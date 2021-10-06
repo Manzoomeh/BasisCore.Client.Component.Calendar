@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.basiscore.net/_js/basiscore-2.2.1.min.js"></script>
+        <title>Print Command - Simple</title>
+        <style>
+            .date-picker-input {
+                border: none;
+                background: none;
+            }
+            input:focus,
+            select:focus,
+            textarea:focus,
+            button:focus {
+                outline: none;
+            }
+            .date-picker-wrapper {
+                background: rgba(0, 0, 0, 0.04);
+                border-radius: 4px 4px 0 0;
+                padding: 0.75em 0.75em 0;
+                width: 200px;
+                display: flex;
+                border-bottom: 1px solid #000;
+            }
+            .date-picker-wrapper:hover {
+                border-bottom: 2px solid #000;
+            }
+            .date-picker-wrapper button {
+                background: none;
+                border: none;
+            }
+            .date-picker-wrapper span {
+                font-size: 12px;
+            }
+            .date-picker-input-wrapper {
+                direction: rtl;
+                text-align: right;
+            }
+            .body {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+        </style>
+
+        <script>
+            const host = {
+
+
+
+
+
+                repositories: {
+
+
+
+
+
+                    "bc.datepicker": "/basiscore.datepicker.component.js"
+
+
+
+
+
+                }
+
+            }
+        </script>
+    </head>
+
+    <body>
+
+        <div class="date-picker-wrapper">
+            <button>
+                <svg viewbox="0 0 24 24" width="24px" height="24px" fill="currentColor" focusable="false" class="mat-datepicker-toggle-default-icon ng-star-inserted">
+                    <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"></path>
+                </svg>
+            </button>
+            <div class="date-picker-input-wrapper">
+                <span>تاریخ را انتخاب کنید</span>
+                <basis core="component.bc.datepicker" run="atclient" setting-object="mySetting"></basis>
+            </div>
+
+        </div>
+
+
+        <script>
+
+            var mySetting = {
+
+
+
+
+
+                dateProvider: "basisCalendar",
+                culture: "fa",
+                secondCulture: "en",
+                lid: 1,
+                todayButton: false
+
+
+
+
+
+            }
+        </script>
+    </body>
+
+</html>

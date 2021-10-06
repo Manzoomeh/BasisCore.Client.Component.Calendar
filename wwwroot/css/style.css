@@ -1,0 +1,134 @@
+@font-face {
+    font-family: IranSans;
+    font-style: normal;
+    font-weight: 400;
+    src: url(../fonts/IRANSansWeb.eot);
+    src: url(../fonts/IRANSansWeb.eot) format("embedded-opentype"), url(../fonts/IRANSansWeb.woff) format("woff"), url(../fonts/IRANSansWeb.ttf) format("truetype");
+}
+body{
+   font-family: IranSans;
+}
+ul{
+   list-style: none;
+}
+.week p{
+   color:#9a9a9a;
+   font-size:11px;
+    float: left;
+}
+.day{
+   height:100px;
+   line-height:20px;
+    border:1px solid #efefef;
+   width: 100%;
+    box-sizing: border-box;
+    text-align:center;
+   border-left:none ;
+    border-bottom:0;
+   top:0;
+   cursor:pointer;
+   font-family: IranSans ;
+    padding: 10px;
+    background: #fff;
+    position: relative;
+}
+p{
+   padding:0 ;
+    margin:0
+}
+.day span{
+   position:relative;
+    top:7px ;
+    float: right;
+}
+.day p{
+   position:relative;
+    top:7px ;
+    float: left;
+}
+.dayul li {
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    font-size: 10px;
+    width: 15%;
+}
+.between-bg {
+   background-color: antiquewhite;
+}
+.day:not([data-id1]){
+   cursor: not-allowed;
+   background-color: #f6f6f6;
+}
+.day[data-id1]:hover{
+   background-color: #f2fbfd;
+}
+div[data-today="1"]{
+   background: #e4f1f6;
+}
+.calendar-header {
+    border-bottom: 1px solid #fcfcfc;
+    background-color: #fcfcfc;
+    color: #555;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    height: 50px;
+}
+.day-name {
+    text-align: center;
+    font-size: 14px;
+    padding: 8px 8px;
+    float: right;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+.day-name .en-name {
+    font-size: 12px;
+    color: #ccc;
+    margin-right: 5px;
+}
+.calendarTitle .sMonth span {
+    font-size: 22px;
+}
+.day[data-id1]:hover:after {
+    content: "\eb46";
+    font-family: "LineIcons";
+    position: absolute;
+    left: 5px;
+    bottom: 5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 3px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .39);
+    background-color: #fff;
+    line-height: 25px;
+}
+.close:hover, .close:focus {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+input[type="text"], input[type="password"], textarea, select {
+    outline: none;
+}
+.noteList{
+   clear: both;
+    padding-top:1px;
+}
+.noteList li{
+   text-align: right;
+    border-radius: 3px;
+    margin-bottom: 3px;
+   color: #fff;
+   padding: 0 5px;
+    box-sizing: border-box;
+    font-size: 12px;
+}
+.noteList ul{
+   padding : 0 
+}
+#basisCalendar{
+   direction: rtl;
+}

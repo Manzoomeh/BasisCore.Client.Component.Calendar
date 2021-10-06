@@ -1,0 +1,392 @@
+@font-face {
+    font-family: IranSans;
+    font-style: normal;
+    font-weight: 400;
+    src: url(IRANSansWeb.eot);
+    src: url(IRANSansWeb.eot) format("embedded-opentype"), url(IRANSansWeb.woff) format("woff"), url(IRANSansWeb.ttf) format("truetype");
+}
+body{
+   font-family: IranSans;
+}
+ul{
+   list-style: none;
+}
+
+[data-calendar-day]{
+   height:100px;
+   line-height:20px;
+    border:1px solid #efefef;
+   width: 100%;
+    box-sizing: border-box;
+    text-align:center;
+   border-left:none ;
+    border-bottom:0;
+   top:0;
+   cursor:pointer;
+   font-family: IranSans ;
+    padding: 10px;
+    background: #fff;
+    position: relative;
+}
+p{
+   padding:0 ;
+    margin:0
+}
+[data-calendar-day] span{
+   position:relative;
+    top:7px ;
+    float: right;
+}
+
+[data-calendar-day]:not([data-id1]){
+   cursor: not-allowed;
+   background-color: #f6f6f6;
+}
+[data-id1]:hover{
+   background-color: #f2fbfd;
+}
+
+[data-calendar-day-names] {
+    border-bottom: 1px solid #fcfcfc;
+    background-color: #fcfcfc;
+    color: #555;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    height: 50px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+[data-calendar-day-name] {
+    text-align: center;
+    font-size: 14px;
+    padding: 8px 8px;
+    float: right;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+[data-calendar-day-name] .en-name {
+    font-size: 12px;
+    color: #ccc;
+    margin-right: 5px;
+}
+
+[data-id1]:hover:after {
+    content: "";
+    background: url("new.svg");
+    background-size: cover;
+    position: absolute;
+    left: 5px;
+    bottom: 5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #fff;
+    line-height: 25px;
+    border: 1px solid #4d576e;
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+input[type="text"], input[type="password"], textarea, select {
+    outline: none;
+}
+[data-calendar-note-list]{
+   clear: both;
+    padding-top:1px;
+}
+[data-calendar-note-list] li{
+   text-align: right;
+    border-radius: 3px;
+    margin-bottom: 3px;
+   color: #fff;
+   padding: 0 5px;
+    box-sizing: border-box;
+    font-size: 12px;
+}
+[data-calendar-note-list] ul{
+   padding : 0 
+}
+#basis-calendar{
+   direction: rtl;
+}
+
+[data-calendar-days] {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+[data-calendar-today-btn] {
+    font-family: IranSans;
+    height: 31px;
+    border-radius: 3px;
+    border: 1px solid #c8e4f0;
+    background: #eff6f9;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    margin-left: 10px;
+}
+[data-calendar-next],
+[data-calendar-prev] {
+    width: 31px;
+    height: 31px;
+    border-radius: 3px;
+    border: 1px solid #c8e4f0;
+    background: #eff6f9;
+    padding: 0 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    margin-left: 10px;
+
+}
+[data-calendar-next] svg,
+[data-calendar-prev] svg {
+    color: #fff;
+}
+[data-calendar-tools] ,[data-months-tools]{
+    display: flex;
+}
+
+[data-calendar-Header] {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    direction: rtl;
+    flex-direction: column;
+}
+[data-calendar-title] {
+    flex-grow: 15;
+    text-align: center;
+    font-size: 22px;
+    background: #fcfcfc;
+    margin-top: 10px;
+    padding: 10px 0;
+    width: 100%;
+}
+[data-disable] {
+    background: #ccc;
+    border: 1px solid #ccc;
+}
+[data-calendar-month-container] {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+[data-basisMCalendarHeader] {
+    position: relative;
+    padding: 10px 0;
+    align-items: center;
+    width: 100%;
+    direction: rtl;
+}
+[data-basisMCalendarHeader] svg {
+    width: 15px;
+    height: 15px;
+}
+[data-calendar-body] {
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    grid-column: 1/-1;
+    border-radius: 5px;
+}
+
+
+[data-resizebtn] {
+    float: left;
+    margin-left: 10px;
+}
+[data-cover] {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+[data-modal-form] {
+    width: 450px;
+    min-height: 300px;
+    background: #fff;
+    border-radius: 20px;
+    padding: 15px;
+}
+
+[data-calendar-form-row] {
+    margin-bottom: 10px;
+}
+[data-calendar-form-row] textarea {
+    box-sizing: border-box;
+    padding: 5px;
+    display: inline-block;
+    border: 1px solid #dce3ed;
+    background: #fbfdff;
+    color: #666;
+    border-radius: 3px;
+    transition: border 0.3s linear 0s;
+    width: 100%;
+    height: 70px;
+    font-size: 12px;
+    resize: vertical;
+    margin-bottom: 0;
+    direction: rtl;
+    font-family: inherit;
+}
+[data-calendar-input-wrapper] {
+    padding: 10px;
+    height: 0;
+}
+[data-calendar-code-color] {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    width: 100px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+[data-calendar-color-input] {
+    float: right;
+    height: 100%;
+    border: none;
+}
+[data-calendar-color-add] {
+    border: 1px solid #dce3ed;
+    background: #fbfdff;
+    height: 35px;
+    padding: 0 0 0 5px;
+    font-size: 12px;
+    text-align: left;
+    width: 70%;
+    float: right;
+    display: flex;
+    justify-content: space-between;
+    direction: ltr;
+    box-sizing: border-box;
+}
+[data-calendar-time-input] {
+    border: 1px solid #dce3ed;
+    background: #fbfdff;
+    height: 35px;
+    padding: 0 10px;
+    font-size: 12px;
+    text-align: left;
+}
+[data-calendar-submit] {
+    font-family: IranSans;
+    background: #0099cc;
+    background-image: none;
+    background-image: none;
+    margin-bottom: 4px;
+    margin-left: 2px;
+    margin-right: 2px;
+    width: 80px;
+    border: none;
+    border-radius: 20px;
+    height: 30px;
+    color: #fff;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+[data-calendar-cancel] {
+    font-family: IranSans;
+    background: #f3565d;
+    background-image: none;
+    background-image: none;
+    margin-bottom: 4px;
+    margin-left: 2px;
+    margin-right: 2px;
+    width: 80px;
+    border: none;
+    border-radius: 20px;
+    height: 30px;
+    color: #fff;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+[data-calendar-color-span] {
+    display: block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin-left: 5px;
+    position: relative;
+    top: 5px;
+}
+[data-calendar-note-item] {
+    display: flex;
+    margin-bottom: 10px;
+    direction: rtl;
+    text-align: right
+}
+[data-calendar-event-btn] {
+    margin-right: 10px;
+    cursor: pointer;
+}
+[data-calendar-new-btn] {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border-radius: 4px;
+    min-height: 1em;
+    border-radius: 20px;
+    border: 0;
+    background-image: none;
+    background: #44b6ae;
+    color: #fff;
+}
+[data-calendar-drop-down-view] {
+    background: #fafafa;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border-radius: 15px;
+    
+}
+[data-calendar-month-btn] {
+    padding: 5px 10px;
+    border: 1px solid #c8e4f0;
+    background: #eff6f9;
+    border-radius: 5px;
+    font-family: IranSans;
+    font-weight: normal;
+    font-size: 12px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-weight: normal;
+}
+[data-calendar-no-message]{
+    font-size: 12px;
+    direction: rtl;
+    text-align: right;
+    border-right:3px solid #44b6 ae ;
+    background: #f0f0f0;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+}
+[data-today]{background: #f2fbfd;}
+.calendar-animated{-webkit-transition:all .3s ease-in-out;-moz-transition:all .3s ease-in-out;
+    -o-transition:all .3s ease-in-out;-ms-transition:all .3s ease-in-out;transition:all .3s ease-in-out}
+[data-calendar-box-animated]{overflow: hidden;}

@@ -1,0 +1,538 @@
+.calendar{width: 100%;
+    background: #FFF;
+    color: #343434;
+    border-radius: 3px;
+    border: 1px solid #f3f3f3;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);}
+    .calendar-body,.calendar-header{display: grid;grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;}
+    body{font-family: 'IRANSansWeb' ;color:#555;}
+        .red {background-color:red}
+        .month{float:right;display:none;text-align:center;width:100%}
+        .week{width:100%;display:block;clear:both;display:block;
+            position:relative; display: flex;direction: rtl;}
+        .week p{color:#9a9a9a;font-size:11px; float: left;}
+        .day{height:100px;line-height:20px; border:1px solid #efefef;width: 100%;
+    box-sizing: border-box;
+            text-align:center;border-left:none ; border-bottom:0;top:0;cursor:pointer;font-family: 'IRANSansWeb' ; padding: 10px; background: #fff; position: relative;}        
+        p{padding:0 ; margin:0}
+        .week:last-child .day{border-bottom:1px solid #bfbfbf;border-left:1px solid #bfbfbf}
+        .week:nth-last-child(2) .day{border-bottom:1px solid #bfbfbf}
+        .week:nth-last-child(2) .day:first-child,.week:nth-last-child(2) .disable_day:first-child{border-bottom:none}
+        .miladi{display:block;width:100%}
+        .miladi{font-size:11px ; color:#8c8c8c}
+        .monthtitle{margin-top:20px;width:100px;margin:0 auto}
+        .back{float:right;width:50px;}
+        .next{float:right;width:50px;}
+        .current{display:block}
+        .disable_day,.disable_day2{color:#BDBDBD;border:1px solid #BDBDBD;border-left:none ; border-bottom:0}
+        .disable_day:hover,.disable_day2:hover{background:#daf0f8 !important}
+      
+        .mainC{margin-top:200px;margin-left:400px}
+      
+        .cal{border:1px solid #ccc;height:30px;width:150px}
+        .day span{position:relative; top:7px ; float: right;}
+        .day p{position:relative; top:7px ; float: left;}
+        .day:hover{background:url(../images/calback.png) no-repeat center center}
+        .fa-caret-left:before{content:"\f0d9";color:#0099cc }
+        .fa-caret-left{position:relative;top:5px;right:5px;float:left}
+        .fa {
+            display: inline-block;
+            font: normal normal normal 14px/1 FontAwesome;
+            font-size: inherit;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .fa-caret-right{float:right;position:relative;top:5px;left:5px;color:#0099cc}
+        .fa-caret-right:before{content:"\f0da"}
+        .fa-angle-left:before{content:"\f104 "}
+        .calendar_header{border-bottom:3px solid #0099cc;padding-bottom:10px}
+    
+    .dayul {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            width: 100%;
+            display: flex;
+            border-bottom: 1px solid #0099cc;
+    background-color: #0099cc;
+    color: #fff;
+        }	
+        
+        .dayul li {
+            padding: 0;
+            margin: 0;
+            display: inline-block;
+            font-size: 10px;
+            width: 15%;
+        }
+    .between-bg {background-color: antiquewhite;}
+    .day:not([data-id1]){cursor: not-allowed;background-color: #f6f6f6;}
+    .day[data-id1]:hover{background-color: #f2fbfd;}
+    div[data-today="1"]{background: #e4f1f6;}
+    .calendar-header {
+    border-bottom: 1px solid #fcfcfc;
+    background-color: #fcfcfc;
+    color: #555;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    height: 50px;
+    }
+    .day-name {
+    text-align: center;
+    font-size: 14px;
+    padding: 8px 8px;
+    float: right;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    }
+    .day-name .en-name {
+    font-size: 12px;
+    color: #ccc;
+    margin-right: 5px;
+    }
+    .top-box {
+    width: 100%;
+    background: #FFF;
+    color: #343434;
+    border-radius: 3px;
+    border: 1px solid #D9E4E6;
+    padding: 15px 5px;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    }
+    #calendarControls {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    direction: rtl;
+    }
+    .calendarSwitch {
+    width: max-content;
+    }
+    .switchBtn {
+    position: relative;
+    float: right;
+    padding-left: 10px;
+    }
+    .switchBtn button {
+    background: #0099cc;
+    width: 31px;
+    height: 31px;
+    border-radius: 3px;
+    border: 1px solid #0099cc;
+    padding: 0 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
+    .switchBtn button i {
+    font-size: 18px;
+    width: 31px;
+    color: #fff;
+    }
+    .switchBtn .gotoToday {
+    color: #fff;
+    background: #0099cc;
+    border: 1px solid #0099cc;
+    border-radius: 3px;
+    padding: 5px 9px;
+    position: relative;
+    float: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    width: 70px;
+    justify-content: space-between;
+    }
+    #calendarControls .calendarTitle {
+    flex-grow: 15;
+    text-align: center;
+    }
+    #calendarControls .calendarTools {
+    flex-grow: 1;
+    text-align: left;
+    }
+    #calendarControls .calendarSwitch {
+    width: max-content;
+    flex-grow: 1;
+    }
+    #calendarControls .calendarTitle .sMonth {
+    height: 20px;
+    line-height: 20px;
+    }
+    #calendarControls .calendarTitle .mMonth {
+    height: 20px;
+    line-height: 30px;
+    }
+    #calendarControls .calendarTools .typeNote {
+    width: 150px;
+    height: 31px;
+    border: 1px solid #dce3ed;
+    background: #fbfdff;
+    color: #666;
+    font-size: 12px;
+    }
+    .calendarTitle .sMonth span {
+    font-size: 22px;
+    }
+    .day[data-sstring]:hover:after {
+    content: "\eb46";
+    font-family: "LineIcons";
+    position: absolute;
+    left: 5px;
+    bottom: 5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 3px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .39);
+    background-color: #fff;
+    line-height: 25px;
+    }
+    .BasisPanelModal {
+    display: none; 
+    position: fixed; 
+    z-index: 9; /* Sit on top */
+    padding-top: 100px; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    box-sizing:border-box;
+    }
+    
+    /* Modal Content */
+    .modal-content,.modal-content1 {
+    background-color: #fff;
+    text-align:left;
+    margin: auto;
+    width: 500px;
+    transition: all 0.3s ease;
+    border-radius:6px;
+    padding: 0 !important;
+    }
+    
+    /* The Close Button */
+    .close {
+    color: #fff;
+    
+    font-size: 28px;
+    font-weight: bold;
+    
+    }
+    
+    .close:hover,
+    .close:focus {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    }
+    
+    a,.no-select{ -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+    
+    .note-list {
+    padding: 15px;
+    font-size: 14px;
+    color: #333;
+    }
+    .note-list .noNote {
+    width: 100%;
+    height: max-content;
+    text-align: right;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border-radius: 3px;
+    border-right: 3px solid #0099cc;
+    font-size: 13px;
+    box-sizing: border-box;
+    direction: rtl;
+    }
+    .modal-title{width: 100%; background: #4d576e; color: #fff; display: flex;
+    justify-content: space-between; direction: rtl; padding: 10px 10px ;box-sizing: border-box;
+    border-top-right-radius: 5px;border-top-left-radius: 5px;border-top-left-radius: 5px;
+    height: 40px;
+    align-items: center; }
+    .form_table_btn.btn-insert {
+    background: #0099cc;
+        background-image: none;
+    background-image: none;
+    margin-bottom: 4px;
+    margin-left: 2px;
+    margin-right: 2px;
+    width: auto;
+    border: none;
+    border-radius: 20px;
+    height: 30px;
+    color: #fff;
+    margin-left: 15px;
+    margin-bottom: 15px;
+    }
+    .new-note {
+    padding: 15px ;
+    font-size: 14px;
+    color: #333;
+    }
+    .new-note .new-note-row {
+    margin-bottom: 10px;
+    }
+    .new-note .new-note-row .new-note-setting {
+    width: 100%;
+    float: right;
+    }
+    
+    .code_color{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    width: 100px;
+    }
+    .new-note textarea.note {
+    box-sizing: border-box;
+    padding: 5px;
+    display: inline-block;
+    border: 1px solid #dce3ed;
+    background: #fbfdff;
+    color: #666;
+    border-radius: 3px;
+    transition: border .3s linear 0s;
+    width: 100%;
+    height: 70px;
+    font-size: 12px;
+    resize: vertical;
+    margin-bottom: 0;
+    direction: rtl;
+    }
+    .new-note textarea.description {
+    box-sizing: border-box;
+    padding: 5px;
+    display: inline-block;
+    border: 1px solid #dce3ed;
+    background: #fbfdff;
+    color: #666;
+    border-radius: 3px;
+    transition: border .3s linear 0s;
+    width: 100%;
+    height: 70px;
+    font-size: 12px;
+    resize: vertical;
+    margin-bottom: 0;
+    direction: rtl;
+    }
+    .new-note-wrapper{display: none;}
+    .form_table_btn.remove {
+    background: #f3565d;
+    background-image: none;
+    margin-bottom: 4px;
+    margin-left: 2px;
+    margin-right: 2px;
+    width: 80px;
+    border: none;
+    border-radius: 20px;
+    height: 30px;
+    color: #fff;
+    margin-bottom:15px ;
+    }
+    .form_table_btn.cancel {
+    background: #0099cc;
+    background-image: none;
+    margin-bottom: 4px;
+    margin-left: 2px;
+    margin-right: 2px;
+    width: 80px;
+    border: none;
+    border-radius: 20px;
+    height: 30px;
+    color: #fff;
+    margin-left: 15px;
+    margin-bottom:15px ;
+    }
+    .new-note #time-add {
+    width: 30%;
+    padding-right: 5px;
+    float: right;
+    position: relative;
+    box-sizing: border-box ;
+    }
+    .new-note #time-add .timepicker {
+    border: 1px solid #dce3ed;
+    background: #fbfdff;
+    height: 35px;
+    padding: 0px 40px 0 10px;
+    font-size: 12px;
+    text-align: left;
+    }
+    .new-note .clock-icon {
+    position: absolute;
+    top: 0;
+    right: 5px;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    background-color: #dce3ed;
+    border-left: 1px solid #dce3ed;
+    border-radius: 0 3px 3px 0;
+    }
+    .new-note #color-add {
+    border: 1px solid #dce3ed;
+    background: #fbfdff;
+    height: 35px;
+    padding: 0px 0 0 10px;
+    font-size: 12px;
+    text-align: left;
+    width: 70%;
+    padding-left: 5px;
+    float: right;
+    display: flex;
+    justify-content: space-between;
+    direction: ltr;
+    box-sizing: border-box;
+    }
+    .new-note #color-add input{float: right; height: 100%; border: none;}
+    .done{border: none ; color: #44b6ae; border: 1px solid #44b6ae; border-radius: 50%;
+    width: 25px; height: 25px; font-size: 10px;}
+    .clear{border: none ; color: #f3565d; border: 1px solid #f3565d; border-radius: 50%;
+    width: 25px; height: 25px; font-size: 10px;}
+    .clear i , .done i {font-size: 12px;}
+    input[type="text"], input[type="password"], textarea, select { 
+    outline: none;
+    }
+    .noteList{clear: both;}
+    .noteList li{text-align: right; border-radius: 3px; margin-bottom: 3px;color: #fff;padding: 0 5px; box-sizing: border-box;}
+    .noteList ul{padding-top:10px ;}
+    .note-title .point-color {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin-left: 5px;
+    }
+    .note-item{direction: rtl;
+    text-align: right;}
+    .note-title{display: flex;
+    align-items: center;
+    padding: 10px 0; font-size: 16px;}
+    .note-icon{padding: 0 3px;}
+    #form-sample,#form-sample2,#form-sample3{display: none;}
+    .event_result form{text-align: left;}
+    .event_result,.new_note_box{display: none;}
+    .sharingBox-row input,.sharingBox-row select {
+    box-sizing: border-box;
+    padding: 5px;
+    border: 1px solid #dce3ed;
+    background: #fbfdff;
+    color: #666;
+    border-radius: 3px;
+    transition: border .3s linear 0s;
+    width: 100%;
+    height: 35px;
+    font-size: 12px;
+    direction: rtl;
+    }
+    .note-list .note-item .drop-down-view {
+    display: none;
+    padding: 10px;
+    text-align: justify;
+    direction: ltr;
+    background-color: #f0f3fa;
+    border: 1px solid #ddd;
+    border-top: 0;
+    border-radius: 3px;
+    margin: 5px 0 15px;
+    }
+    .sharingBox-row .inputBox {
+    width: 31.3333%;
+    float: right;
+    position: relative;
+    padding-left: 5px;
+    }
+    .sharingBox-row .plusMinusBox {
+    width: 24px;
+    float: left;
+    margin-top:10px ;
+    text-align: center;
+    }
+    .sharingBox{padding: 15px 5px;
+    border: 1px solid #f4f4f4;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 3px #f4f4f4;}
+    #sharingForm .btn,#reminderForm .btn{margin-left: 0 !important;}
+    .reminderBox-row .reminderBox-right {
+    width: 51%;
+    float: right;
+    padding-left: 10px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    direction: rtl;
+    }
+    .reminderBox-row .reminderBox-left {
+    width: 43%;
+    float: right;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    direction: rtl;
+    }
+    .reminderBox-left .reminderTitle {
+    width: 45px;
+    text-align: right;
+    float: right;
+    color: #555;
+    font-size: 13px;
+    }
+    .reminderBox {
+    padding: 15px 5px;
+    border: 1px solid #f4f4f4;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 3px #f4f4f4;
+    }
+    #reminderForm input,#reminderForm select{box-sizing: border-box;
+    padding: 5px;
+    border: 1px solid #dce3ed;
+    background: #fbfdff;
+    color: #666;
+    border-radius: 3px;
+    transition: border .3s linear 0s;
+    width: calc((100% - 40px)/2);
+    height: 35px;
+    font-size: 12px;
+    direction: rtl;
+    margin-left: 5px;}
+    .reminderBox .plusMinusBox {
+    width: 24px;
+    float: left;
+    margin-top:10px ;
+    text-align: center;
+    }
+    .reminderBox-row {
+    width: 100%;
+    float: right;
+    margin-bottom: 10px;
+    }
+    .addRemoveBox i{font-size: 18px;color: #0099cc;}
+    .btns{margin-right: 10px;}
+    .btns i{font-size: 15px;}
+    .event_result .new-note{padding: 0 !important;}
+    .not_editable #color-add,.not_editable #timepicker_ampm_dark,.not_editable textarea{
+    background: #f7fbff ; color: #000;cursor: not-allowed;}
+    #sharingTools{width: 70% !important;}
+    .addRemoveBox {cursor: pointer;}
+    .minus i{color: #f53260;}
+    .sharingBox-row{margin-bottom: 10px;}
+    .gotoToday i{color: #fff; font-size: 15px !important; }

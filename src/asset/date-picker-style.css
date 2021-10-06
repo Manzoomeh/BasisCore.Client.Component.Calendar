@@ -1,0 +1,260 @@
+@font-face {
+    font-family: IranSans;
+    font-style: normal;
+    font-weight: 400;
+    src: url(IRANSansWeb.eot);
+    src: url(IRANSansWeb.eot) format("embedded-opentype"), url(IRANSansWeb.woff) format("woff"), url(IRANSansWeb.ttf) format("truetype");
+}
+body{
+   font-family: IranSans;
+}
+ul{
+   list-style: none;
+}
+
+[data-datepicker-day]{
+   line-height:20px;
+   height: 40px;
+    box-sizing: border-box;
+    text-align:center;
+   border-left:none ;
+    border-bottom:0;
+   top:0;
+   cursor:pointer;
+   font-family: IranSans ;
+    background: #fff;
+    position: relative;
+}
+p{
+   padding:0 ;
+    margin:0
+}
+[data-datepicker-day] span{
+   position:relative;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+[data-datepicker-day]:not([data-datepicker-id]){
+   cursor: not-allowed;
+}
+[data-datepicker-id]:hover span{
+   background-color: #f2fbfd;
+   color: #555;
+
+}
+
+[datepicker-header] {
+    color: rgba(0,0,0,.38);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    border-bottom: 1px solid rgba(0,0,0,.38);
+    margin-bottom: 10px;
+}
+[data-datepicker-day-name] {
+    text-align: center;
+    font-size: 14px;
+    padding: 8px 8px;
+    float: right;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+[data-datepicker-day-name] .en-name {
+    font-size: 12px;
+    color: #ccc;
+    margin-right: 5px;
+}
+
+
+input[type="text"], input[type="password"], textarea, select {
+    outline: none;
+}
+
+#basis-datepicker{
+   direction: rtl;
+   width: 300px; min-height:300px;
+   position: absolute;
+   box-shadow: 0 2px 4px -1px rgba(0,0,0,.2),0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12);
+background-color: #fff;
+border-radius: 4px;
+z-index: 9;
+}
+
+[data-datepicker-days] {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+[data-datepicker-today-btn] {
+    font-family: IranSans;
+    height: 31px;
+    border-radius: 3px;
+    border: 1px solid #c8e4f0;
+    background: #eff6f9;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+[data-datepicker-next],
+[data-datepicker-prev] {
+    width: 31px;
+    height: 31px;
+    border-radius: 3px;
+    border: none;
+    background: #fff  ;
+    padding: 0 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    border-radius: 50%;
+    margin-left: 5px;
+
+}
+[data-datepicker-next]:hover{
+    background: rgb(243, 243, 243)
+}
+[data-datepicker-prev]:hover{ background: rgb(243, 243, 243)}
+[data-datepicker-next] svg,
+[data-datepicker-prev] svg {
+    width: 20px;
+    
+}
+[data-calendarTools] {
+    width: 100%;
+    display: flex;
+}
+[data-datepicker-header] {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    direction: rtl;
+}
+[data-datepicker-title] {
+    text-align: right;
+    font-size: 14px;
+    padding: 10px 0;
+    width: 100%;
+    padding-right: 10px;
+}
+[data-disable] {
+    background: #ccc;
+    border: 1px solid #ccc;
+}
+
+[data-basisMCalendarHeader] {
+    position: relative;
+    padding: 10px 0;
+    align-items: center;
+    width: 100%;
+    direction: rtl;
+}
+[data-basisMCalendarHeader] svg {
+    width: 15px;
+    height: 15px;
+}
+[data-datepicker-body] {
+    border-radius: 5px;
+}
+[data-cover] {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+[data-form-row] {
+    margin-bottom: 10px;
+}
+[data-form-row] textarea {
+    box-sizing: border-box;
+    padding: 5px;
+    display: inline-block;
+    border: 1px solid #dce3ed;
+    background: #fbfdff;
+    color: #666;
+    border-radius: 3px;
+    transition: border 0.3s linear 0s;
+    width: 100%;
+    height: 70px;
+    font-size: 12px;
+    resize: vertical;
+    margin-bottom: 0;
+    direction: rtl;
+}
+[data-input-wrapper] {
+    padding: 10px;
+}
+[data-code-color] {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    width: 100px;
+}
+
+[data-color-input] {
+    float: right;
+    height: 100%;
+    border: none;
+}
+[data-color-add] {
+    border: 1px solid #dce3ed;
+    background: #fbfdff;
+    height: 35px;
+    padding: 0 0 0 5px;
+    font-size: 12px;
+    text-align: left;
+    width: 70%;
+    float: right;
+    display: flex;
+    justify-content: space-between;
+    direction: ltr;
+    box-sizing: border-box;
+}
+[data-time-input] {
+    border: 1px solid #dce3ed;
+    background: #fbfdff;
+    height: 35px;
+    padding: 0 10px;
+    font-size: 12px;
+    text-align: left;
+}
+
+[data-color-span] {
+    display: block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin-left: 5px;
+    position: relative;
+    top: 2px;
+}
+[data-note-item] {
+    display: flex;
+    margin-bottom: 10px;
+    direction: rtl;
+    text-align: right
+}
+
+
+[data-datepicker-today] span{background: #3f51b5; color: #fff;}
