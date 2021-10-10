@@ -25,7 +25,7 @@ export class DateRange {
   public rKey: string;
   public wrapper: Element;
   public activeIndex: number;
-  private userId : number
+  public userId : number =0
   private static readonly defaultCalenderOptions: Partial<ICalenderOptions> = {
     dateProvider: "basisCalendar",
     displayNote: true,
@@ -71,7 +71,8 @@ export class DateRange {
     form.append("rkey", this.rKey);
     form.append("dmnid", "12");
     let userIdObj = await this.sendAsyncData(form, "/trustlogin/userid" );
-    this.userId = userIdObj.userid
+    console.log("obj is ", userIdObj )
+    this.userId =parseInt(userIdObj.userid) 
     return null;
   }
   public async refreshNotesAsync(): Promise<void> {
@@ -97,7 +98,7 @@ export class DateRange {
     const fromDateId = this.dateUtil.getBasisDayId(from);
     const toDateId = this.dateUtil.getBasisDayId(to);
     const form = new FormData();
-    form.append("userid", "122504");
+    form.append("userid", this.userId.toString());
     form.append("ownerid", "0");
     form.append("from", `${fromDateId}`);
     form.append("to", `${toDateId}`);

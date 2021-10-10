@@ -3,7 +3,6 @@ function PersianCalendar(year , month){
     year= parseInt(year)
     month= parseInt(month)
     var result = Month(year , month)
-    console.log(result)
 }
 
 function Month(year , month){

@@ -17,7 +17,6 @@ export default class BcComponent implements IComponentManager {
     this.owner = owner;
   }
   public async initializeAsync(): Promise<void> {
-    console.log("yes");
     const name = await this.owner.getAttributeValueAsync("name");
     this.container = document.createElement("input");
     this.container.classList.add("date-picker-input");
