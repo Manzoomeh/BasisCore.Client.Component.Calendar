@@ -3,6 +3,7 @@ import { Modal } from "../Modal/Modal";
 import { DateRange } from "../calendar";
 import { INote } from "../Interface/Interface";
 import layout from  "../../asset/reminderForm.html"
+import { node } from "webpack";
 export class UiCalendar {
   private readonly day: Day;
   readonly range: DateRange;
@@ -119,41 +120,36 @@ export class UiCalendar {
   }
   generateReminderForm(note?: INote): Node {
     let formWrapper = document.createElement("form");
-
-    // submitBtn.addEventListener("click", async (e) => {
-    //   e.preventDefault();
-    //   let formData = new FormData();
-    //   formData.append("id", this.day.dateId.toString());
-    //   formData.append("time", reminderUnit.value ? reminderUnit.value : "00:00");
-    //   formData.append("userid", "122504");
-    //   formData.append("ownerid", "0");
-    //   formData.append("color", reminderNumber.value ? reminderNumber.value : "");
-    //   this.range.sendAsyncData(
-    //     formData,
-    //     `/ticketing/${this.range.rKey}/addnote`
-    //   );
-    //   if (this.range.options.displayNote) {
-    //     await this.range.refreshNotesAsync();
-    //   }
-    //   this.modal.closeModal();
-    //   this.range.renderAsync();
-    // });
-
-    // formWrapper.appendChild(reminderWrapper);
-    // formWrapper.appendChild(btnWrapper);
     formWrapper.innerHTML = layout
+    const reminderSubmit = formWrapper.querySelector("[data-reminder-submit]")
     let plusBtn = formWrapper.querySelector("[plus-row]")
     let formReminderWrapper = formWrapper.querySelector("[data-calendar-form-row-reminder]")
     plusBtn.addEventListener("click" , (e) =>{
       let rowContent = formWrapper.querySelector("[data-calendar-form-row-reminder-sample]")   
-      let childSize = formReminderWrapper.querySelectorAll("div").length
-      console.log(childSize) 
       let rowInside = document.createElement("div")
       let rowContentHtml = rowContent.outerHTML
-      rowInside.innerHTML = rowContentHtml.replace("/__1/g", "__2"); 
-      formReminderWrapper.appendChild(rowInside)     
-      
-      
+      rowInside.innerHTML = rowContentHtml
+      formReminderWrapper.appendChild(rowInside)
+    })
+    reminderSubmit.addEventListener("click" ,async (e) =>{
+      e.preventDefault()
+      let reminderObj = []
+      let childs = formReminderWrapper.childNodes
+      for(let i = 0 ; i < childs.length ; i++){
+        if(childs[i].nodeName == "DIV"){
+          let currentElement = childs[i] as HTMLElement
+          let reminderNum = currentElement.querySelector("[data-calendar-reminder-input]")  as HTMLInputElement
+          let reminderTimeType = currentElement.querySelector("[data-calendar-reminder-select]") as HTMLInputElement
+          let reminderActionId = currentElement.querySelector("[data-calendar-reminder-action]") as HTMLInputElement
+          reminderObj.push({"id":"0" , "num":`${reminderNum.value}`,"timetype":`${reminderTimeType.value}`,"actionID":`${reminderActionId.value}`})
+        }
+      }
+      const form = new FormData();
+      form.append("reminder", `${reminderObj}`);      
+      const data = await this.range.sendAsyncData(
+        form,
+        `/ticketing/${this.range.rKey}/usernotes`
+      );
     })
     
     return formWrapper;

@@ -397,7 +397,7 @@ input[type="text"], input[type="password"], textarea, select {
     padding: 0 10px;
     font-size: 12px;
     text-align: left;}
-[data-calendar-reminder-select]{
+[data-calendar-reminder-select],[data-calendar-reminder-action]{
     border: 1px solid #dce3ed;
     background: #fbfdff;
     height: 35px;

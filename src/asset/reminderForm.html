@@ -5,16 +5,17 @@
 		<div>
 		<input type="text" data-calendar-reminder-input name="_root.reminder__1.num" />
         <select data-calendar-reminder-select="" name="_root.reminder__1.timetype">
-			<option>روز</option>
-			<option>ساعت</option>
-			<option>دقیقه</option>
+			<option value="1">روز</option>
+			<option value="2">ساعت</option>
+			<option value="3">دقیقه</option>
 		</select>
 	</div>
 	<div>
 		<span>از طریق</span>
-		<select data-calendar-reminder-select="" name="_root.reminder__1.actionID">
-			<option>SMS</option>
-			<option>Email</option>
+		<select data-calendar-reminder-action="" name="_root.reminder__1.actionID">
+			<option value="1">Email</option>
+			<option value="2">SMS</option>
+			
 		</select>
 	</div>
 	</div>
@@ -22,7 +23,7 @@
 	</div>
     </div>
     <div data-calendar-form-row="">
-        <button data-calendar-submit="">ثبت</button>
+        <button data-calendar-submit data-reminder-submit="">ثبت</button>
         <button data-calendar-cancel="">لغو</button>
     </div>
 </form>
