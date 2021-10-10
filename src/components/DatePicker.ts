@@ -41,7 +41,7 @@ export class DatePicker {
 
     this.monthValues = this.dateUtil.getMonthValueList(from, to);
     this.monthValues.map((x) => this.months.push(new Month(this, x)));
-    console.log(this.months);
+
   }
 
   nextMonth(): void {

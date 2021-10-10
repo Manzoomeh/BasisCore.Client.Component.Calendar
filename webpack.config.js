@@ -66,11 +66,15 @@ module.exports = {
       {
         test: /\.css$/,
         use: ["style-loader","css-loader"],
+      },
+      {
+        test: /\.(png|html)$/,
+        type: "asset/source",
       }
     ],
   },
   resolve: {
-    extensions: [".ts", ".d.ts", ".tsx", ".js", ".jsx", ".css"],
+    extensions: [".ts", ".d.ts", ".tsx", ".js", ".jsx", ".css",".html"],
   },
   plugins: [
     new CircularDependencyPlugin({

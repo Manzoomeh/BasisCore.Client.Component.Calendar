@@ -1,6 +1,5 @@
 import { DatePicker } from "./components/DatePicker";
-// import * from "./app7"
-console.log("start");
+
 const container = document.getElementById("datepickerCalendar");
 
 var from: any = {
@@ -21,7 +20,7 @@ const range = new DatePicker(from, to, {
   lid: 1,
 });
 range.createUIAsync(container);
-console.log(range);
+
 
 // var dDate= {
 //   year: 1400,

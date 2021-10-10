@@ -20,11 +20,12 @@ export class DateRange {
   public readonly dateUtil: IDateUtil;
   public readonly months: Array<Month> = new Array<Month>();
   public readonly options: ICalenderOptions;
+  private readonly monthValues: MonthValue[];
   public note: INote[];
   public rKey: string;
   public wrapper: Element;
   public activeIndex: number;
-  private readonly monthValues: MonthValue[];
+  private userId : number
   private static readonly defaultCalenderOptions: Partial<ICalenderOptions> = {
     dateProvider: "basisCalendar",
     displayNote: true,
@@ -50,6 +51,8 @@ export class DateRange {
     this.monthValues.map((x) => this.months.push(new Month(this, x)));
     this.rKey = rkey;
     this.getRKey();
+    this.getUserId()
+   
   }
 
   public getRKey(): string {
@@ -63,11 +66,12 @@ export class DateRange {
     }
     return this.rKey;
   }
-  public async getUserId(): Promise<void> {
+   public async getUserId(): Promise<void> {
     const form = new FormData();
     form.append("rkey", this.rKey);
     form.append("dmnid", "12");
-    await this.sendAsyncData(form, "/trustlogin/userid" );
+    let userIdObj = await this.sendAsyncData(form, "/trustlogin/userid" );
+    this.userId = userIdObj.userid
     return null;
   }
   public async refreshNotesAsync(): Promise<void> {

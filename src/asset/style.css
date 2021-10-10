@@ -390,3 +390,46 @@ input[type="text"], input[type="password"], textarea, select {
 .calendar-animated{-webkit-transition:all .3s ease-in-out;-moz-transition:all .3s ease-in-out;
     -o-transition:all .3s ease-in-out;-ms-transition:all .3s ease-in-out;transition:all .3s ease-in-out}
 [data-calendar-box-animated]{overflow: hidden;}
+[data-calendar-reminder-input]{
+    border: 1px solid #dce3ed;
+    background: #fbfdff;
+    height: 35px;
+    padding: 0 10px;
+    font-size: 12px;
+    text-align: left;}
+[data-calendar-reminder-select]{
+    border: 1px solid #dce3ed;
+    background: #fbfdff;
+    height: 35px;
+    padding: 0 10px;
+    font-size: 12px;
+    text-align: left;
+}
+[data-calendar-form-row-reminder]{
+    font-size: 12px;
+    direction: rtl;
+    padding: 15px;
+}
+[data-calendar-form-row-reminder] span{
+    display: inline-block;
+    padding: 0 15px;
+}
+[data-calendar-form-row-reminder] select{
+    padding: 0 10px;
+}
+[plus-row]{
+    width: 20px;
+    height: 20px;
+    border: 1px solid #555;
+    border-radius: 50%;
+    color: #555;
+    font-size: 18px;
+    text-align: center;
+    line-height: 22px;
+    margin-top: 5px;
+    margin-right: 5px;  
+    cursor: pointer;
+}
+[data-calendar-form-row-reminder-inline]{
+    display: flex;
+}

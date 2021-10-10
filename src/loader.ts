@@ -1,6 +1,6 @@
 import { DateRange } from "./components/calendar";
 // import * from "./app7"
-console.log("start");
+
 const container = document.getElementById("basisCalendar");
 
 var from: any = {
@@ -27,7 +27,7 @@ const range = new DateRange(
   "0F21A34F-A613-4DAA-BA79-A02F021ADFE0"
 );
 range.createUIAsync(container);
-console.log(range);
+
 
 // var dDate= {
 //   year: 1400,

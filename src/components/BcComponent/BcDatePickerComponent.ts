@@ -15,7 +15,6 @@ export default class BcComponent implements IComponentManager {
   private options: object;
   constructor(owner: IUserDefineComponent) {
     this.owner = owner;
-    console.log("constructor");
   }
   public async initializeAsync(): Promise<void> {
     console.log("yes");
