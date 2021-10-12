@@ -27,6 +27,9 @@ export interface ICalenderOptions {
   culture?: Culture;
   secondCulture?: Culture;
   lid?: Lid;
+  dmnid? :number;
+  baseUrl? : object
+  
 }
 export interface IDatePickerOptions {
   dateProvider?: DateUtilProvider;

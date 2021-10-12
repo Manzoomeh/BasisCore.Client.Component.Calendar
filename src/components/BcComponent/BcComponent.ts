@@ -35,7 +35,7 @@ export default class BcComponent implements IComponentManager {
         .replace(/([۰-۹])/g, (token) =>
           String.fromCharCode(token.charCodeAt(0) - 1728)
         );
-      this.loadCalendar(from, from, this.options, this.rKey);
+      this.loadCalendar(from, from, this.options, this.rKey );
     } else {
       this.loadCalendar(initFrom, initTo, this.options, this.rKey);
     }

@@ -26,6 +26,8 @@ export class Modal {
   }
 
   closeModal() {
+    this.cover.innerHTML= ""
     this.cover.remove();
+    
   }
 }

@@ -3,6 +3,7 @@ import { Modal } from "../Modal/Modal";
 import { DateRange } from "../calendar";
 import { INote } from "../Interface/Interface";
 import layout from  "../../asset/reminderForm.html"
+import listLayout from "../../asset/reminderList.html"
 import { node } from "webpack";
 export class UiCalendar {
   private readonly day: Day;
@@ -118,11 +119,42 @@ export class UiCalendar {
     formWrapper.appendChild(btnWrapper);
     return formWrapper;
   }
+  async loadReminderList(form:HTMLElement, note: INote) : Promise<void>{
+    let formData = new FormData();
+    let reminderListWrapper = document.createElement("div")
+    formData.append("creatoruser", this.range.userId.toString());
+    formData.append("usedforid", note.id.toString());
+    formData.append("userid", this.range.userId.toString());
+    const data =await this.range.sendAsyncData(
+      formData,
+      `http://api-ticketing.basiscore.com/${this.range.rKey}/viewnote`
+    );
+     const reminderList =  data[0].reminder
+    if(reminderList.length>0){
+      reminderList.map((x) => {
+        reminderListWrapper.innerHTML = listLayout   
+        let reminderNumber = reminderListWrapper.querySelector("[data-calendar-reminder-input]") as HTMLInputElement
+        let reminderTimeType = reminderListWrapper.querySelector("[data-calendar-reminder-select]") as HTMLInputElement
+        let reminderAction = reminderListWrapper.querySelector("[data-calendar-reminder-action]") as HTMLInputElement
+        reminderNumber.value=x.num 
+        reminderTimeType.value = x.timetype
+        reminderAction.value = x.actionID
+        // reminderListWrapper.appendChild(reminderNumber)
+      })
+      
+
+    }
+    let formInside = form.querySelector("[data-calendar-reminder-list]")
+    formInside.appendChild(reminderListWrapper)
+    return null
+  }
   generateReminderForm(note?: INote): Node {
     let formWrapper = document.createElement("form");
     formWrapper.innerHTML = layout
+    this.loadReminderList(formWrapper, note)
     const reminderSubmit = formWrapper.querySelector("[data-reminder-submit]")
     let plusBtn = formWrapper.querySelector("[plus-row]")
+    let minusBtn = formWrapper.querySelector("[minus-row]")
     let formReminderWrapper = formWrapper.querySelector("[data-calendar-form-row-reminder]")
     plusBtn.addEventListener("click" , (e) =>{
       let rowContent = formWrapper.querySelector("[data-calendar-form-row-reminder-sample]")   
@@ -130,13 +162,14 @@ export class UiCalendar {
       let rowContentHtml = rowContent.outerHTML
       rowInside.innerHTML = rowContentHtml
       formReminderWrapper.appendChild(rowInside)
-    })
+    })  
     reminderSubmit.addEventListener("click" ,async (e) =>{
       e.preventDefault()
       let reminderObj = []
       let childs = formReminderWrapper.childNodes
       for(let i = 0 ; i < childs.length ; i++){
         if(childs[i].nodeName == "DIV"){
+          
           let currentElement = childs[i] as HTMLElement
           let reminderNum = currentElement.querySelector("[data-calendar-reminder-input]")  as HTMLInputElement
           let reminderTimeType = currentElement.querySelector("[data-calendar-reminder-select]") as HTMLInputElement
@@ -217,6 +250,7 @@ export class UiCalendar {
         boxElement.setAttribute("data-calendar-box-animated", "");
         boxElement.style.height = "0px";
         setTimeout(() => (boxElement.style.height = "260px"), 100);
+
         boxElement.appendChild(this.generateReminderForm(x));
       });
       editBtn.addEventListener("click", (e) => {

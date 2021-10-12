@@ -380,7 +380,7 @@ input[type="text"], input[type="password"], textarea, select {
     font-size: 12px;
     direction: rtl;
     text-align: right;
-    border-right:3px solid #44b6 ae ;
+    border-right:3px solid #44b6ae ;
     background: #f0f0f0;
     border-radius: 5px;
     padding: 5px 10px;
@@ -430,6 +430,25 @@ input[type="text"], input[type="password"], textarea, select {
     margin-right: 5px;  
     cursor: pointer;
 }
+[minus-row]{
+    width: 20px;
+    height: 20px;
+    border: 1px solid #555;
+    border-radius: 50%;
+    color: #555;
+    font-size: 18px;
+    text-align: center;
+    line-height: 22px;
+    margin-top: 5px;
+    margin-right: 5px;  
+    cursor: pointer;
+}
 [data-calendar-form-row-reminder-inline]{
+    display: flex;
+}
+[data-reminder-form-btns]{
+    margin-left: 15px;
+}
+[data-calendar-reminder-list-item]{
     display: flex;
 }

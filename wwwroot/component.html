@@ -133,37 +133,28 @@
                 <input type="submit" class="filter-submit" name='submit' value="انتخاب"/>
             </div>
         </form>
-        <Basis core="component.bc.calendar" run="atclient" sourceid="db.form" from="1400/06/01" to="1400/06/29" setting-object="mySetting" rkey="82540DDE-B5D1-4BC9-BBA0-14FC5206EFF6"></Basis>
+        <Basis core="component.bc.calendar" run="atclient" sourceid="db.form" from="1400/06/01" to="1400/06/29" setting-object="mySetting1" rkey="AA8E1713-D8FC-4382-AD41-E664AB043DE6"></Basis>
 
         <script>
             var mySetting = {
-
-
-
-
-
                 dateProvider: "basisCalendar",
                 displayNote: true,
                 culture: "fa",
                 lid: 1
-
-
-
-
-
             }
             var mySetting1 = {
-
-
-
-
-
                 dateProvider: "basisCalendar",
                 culture: "fa",
                 secondCulture: "en",
-                lid: 1,
-                todayButton: false
-
+                lid: 2,
+                todayButton: false,
+                dmnid : 12,
+                baseUrl: {
+                    "userid" : "https://trust-login.com/api/userid",
+                    "viewnote" :"https://api-ticketing.basiscore.com/${rkey}/viewnote",
+                    "usernotes" :"https://api-ticketing.basiscore.com/${rkey}/usernotes",
+                    "removeNote":"https://api-ticketing.basiscore.com/${rkey}/viewnote"
+                }
 
 
 

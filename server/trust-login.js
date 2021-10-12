@@ -6,8 +6,6 @@ var router = express.Router();
 //   next()
 // })
 router.post("/userid", function (req, res) {
-  console.log("profile");
-  // res.json({ "userid": '122504' });
   res.status(200).json({ "userid": '122504' })
 });
 

@@ -52,6 +52,7 @@ export class DateRange {
     this.rKey = rkey;
     this.getRKey();
     this.getUserId()
+    
    
   }
 
@@ -69,8 +70,9 @@ export class DateRange {
    public async getUserId(): Promise<void> {
     const form = new FormData();
     form.append("rkey", this.rKey);
-    form.append("dmnid", "12");
-    let userIdObj = await this.sendAsyncData(form, "/trustlogin/userid" );
+    form.append("dmnid", this.options.dmnid.toString());
+    let apiLink = this.options.baseUrl
+    let userIdObj = await this.sendAsyncData(form, apiLink["userid"] );
     console.log("obj is ", userIdObj )
     this.userId =parseInt(userIdObj.userid) 
     return null;
@@ -102,9 +104,12 @@ export class DateRange {
     form.append("ownerid", "0");
     form.append("from", `${fromDateId}`);
     form.append("to", `${toDateId}`);
+    let apiLink = this.options.baseUrl["usernotes"]
+    apiLink = apiLink.toString().replace("${rkey}" , this.rKey)
+    console.log("apilink    " , apiLink)
     const data = await this.sendAsyncData(
       form,
-      `/ticketing/${this.rKey}/usernotes`
+      apiLink
     );
     this.note = [];
     data.map((x: INote) =>
