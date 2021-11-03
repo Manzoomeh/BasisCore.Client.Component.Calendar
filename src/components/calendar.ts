@@ -73,8 +73,7 @@ export class DateRange {
     form.append("dmnid", this.options.dmnid.toString());
     let apiLink = this.options.baseUrl
     let userIdObj = await this.sendAsyncData(form, apiLink["userid"] );
-    console.log("obj is ", userIdObj )
-    this.userId =parseInt(userIdObj.userid) 
+    this.userId =parseInt(userIdObj[0].userid) 
     return null;
   }
   public async refreshNotesAsync(): Promise<void> {
@@ -106,7 +105,6 @@ export class DateRange {
     form.append("to", `${toDateId}`);
     let apiLink = this.options.baseUrl["usernotes"]
     apiLink = apiLink.toString().replace("${rkey}" , this.rKey)
-    console.log("apilink    " , apiLink)
     const data = await this.sendAsyncData(
       form,
       apiLink
