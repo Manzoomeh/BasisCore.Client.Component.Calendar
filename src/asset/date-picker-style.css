@@ -259,13 +259,13 @@ z-index: 9;
 
 [data-datepicker-today] span{background: #3f51b5; color: #fff;}
 [data-datepicker-year-number]{margin: 0 5px; display: inline-block; }
-[data-datepicker-yearnumber-select]{cursor: pointer;}
-[data-datepicker-years-list]{padding: 0 10px; display: flex; flex-wrap: wrap; display: flex; margin: 0; }
-[data-datepicker-years-list] li{border-bottom: 1px solid #d2d2d2;border-left: 1px solid #d2d2d2;
+[data-datepicker-yearnumber-select],[data-datepicker-month-select]{cursor: pointer;}
+[data-datepicker-years-list],[data-datepicker-month-list]{padding: 0 10px; display: flex; flex-wrap: wrap; display: flex; margin: 0; }
+[data-datepicker-years-list] li,[data-datepicker-month-list] li{border-bottom: 1px solid #d2d2d2;border-left: 1px solid #d2d2d2;
 width: 63px;height: 30px;
 display: flex;
 justify-content: center;
 align-items: center;cursor: pointer;}
 [data-datepicker-body-years-list]{height: 250px; overflow: hidden; overflow-y: scroll;display: flex; justify-content: center;}
-[data-datepicker-years-list] li:nth-child(4n){border-left: none;}
+[data-datepicker-years-list] li:nth-child(4n), [data-datepicker-month-list] li:nth-child(4n){border-left: none;}
 [data-bc-close-year-list]{float: left;font: 14px;cursor: pointer;}

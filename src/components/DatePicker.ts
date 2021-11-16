@@ -1,6 +1,6 @@
 import "../asset/date-picker-style.css";
 import { Month } from "./Month/Month";
-import { DayValue, MonthValue, YearValue } from "./type-alias";
+import { DayValue, MonthNumber, MonthValue, YearValue } from "./type-alias";
 import { IDatePickerOptions } from "./Interface/Interface";
 import { IDateUtil } from "./IDateUtil/IDateUtil";
 import { BasisCoreDateUtil } from "./BasisCoreDateUtil/BasisCoreDateUtil";
@@ -25,7 +25,8 @@ export class DatePicker {
       lid: 1,
       todayButton: false,
       selectDate: false,
-      yearsList : false
+      yearsList : false,
+      monthList : false
     };
 
   public constructor(
@@ -96,6 +97,12 @@ export class DatePicker {
         this.showYears(yearNumber);
       });
     }
+    if (this.options.monthList == true) {
+      monthName.setAttribute("data-datepicker-month-select" , "")
+      monthName.addEventListener("click", (e) => {
+        this.showMonth(monthName);
+      });
+    }
     if (this.monthValues.length == 1) {
       nextButton.addEventListener("click", (e) => {
         this.nextMonth();
@@ -133,7 +140,7 @@ export class DatePicker {
    return this.months[this.activeIndex]
 
   }
-  protected showYears(yearNumberWrapper : HTMLElement){
+  protected showYears(yearNumberWrapper : HTMLElement): void{
     const lastOldData : string = this.bodyElement.innerHTML
     this.bodyElement.innerHTML = ""
     this.bodyElement.setAttribute("data-datepicker-body-years-list","")
@@ -152,13 +159,12 @@ export class DatePicker {
         yearNumberWrapper.textContent = yearListLi.getAttribute("year-number")
         const year = yearListLi.getAttribute("year-number")
         const currentMonth = this.activeMonth()
-        console.log(currentMonth)   
-        let m : MonthValue =  {
+        let selectedYear : MonthValue =  {
           year : parseInt(year)  ,
           month : currentMonth.value.month
         }  
           
-        this.months[this.activeIndex] = new Month(this, m);
+        this.months[this.activeIndex] = new Month(this, selectedYear);
         this.renderAsync();
         this.bodyElement.removeAttribute("data-datepicker-body-years-list") 
       });
@@ -168,10 +174,54 @@ export class DatePicker {
       this.bodyElement.removeAttribute("data-datepicker-body-years-list") 
       yearList.remove()
       this.bodyElement.innerHTML = lastOldData
+      closeBtnWrapper.remove()
     })
     this.bodyElement.appendChild(yearList)
   }
-
+  protected showMonth (monthWrapper : HTMLElement) : void{
+    const lastOldData : string = this.bodyElement.innerHTML
+    this.bodyElement.innerHTML = ""
+    this.bodyElement.setAttribute("data-datepicker-body-years-list","")
+    const closeBtnWrapper = document.createElement("span")
+    closeBtnWrapper.setAttribute("data-bc-close-year-list" , "")
+    closeBtnWrapper.textContent= 'x'
+    this.headerElement.querySelector("[data-datepicker-title]").appendChild(closeBtnWrapper)
+    const monthList = document.createElement("ul")
+    monthList.setAttribute("data-datepicker-month-list" , "")
+    for(var i = 1 ; i <=12 ; i++){
+      const currentMonth = this.activeMonth()
+      const currentMonthInLoop : MonthValue = {
+        year : currentMonth.value.year,
+        month : i as MonthNumber
+      }
+      const t = this.dateUtil.getMonthName(currentMonthInLoop , this.options.culture , this.options.lid)
+      const monthListLi = document.createElement("li")
+      monthListLi.textContent = t
+      monthListLi.setAttribute("month-number" , i.toString())
+      monthListLi.setAttribute("month-name" , t)
+      monthListLi.addEventListener("click", e => {
+        monthWrapper.textContent=""
+        monthWrapper.textContent = monthListLi.getAttribute("month-name")
+        const month = monthListLi.getAttribute("month-number")
+        const currentMonth = this.activeMonth()
+        let selectedMonth : MonthValue =  {
+          year : currentMonth.value.year  ,
+          month : parseInt(month) as MonthNumber
+        }         
+        this.months[this.activeIndex] = new Month(this, selectedMonth);
+        this.renderAsync();
+        this.bodyElement.removeAttribute("data-datepicker-body-years-list") 
+      });
+      monthList.appendChild(monthListLi)
+    }
+    closeBtnWrapper.addEventListener("click", e => {
+      this.bodyElement.removeAttribute("data-datepicker-body-years-list") 
+      monthList.remove()
+      this.bodyElement.innerHTML = lastOldData
+      closeBtnWrapper.remove()
+    })
+    this.bodyElement.appendChild(monthList)
+  }
   protected generateDaysName(): Node {
     const daysName = this.dateUtil.getDayShortNames(this.options.lid);
     const weekNameWrapper: Element = document.createElement("div");
