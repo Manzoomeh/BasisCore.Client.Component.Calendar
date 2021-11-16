@@ -25,6 +25,8 @@
                 width: 200px;
                 display: flex;
                 border-bottom: 1px solid #000;
+                position: absolute;
+                right: 0;
             }
             .date-picker-wrapper:hover {
                 border-bottom: 2px solid #000;
@@ -89,23 +91,13 @@
 
 
         <script>
-
             var mySetting = {
-
-
-
-
-
                 dateProvider: "basisCalendar",
                 culture: "fa",
                 secondCulture: "en",
                 lid: 1,
-                todayButton: false
-
-
-
-
-
+                todayButton: false,
+                yearsList : true
             }
         </script>
     </body>

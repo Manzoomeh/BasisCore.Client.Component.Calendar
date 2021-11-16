@@ -38,4 +38,5 @@ export interface IDatePickerOptions {
   lid?: Lid;
   todayButton?: boolean;
   selectDate?: boolean;
+  yearsList? : boolean ; 
 }
