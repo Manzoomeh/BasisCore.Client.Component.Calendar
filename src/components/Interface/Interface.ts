@@ -40,4 +40,5 @@ export interface IDatePickerOptions {
   selectDate?: boolean;
   yearsList? : boolean ; 
   monthList? : boolean;
+  rangeDates? : boolean;
 }

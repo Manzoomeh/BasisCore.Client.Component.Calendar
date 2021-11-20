@@ -269,3 +269,12 @@ align-items: center;cursor: pointer;}
 [data-datepicker-body-years-list]{height: 250px; overflow: hidden; overflow-y: scroll;display: flex; justify-content: center;}
 [data-datepicker-years-list] li:nth-child(4n), [data-datepicker-month-list] li:nth-child(4n){border-left: none;}
 [data-bc-close-year-list]{float: left;font: 14px;cursor: pointer;}
+[data-disabled]{color: #ccc;cursor :default;pointer-events: none}
+[data-disabled]:hover span {
+    background-color: inherit !important;
+    color: inherit !important;
+}
+[data-datepicker-buttons]{
+    display: flex;
+    direction: ltr;
+}

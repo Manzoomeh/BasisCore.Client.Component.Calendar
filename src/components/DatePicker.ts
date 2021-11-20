@@ -6,17 +6,18 @@ import { IDateUtil } from "./IDateUtil/IDateUtil";
 import { BasisCoreDateUtil } from "./BasisCoreDateUtil/BasisCoreDateUtil";
 import { PersianDateUtil } from "./PersianDateUtil/PersianDateUtil";
 import { UiDatePicker } from "./UiDatePicker/UiDatePicker";
-import { library } from "webpack";
+import { Day } from "./Day/Day";
 export class DatePicker {
   public readonly dateUtil: IDateUtil;
   public readonly months: Array<Month> = new Array<Month>();
   public readonly options: IDatePickerOptions;
-  public wrapper: Element;
-  public datePickerInput: HTMLInputElement;
-  public activeIndex: number;
   private readonly monthValues: MonthValue[];
   private bodyElement : HTMLElement
   private headerElement : HTMLElement
+  public wrapper: Element;
+  public datePickerInput: HTMLInputElement;
+  public activeIndex: number;
+  public datesArray : DayValue[] = [];
   private static readonly defaultCalenderOptions: Partial<IDatePickerOptions> =
     {
       dateProvider: "basisCalendar",
@@ -26,7 +27,8 @@ export class DatePicker {
       todayButton: false,
       selectDate: false,
       yearsList : false,
-      monthList : false
+      monthList : false,
+      rangeDates : false
     };
 
   public constructor(
@@ -84,9 +86,11 @@ export class DatePicker {
     const prevButton = document.createElement("button");
     const yearNumber = document.createElement("span")
     const monthName = document.createElement("span")
+    const headerButtons = document.createElement("div")
     this.headerElement.setAttribute("data-datepicker-header", "");    
     monthNameElement.setAttribute("data-datepicker-title", "");
     yearNumber.setAttribute("data-datepicker-year-number" , "")
+    headerButtons.setAttribute("data-datepicker-buttons" , "")
     yearNumber.textContent= this.months[this.activeIndex].value.year + ""
     monthName.textContent = this.months[this.activeIndex].monthName 
     monthNameElement.appendChild(monthName)
@@ -131,14 +135,19 @@ export class DatePicker {
       });
     }
     this.headerElement.appendChild(monthNameElement);
-    this.headerElement.appendChild(prevButton);
-    this.headerElement.appendChild(nextButton);
-
+    headerButtons.appendChild(nextButton);
+    headerButtons.appendChild(prevButton);    
+    if(this.options.rangeDates == true){
+      const submitDate = document.createElement("button")
+      submitDate.textContent="ثبت"
+      submitDate.setAttribute("data-datepicker-submit", "");
+      headerButtons.appendChild(submitDate);
+    }
+    this.headerElement.appendChild(headerButtons)
     return this.headerElement;
   }
   protected activeMonth(): Month{
    return this.months[this.activeIndex]
-
   }
   protected showYears(yearNumberWrapper : HTMLElement): void{
     const lastOldData : string = this.bodyElement.innerHTML
@@ -237,8 +246,7 @@ export class DatePicker {
     return weekNameWrapper;
   }
   protected createMountBody(): Node {
-    const monthsContainer = document.createElement("div");
-    
+    const monthsContainer = document.createElement("div");    
     const mainElement = document.createElement("div");
     this.bodyElement.setAttribute("data-datepicker-body", "");
     mainElement.setAttribute("data-datepicker-days", "");
@@ -251,8 +259,15 @@ export class DatePicker {
       mainElement.appendChild(dayElement);
     }
     this.months[this.activeIndex].days.map((x) => {
-      const dayElement = new UiDatePicker(this, x).generateDaysUi();
-      mainElement.appendChild(dayElement);
+      if(this.options.rangeDates == false){
+        new UiDatePicker(this, x ).generateDaysUi(mainElement);
+      }
+      else{
+        new UiDatePicker(this, x ).generateDaysUiWithDateRange(mainElement);
+       
+
+      }
+      
     });
 
     for (var j = 0; j < 6 - lastDayInMonth; j++) {

@@ -133,7 +133,8 @@
                 <input type="submit" class="filter-submit" name='submit' value="انتخاب"/>
             </div>
         </form>
-        <Basis core="component.bc.calendar" run="atclient" sourceid="db.form" from="1400/06/01" to="1400/06/29" setting-object="mySetting1" rkey="A6FAE3F4-FCE4-43E1-BE1A-CC022C71E989"></Basis>
+        
+        <Basis core="component.bc.calendar" run="atclient" sourceid="db.form" from="" to="" setting-object="mySetting1" rkey="FA0B516B-BDAF-446E-B884-9BAD5F53852D"></Basis>
 
         <script>
             var mySetting = {
@@ -153,12 +154,10 @@
                     "userid" : "https://trust-login.com/api/userid",
                     "viewnote" :"https://api-ticketing.basiscore.com/${rkey}/viewnote",
                     "usernotes" :"https://api-ticketing.basiscore.com/${rkey}/usernotes",
-                    "removeNote":"https://api-ticketing.basiscore.com/${rkey}/viewnote"
+                    "removenote":"https://api-ticketing.basiscore.com/${rkey}/removeNote",
+                    "addnote":"https://api-ticketing.basiscore.com/${rkey}/addnote",
+                    "reminder" : "http://api-ticketing.basiscore.com/${rkey}/notereminder"
                 }
-
-
-
-
             }
         </script>
     </body>

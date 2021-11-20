@@ -74,7 +74,7 @@ p{
 
 [data-id1]:hover:after {
     content: "";
-    background: url("new.svg");
+    background: url("new.png");
     background-size: cover;
     position: absolute;
     left: 5px;
@@ -221,6 +221,7 @@ input[type="text"], input[type="password"], textarea, select {
     background: #fff;
     border-radius: 20px;
     padding: 15px;
+    z-index: 999;
 }
 
 [data-calendar-form-row] {
@@ -396,7 +397,7 @@ input[type="text"], input[type="password"], textarea, select {
     height: 35px;
     padding: 0 10px;
     font-size: 12px;
-    text-align: left;}
+    text-align: right;}
 [data-calendar-reminder-select],[data-calendar-reminder-action]{
     border: 1px solid #dce3ed;
     background: #fbfdff;
