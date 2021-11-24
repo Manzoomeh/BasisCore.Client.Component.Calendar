@@ -34,7 +34,7 @@ export class DateRange {
     lid: 1,
   };
 
-  public constructor(
+  public  constructor(
     from: DayValue,
     to: DayValue,
     options?: ICalenderOptions,
@@ -42,21 +42,20 @@ export class DateRange {
   ) {
     this.activeIndex = 0;
     this.options = { ...DateRange.defaultCalenderOptions, ...(options as any) };
+    this.rKey = rkey;
+    
+    this.getUserId()
     this.dateUtil =
       this.options.dateProvider == "basisCalendar"
         ? new BasisCoreDateUtil()
         : new PersianDateUtil();
+    
     this.note = new Array<INote>();
     this.monthValues = this.dateUtil.getMonthValueList(from, to);
-    this.monthValues.map((x) => this.months.push(new Month(this, x)));
-    this.rKey = rkey;
-    this.getRKey();
-    this.getUserId()
     
-   
+    this.monthValues.map((x) => this.months.push(new Month(this, x)));
   }
-
-  public getRKey(): string {
+  public  getRKey(): string {
     if (!this.rKey) {
       let cookie = {};
       document.cookie.split(";").forEach(function (el) {
@@ -68,11 +67,12 @@ export class DateRange {
     return this.rKey;
   }
    public async getUserId(): Promise<void> {
+    this.getRKey();
     const form = new FormData();
     form.append("rkey", this.rKey);
     form.append("dmnid", this.options.dmnid.toString());
     let apiLink = this.options.baseUrl
-    let userIdObj = await this.sendAsyncData(form, apiLink["userid"] );
+    let userIdObj = await this.sendAsyncData(form, apiLink["userid"] );    
     this.userId =parseInt(userIdObj[0].userid) 
     return null;
   }
@@ -99,6 +99,7 @@ export class DateRange {
     const fromDateId = this.dateUtil.getBasisDayId(from);
     const toDateId = this.dateUtil.getBasisDayId(to);
     const form = new FormData();
+    const useridd  =await this.getUserId()
     form.append("userid", this.userId.toString());
     form.append("ownerid", "0");
     form.append("from", `${fromDateId}`);

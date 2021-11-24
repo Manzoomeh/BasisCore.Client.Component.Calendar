@@ -114,23 +114,9 @@
                         </div>
 
                     </div>
-                </div>
-                <div class="to">
-                    <div class="date-picker-wrapper">
-                        <button>
-                            <svg viewbox="0 0 24 24" width="24px" height="24px" fill="currentColor" focusable="false" class="mat-datepicker-toggle-default-icon ng-star-inserted">
-                                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"></path>
-                            </svg>
-                        </button>
-                        <div class="date-picker-input-wrapper">
-                            <span>تا تاریخ</span>
-                            <basis core="component.bc.datepicker" run="atclient" name="to" setting-object="mySetting"></basis>
-                        </div>
+                </div>             
 
-                    </div>
-                </div>
-
-                <input type="submit" class="filter-submit" name='submit' value="انتخاب"/>
+                <button class="filter-submit"  onclick="setDates(this,event)" >انتخاب</button>
             </div>
         </form>
         
@@ -141,8 +127,18 @@
                 dateProvider: "basisCalendar",
                 displayNote: true,
                 culture: "fa",
-                lid: 1
+                lid: 1,
+                yearsList : true,
+                monthList:true,
+                rangeDates: true
             }
+            function setDates(el , event){
+		event.preventDefault()
+		const input = document.querySelectorAll(['[class="date-picker-input"]'])[0]
+		const fromDate = input.getAttribute("data-datepicker-sstring");
+		const toDate = input.getAttribute("data-datepicker-to-sstring");
+		$bc.setSource("db.form" , [{"from": fromDate, "to" : toDate }] )
+	}
             var mySetting1 = {
                 dateProvider: "basisCalendar",
                 culture: "fa",

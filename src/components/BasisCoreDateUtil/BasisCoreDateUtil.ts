@@ -120,12 +120,34 @@ export class BasisCoreDateUtil implements IDateUtil {
   }
   getMonthValueList(from: DayValue, to: DayValue): MonthValue[] {
     let months: MonthValue[] = [];
-    let currentYear = from.year;
-    for (var i = from.month; i <= to.month; i++) {
-      months.push({ year: from.year, month: i });
-      if (i == 12) {
-        currentYear = currentYear + 1;
+    let startYear = false
+    for(var j = from.year ; j <= to.year ; j++){
+      if(startYear == true){
+        from.month = 1
       }
+      if(from.year == to.year){
+        for (var i = from.month; i <= to.month; i++) {
+          months.push({ year: j, month: i });
+        }
+      }
+      else if(from.year < to.year && j != to.year){
+        for (var i = from.month; i <= 12; i++) {
+          months.push({ year: j, month: i });
+          if (i == 12) {
+            startYear = true
+            break
+          }
+        }
+      }
+      else if(from.year < to.year && j == to.year){        
+        for (var i = from.month; i <= to.month; i++) {
+          months.push({ year: j, month: i });
+          if (i == 12) {
+            startYear = true
+            break
+          }
+        }
+      }      
     }
     return months;
   }

@@ -68,7 +68,15 @@ module.exports = {
         use: ["style-loader","css-loader"],
       },
       {
-        test: /\.(png|html)$/,
+        test: /\.png$/i,
+        type: "asset/inline",
+      },
+      {
+        test: /\.svg$/i,
+        type: "asset/inline",
+      },
+      {
+        test: /\.html$/i,
         type: "asset/source",
       }
     ],
