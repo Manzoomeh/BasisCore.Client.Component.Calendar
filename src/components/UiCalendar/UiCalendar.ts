@@ -5,6 +5,7 @@ import { INote } from "../Interface/Interface";
 import layout from  "../../asset/reminderForm.html"
 import listLayout from "../../asset/reminderList.html"
 import { node } from "webpack";
+import IWidget from "../../basiscore/BasisPanel/IWidget";
 export class UiCalendar {
   private readonly day: Day;
   readonly range: DateRange;
@@ -12,7 +13,11 @@ export class UiCalendar {
   constructor(owner: DateRange, day: Day) {
     this.day = day;
     this.range = owner;
-    this.modal = new Modal();
+    this.modal = new Modal(owner);
+    if(this.range.Owner && this.range.Owner.dc){        
+      const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
+       widgetName.title= this.range.options.labels["mainTitle"]       
+  }    
   }
   generateDaysUi(): Node {
     let dayElement = document.createElement("div");
@@ -39,6 +44,10 @@ export class UiCalendar {
       dayElement.setAttribute("data-today", "");
     }
     dayElement.addEventListener("click", (e) => {
+      if(this.range.Owner && this.range.Owner.dc){        
+          const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
+           widgetName.title= this.range.options.labels["list"]       
+      }     
       let modalInside = this.generateNoteList();
       this.modal.openModal(modalInside);
     });
@@ -94,9 +103,10 @@ export class UiCalendar {
       formData.append("note", titleInput.value ? titleInput.value : "");
       formData.append("description", descInput.value ? descInput.value : "");
       formData.append("color", colorInput.value ? colorInput.value : "");
+      let apiLink = this.range.options.baseUrl
       this.range.sendAsyncData(
         formData,
-        `/ticketing/${this.range.rKey}/addnote`
+        apiLink["addnote"]
       );
 
       if (this.range.options.displayNote) {
@@ -196,6 +206,10 @@ export class UiCalendar {
     newBtn.setAttribute("data-calendar-new-btn", "");
     newBtn.textContent = `ثبت یادداشت جدید`;
     newBtn.addEventListener("click", (e) => {
+      if(this.range.Owner && this.range.Owner.dc){        
+        const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
+         widgetName.title= this.range.options.labels["new"]       
+    }
       boxElement.innerHTML = "";
       boxElement.appendChild(this.generateNoteForm());
       boxElement.classList.add("calendar-animated");
@@ -254,6 +268,10 @@ export class UiCalendar {
         boxElement.appendChild(this.generateReminderForm(x));
       });
       editBtn.addEventListener("click", (e) => {
+        if(this.range.Owner && this.range.Owner.dc){        
+          const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
+           widgetName.title= this.range.options.labels["edit"]       
+      }
         boxElement.innerHTML = "";
         boxElement.classList.add("calendar-animated");
         boxElement.setAttribute("data-calendar-box-animated", "");

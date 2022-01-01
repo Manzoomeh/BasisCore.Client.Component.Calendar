@@ -74,7 +74,7 @@ export default class BcComponent implements IComponentManager {
       month: parseInt(toParts[1]) as MonthNumber,
       day: parseInt(toParts[2]) as DayNumber,
     };
-    this.dateRange = new DateRange(this.from, this.to, obj, rKey);
+    this.dateRange = new DateRange(this.from, this.to, obj, rKey,this.owner);
     this.dateRange.createUIAsync(this.container);
   }
 }

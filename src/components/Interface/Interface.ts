@@ -28,7 +28,8 @@ export interface ICalenderOptions {
   secondCulture?: Culture;
   lid?: Lid;
   dmnid? :number;
-  baseUrl? : object
+  baseUrl? : object,
+  labels? : object
   
 }
 export interface IDatePickerOptions {

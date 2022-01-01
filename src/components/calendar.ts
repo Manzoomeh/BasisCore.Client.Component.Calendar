@@ -16,6 +16,7 @@ import { IDateUtil } from "./IDateUtil/IDateUtil";
 import { BasisCoreDateUtil } from "./BasisCoreDateUtil/BasisCoreDateUtil";
 import { PersianDateUtil } from "./PersianDateUtil/PersianDateUtil";
 import { UiCalendar } from "./UiCalendar/UiCalendar";
+import IUserDefineComponent from "../basiscore/IUserDefineComponent";
 export class DateRange {
   public readonly dateUtil: IDateUtil;
   public readonly months: Array<Month> = new Array<Month>();
@@ -25,7 +26,8 @@ export class DateRange {
   public rKey: string;
   public wrapper: Element;
   public activeIndex: number;
-  public userId : number =0
+  public userId : number =0;
+  public readonly Owner?:IUserDefineComponent;
   private static readonly defaultCalenderOptions: Partial<ICalenderOptions> = {
     dateProvider: "basisCalendar",
     displayNote: true,
@@ -38,12 +40,13 @@ export class DateRange {
     from: DayValue,
     to: DayValue,
     options?: ICalenderOptions,
-    rkey?: string
+    rkey?: string,
+    owner?:IUserDefineComponent
   ) {
     this.activeIndex = 0;
     this.options = { ...DateRange.defaultCalenderOptions, ...(options as any) };
     this.rKey = rkey;
-    
+    this.Owner = owner;
     this.getUserId()
     this.dateUtil =
       this.options.dateProvider == "basisCalendar"
