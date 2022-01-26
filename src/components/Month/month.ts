@@ -22,34 +22,42 @@ export class Month {
   public constructor(owner: DateRange | DatePicker, value: MonthValue) {
     this.range = owner;
     this.value = value;
+   
     const firstDay: DayValue = {
       year: this.value.year,
       month: this.value.month,
       day: 1,
     };
+   
     const year: YearValue = { year: this.value.year };
     this.monthName = this.range.dateUtil.getMonthName(
       this.value,
       this.range.options.culture,
       this.range.options.lid
     );
+   
     this.dayInMonth = this.range.dateUtil.getDaysNumber(
       this.value,
       this.range.options.culture
     );
+  
     this.firstDayInMonth = this.range.dateUtil.getWeekday(
       firstDay,
       this.range.options.culture
-    );
+    )
+
+    
     this.currentDate = this.range.dateUtil.getCurrentDate();
     if (this.firstDayInMonth == 7) {
       this.firstDayInMonth = 0;
     }
+    
     let lastDay: DayValue = {
       year: this.value.year,
       month: this.value.month,
       day: this.dayInMonth,
     };
+    
     this.lastDayInMonth = this.range.dateUtil.getWeekday(
       lastDay,
       this.range.options.culture

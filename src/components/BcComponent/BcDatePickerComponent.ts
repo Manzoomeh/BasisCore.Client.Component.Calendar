@@ -4,6 +4,8 @@ import ISource from "../../basiscore/ISource";
 import IUserDefineComponent from "../../basiscore/IUserDefineComponent";
 import { SourceId } from "../../basiscore/type-alias";
 import { DayNumber, DayValue, MonthNumber } from "../type-alias";
+import { IDatePickerOptions } from "../Interface/Interface";
+import { visitFunctionBody } from "typescript";
 
 export default class BcComponent implements IComponentManager {
   readonly owner: IUserDefineComponent;
@@ -12,7 +14,7 @@ export default class BcComponent implements IComponentManager {
   private to: DayValue;
   private container: HTMLElement;
   private sourceId: SourceId;
-  private options: object;
+  private options : IDatePickerOptions;
   constructor(owner: IUserDefineComponent) {
     this.owner = owner;
   }
@@ -31,15 +33,16 @@ export default class BcComponent implements IComponentManager {
     const initFrom = await this.owner.getAttributeValueAsync("from");
     const initTo = await this.owner.getAttributeValueAsync("to");
     if (!initFrom || !initTo) {
-      const from = new Date()
-        .toLocaleDateString("fa-IR")
-        .replace(/([۰-۹])/g, (token) =>
-          String.fromCharCode(token.charCodeAt(0) - 1728)
-        );
-      this.loadCalendar(from, from, this.options);
+      if(this.options.culture == "fa"){
+         this.loadDefaultFaCalendar()
+      }
+      else if(this.options.culture == "en"){
+         this.loadDefaultEnCalendar()
       
+      }
     } else {
-      this.loadCalendar(initFrom, initTo, this.options);
+       this.loadCalendar(initFrom, initTo, this.options);
+     
     }
   }
   public async runAsync(source?: ISource): Promise<boolean> {
@@ -58,7 +61,26 @@ export default class BcComponent implements IComponentManager {
       month: parseInt(toParts[1]) as MonthNumber,
       day: parseInt(toParts[2]) as DayNumber,
     };
+
     this.dateRange = new DatePicker(this.from, this.to, obj);
     this.dateRange.createUIAsync(this.container);
   }
+  loadDefaultFaCalendar(){
+    const from = new Date()
+        .toLocaleDateString("fa-IR")
+        .replace(/([۰-۹])/g, (token) =>
+          String.fromCharCode(token.charCodeAt(0) - 1728)
+        );
+        this.loadCalendar(from, from, this.options);
+  }
+  loadDefaultEnCalendar(){
+    var date = new Date();
+    var curr_date = date.getDate();
+    var curr_month = date.getMonth() + 1; //Months are zero based
+    var curr_year = date.getFullYear();
+    const from : string = curr_year + "/" + curr_month + "/" + curr_date
+    this.loadCalendar(from, from, this.options);
+  }
+
+
 }

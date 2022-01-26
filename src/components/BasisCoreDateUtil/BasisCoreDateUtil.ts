@@ -11,6 +11,37 @@ import {
 } from "../type-alias";
 export class BasisCoreDateUtil implements IDateUtil {
   json;
+  readonly sMonthsNameCultureEnLangFa: string[] = [
+    "",
+    "ژانویه",
+    "فوریه",
+    "مارس",
+    "آپریل",
+    "می",
+    "ژوئن",
+    "جولای",
+    "آگوست",
+    "سپتامبر",
+    "اکتبر",
+    "نوامبر",
+    "دسامبر",
+   
+  ];
+  readonly sMonthsNameCultureEn: string[] = [
+    "",    
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ];
   readonly sMonthsNameFa: string[] = [
     "",
     "فروردین",
@@ -52,7 +83,7 @@ export class BasisCoreDateUtil implements IDateUtil {
     "شنبه",
   ];
   readonly weeksEnName: string[] = [
-    "",
+    "",    
     "Sun",
     "Mon",
     "Tue",
@@ -61,10 +92,21 @@ export class BasisCoreDateUtil implements IDateUtil {
     "Fri",
     "Sat",
   ];
+  readonly weeksNameEn:string[]= [
+    "",    
+    "Sun",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat"
+  ]
   constructor() {
     this.json = require("./tdate.json");
   }
   getObj(year: number, month: MonthNumber, day?: DayNumber) {
+    
     if (year > 1300 && year < 1500 && day) {
       return this.json.find((item) => {
         return item.syear == year && item.smonth == month && item.sdate == day;
@@ -74,19 +116,37 @@ export class BasisCoreDateUtil implements IDateUtil {
         return element.syear == year && element.smonth == month;
       });
       return filtered;
-    } else {
+    } else if (year > 1800 && year < 3000 && day) {
       return this.json.find((item) => {
         return item.nyear == year && item.mmonth == month && item.mdate == day;
       });
     }
+    else if (year > 1800 && year < 3000 && !day) {
+      var filtered = this.json.filter(function (element) {
+        return element.nyear == year && element.mmonth == month;
+      });
+      return filtered;
+    } 
   }
   getMonthName(month: MonthValue, culture: Culture, lid: Lid): string {
-    let sMonth = this.getObj(month.year, month.month, 1).smonth;
-    if (lid == 1) {
-      return this.sMonthsNameFa[sMonth];
-    } else if (lid == 2) {
-      return this.sMonthsNameEn[sMonth];
+   
+    if(culture == "fa"){
+      let sMonth = this.getObj(month.year, month.month, 1).smonth;
+      if (lid == 1) {
+        return this.sMonthsNameFa[sMonth];
+      } else if (lid == 2) {
+        return this.sMonthsNameEn[sMonth];
+      }
     }
+    if(culture == "en"){
+      let sMonth = this.getObj(month.year, month.month, 1).mmonth;
+      if (lid == 1) {
+        return this.sMonthsNameCultureEnLangFa[sMonth];
+      } else if (lid == 2) {
+        return this.sMonthsNameCultureEn[sMonth];
+      }
+    }
+    
   }
   getDaysNumber(month: MonthValue, culture: Culture): DayNumber {
     let sMonth = this.getObj(month.year, month.month).length;
@@ -94,7 +154,10 @@ export class BasisCoreDateUtil implements IDateUtil {
   }
   getDayName(day: DayValue, culture: Culture, lid: Lid): string {
     let weekday = this.getObj(day.year, day.month, day.day).weekday;
-    if (lid == 1) {
+    if(culture == "en"){
+      return this.weeksNameEn[weekday];
+    }
+    else if (lid == 1) {
       return this.weeksName[weekday];
     } else {
       return this.weeksEnName[weekday];
@@ -106,6 +169,8 @@ export class BasisCoreDateUtil implements IDateUtil {
 
   getWeekday(day: DayValue, culture: Culture): number {
     return this.getObj(day.year, day.month, day.day).weekday;
+    
+    
   }
   getIsHoliday(day: DayValue, culture: Culture): boolean {
     let weekday = this.getObj(day.year, day.month, day.day).weekday;
@@ -180,11 +245,17 @@ export class BasisCoreDateUtil implements IDateUtil {
         : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     return weekName;
   }
-  getDayShortNames(lid: Lid): string[] {
-    let weekName: string[] =
-      lid == 1
+  getDayShortNames(lid: Lid , culture : Culture): string[] {
+    
+      if(culture == "fa"){
+        var weekName: string[] = lid == 1
         ? ["ش", "ی", "د", "س", "چ", "پ", "ج"]
         : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      }
+      else{
+        var weekName: string[]= ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      }
+      
     return weekName;
   }
   nextMonth(month: Month, culture: Culture): MonthValue {
@@ -225,5 +296,23 @@ export class BasisCoreDateUtil implements IDateUtil {
       return true;
     }
     return false;
+  }
+  convertToGregorian(day : MonthValue ) : DayValue{
+    const basisDate = this.getObj(day.year, day.month, 1);
+    var gregorianDate: DayValue = {
+      year: basisDate.nyear,
+      month: basisDate.mmonth,
+      day: basisDate.mdate,
+    };
+    return gregorianDate
+  }
+  convertToJalali(day : MonthValue ) : DayValue{
+    const basisDate = this.getObj(day.year, day.month, 1);
+    var jalaliDate: DayValue = {
+      year: basisDate.syear,
+      month: basisDate.smonth,
+      day: basisDate.sdate,
+    };
+    return jalaliDate;
   }
 }

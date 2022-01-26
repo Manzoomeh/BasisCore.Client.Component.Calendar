@@ -93,7 +93,7 @@ export class PersianDateUtil implements IDateUtil {
         : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     return weekName;
   }
-  getDayShortNames(lid: Lid): string[] {
+  getDayShortNames(lid: Lid , culture:Culture): string[] {
     let weekName: string[] =
       lid == 1
         ? ["ش", "ی", "د", "س", "چ", "پ", "ج"]
@@ -108,5 +108,11 @@ export class PersianDateUtil implements IDateUtil {
   }
   getIsToday(day: DayValue): boolean {
     return true;
+  }
+  convertToGregorian(day : MonthValue ) : DayValue{
+    return null
+  }
+  convertToJalali(day : MonthValue ) : DayValue{
+    return null
   }
 }

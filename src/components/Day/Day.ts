@@ -35,5 +35,6 @@ export class Day {
       this.month.range.options.culture,
       this.month.range.options.lid
     );
+ 
   }
 }

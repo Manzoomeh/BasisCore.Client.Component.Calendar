@@ -9,9 +9,9 @@ import { UiDatePicker } from "./UiDatePicker/UiDatePicker";
 import { Day } from "./Day/Day";
 export class DatePicker {
   public readonly dateUtil: IDateUtil;
-  public readonly months: Array<Month> = new Array<Month>();
+  public  months: Array<Month> = new Array<Month>();
   public readonly options: IDatePickerOptions;
-  private readonly monthValues: MonthValue[];
+  private  monthValues: MonthValue[];
   private bodyElement : HTMLElement
   private headerElement : HTMLElement
   public wrapper: Element;
@@ -28,7 +28,8 @@ export class DatePicker {
       selectDate: false,
       yearsList : false,
       monthList : false,
-      rangeDates : false
+      rangeDates : false,
+      switchType : false
     };
 
   public constructor(
@@ -136,13 +137,28 @@ export class DatePicker {
     }
     this.headerElement.appendChild(monthNameElement);
     headerButtons.appendChild(nextButton);
-    headerButtons.appendChild(prevButton);    
-    if(this.options.rangeDates == true){
-      const submitDate = document.createElement("button")
-      submitDate.textContent="ثبت"
-      submitDate.setAttribute("data-datepicker-submit", "");
-      headerButtons.appendChild(submitDate);
+    headerButtons.appendChild(prevButton); 
+    if(this.options.switchType){
+      const changeTypeButton = document.createElement("div")
+      changeTypeButton.textContent= (this.options.culture == "en" ? "شمسی" : "میلادی")
+      changeTypeButton.addEventListener("click" , e =>{
+        this.goToday()
+        if(this.options.culture == "en"){
+          var convertDate :DayValue= this.dateUtil.convertToJalali(this.months[this.activeIndex].value)   
+        }
+        else{
+          var convertDate :DayValue=  this.dateUtil.convertToGregorian(this.months[this.activeIndex].value)
+        }
+        this.options.lid=(this.options.culture == "en" ? 1: 2)
+        this.options.culture = (this.options.culture == "en" ? "fa" : "en") 
+        this.monthValues = this.dateUtil.getMonthValueList(convertDate, convertDate);
+        this.months = []
+        this.monthValues.map((x) => this.months.push(new Month(this, x)));
+        this.renderAsync()
+      })
+     this.headerElement.appendChild(changeTypeButton)
     }
+    
     this.headerElement.appendChild(headerButtons)
     return this.headerElement;
   }
@@ -232,9 +248,12 @@ export class DatePicker {
     this.bodyElement.appendChild(monthList)
   }
   protected generateDaysName(): Node {
-    const daysName = this.dateUtil.getDayShortNames(this.options.lid);
+    const daysName = this.dateUtil.getDayShortNames(this.options.lid , this.options.culture);
     const weekNameWrapper: Element = document.createElement("div");
     weekNameWrapper.setAttribute("datepicker-header", "");
+    if(this.options.culture == "en"){
+      weekNameWrapper.setAttribute("datepicker-header-en" , "")
+    }
     for (const index in daysName) {
       const dayWrapper: Element = document.createElement("div");
       const faSpan: Element = document.createElement("span");
@@ -250,9 +269,16 @@ export class DatePicker {
     const mainElement = document.createElement("div");
     this.bodyElement.setAttribute("data-datepicker-body", "");
     mainElement.setAttribute("data-datepicker-days", "");
-    const firstDayInMonth = this.months[this.activeIndex].firstDayInMonth;
+    if(this.options.culture == "en"){
+      mainElement.setAttribute("data-datepicker-days-en", "");
+    }
+    let firstDayInMonth = this.months[this.activeIndex].firstDayInMonth;
     const lastDayInMonth = this.months[this.activeIndex].lastDayInMonth;
     this.bodyElement.append(this.generateDaysName());
+    if(this.options.culture == "en"){
+      firstDayInMonth = firstDayInMonth - 1 
+      firstDayInMonth =  firstDayInMonth== -1 ? 6 : firstDayInMonth
+    }
     for (var j = 0; j < firstDayInMonth; j++) {
       let dayElement = document.createElement("div");
       dayElement.setAttribute("data-datepicker-day", "");
@@ -306,7 +332,7 @@ export class DatePicker {
     this.wrapper.appendChild(bodyPart);
     this.wrapper.appendChild(footerPart);
   }
-  public async createUIAsync(container: Element): Promise<void> {
+  public async createUIAsync(container?: Element): Promise<void> {
     this.datePickerInput = container as HTMLInputElement;
 
     this.wrapper = document.createElement("div");

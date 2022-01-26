@@ -56,6 +56,9 @@ p{
     border-bottom: 1px solid rgba(0,0,0,.38);
     margin-bottom: 10px;
 }
+[datepicker-header-en]{
+    direction: ltr;
+}
 [data-datepicker-day-name] {
     text-align: center;
     font-size: 14px;
@@ -90,6 +93,9 @@ z-index: 9;
 [data-datepicker-days] {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+[data-datepicker-days-en]{
+    direction: ltr;
 }
 
 [data-datepicker-today-btn] {
