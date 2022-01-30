@@ -11,10 +11,14 @@ export class UiDatePicker {
   generateDaysUi(parentElement : HTMLElement): void {
     let dayElement = document.createElement("div");
     let spanElement = document.createElement("span");
+    let secondDayNumber = document.createElement("span")
     dayElement.setAttribute("data-datepicker-day", "");
+    secondDayNumber.setAttribute("data-datepicker-second-culture-day" , "")    
+    secondDayNumber.textContent= (this.day.secondValue ? this.day.secondValue +"" : "") ;
     spanElement.textContent = this.day.currentDay.day + "";
     dayElement.setAttribute("data-datepicker-id", this.day.dateId.toString());
     dayElement.appendChild(spanElement);
+    dayElement.appendChild(secondDayNumber)
     if (this.day.isToday == true) {
       dayElement.setAttribute("data-datepicker-today", "");
     }
@@ -41,10 +45,14 @@ export class UiDatePicker {
   generateDaysUiWithDateRange(parentElement : HTMLElement): void {
     let dayElement = document.createElement("div");
     let spanElement = document.createElement("span");
+    let secondDayNumber = document.createElement("span")
     dayElement.setAttribute("data-datepicker-day", "");
-    spanElement.textContent = this.day.currentDay.day + "";
+    secondDayNumber.setAttribute("data-datepicker-second-culture-day" , "")    
+    secondDayNumber.textContent= (this.day.secondValue ? this.day.secondValue +"" : "") ;
+    spanElement.textContent = this.day.currentDay.day + "";    
     dayElement.setAttribute("data-datepicker-id", this.day.dateId.toString());
     dayElement.appendChild(spanElement);
+    dayElement.appendChild(secondDayNumber)
     if (this.day.isToday == true) {
       dayElement.setAttribute("data-datepicker-today", "");
     }    

@@ -14,6 +14,7 @@ export class Month {
   readonly value: MonthValue;
   readonly days: Array<Day>;
   readonly monthName: string;
+  readonly secondMonthName : string ; 
   readonly isLeapYear: boolean;
   readonly dayInMonth: DayNumber;
   readonly firstDayInMonth: number;
@@ -35,7 +36,12 @@ export class Month {
       this.range.options.culture,
       this.range.options.lid
     );
-   
+    if(this.range.options.secondCulture && this.range.options.secondCulture == "en"){
+      this.secondMonthName = this.range.dateUtil.getGregorianMonthsName(value)
+    }
+    else if(this.range.options.secondCulture && this.range.options.secondCulture == "fa"){
+      this.secondMonthName = this.range.dateUtil.getJalaliMonthsName(value)
+    }
     this.dayInMonth = this.range.dateUtil.getDaysNumber(
       this.value,
       this.range.options.culture

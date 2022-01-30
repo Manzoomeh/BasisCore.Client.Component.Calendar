@@ -26,4 +26,8 @@ export interface IDateUtil {
   prevMonth(month: Month, culture: Culture): MonthValue;
   convertToGregorian(day : MonthValue ) : DayValue
   convertToJalali(day : MonthValue ) : DayValue
+  getGregorianDaysNumber(day : DayValue ) : DayNumber
+  getGregorianMonthsName(month : MonthValue): string
+  getJalaliDaysNumber(day : DayValue ) : DayNumber
+  getJalaliMonthsName(month : MonthValue): string
 }

@@ -115,4 +115,16 @@ export class PersianDateUtil implements IDateUtil {
   convertToJalali(day : MonthValue ) : DayValue{
     return null
   }
+  getGregorianDaysNumber(day : DayValue) : DayNumber{
+    return null
+  }
+  getGregorianMonthsName(month : MonthValue): string{
+    return null
+  }
+  getJalaliMonthsName(month : MonthValue): string{
+    return null
+  }
+  getJalaliDaysNumber(day : DayValue ) : DayNumber{
+    return null
+  }
 }

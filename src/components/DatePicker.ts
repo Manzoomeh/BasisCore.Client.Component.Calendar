@@ -22,7 +22,6 @@ export class DatePicker {
     {
       dateProvider: "basisCalendar",
       culture: "fa",
-      secondCulture: "en",
       lid: 1,
       todayButton: false,
       selectDate: false,
@@ -87,15 +86,22 @@ export class DatePicker {
     const prevButton = document.createElement("button");
     const yearNumber = document.createElement("span")
     const monthName = document.createElement("span")
-    const headerButtons = document.createElement("div")
+    const headerTitles = document.createElement("div")
+    headerTitles.setAttribute("data-datepicker-button-full" , "")
+    const secondMonthNameElement = document.createElement("div")
+    const secondMonthName = document.createElement("span")
+    secondMonthName.setAttribute("data-datepicker-second-title","")
+    secondMonthName.textContent= this.months[this.activeIndex].secondMonthName
+    secondMonthNameElement.appendChild(secondMonthName)
     this.headerElement.setAttribute("data-datepicker-header", "");    
     monthNameElement.setAttribute("data-datepicker-title", "");
     yearNumber.setAttribute("data-datepicker-year-number" , "")
-    headerButtons.setAttribute("data-datepicker-buttons" , "")
     yearNumber.textContent= this.months[this.activeIndex].value.year + ""
     monthName.textContent = this.months[this.activeIndex].monthName 
     monthNameElement.appendChild(monthName)
     monthNameElement.appendChild(yearNumber)
+    headerTitles.appendChild(monthNameElement)
+    headerTitles.appendChild(secondMonthName)
     if (this.options.yearsList == true) {
       yearNumber.setAttribute("data-datepicker-yearnumber-select" , "")
       yearNumber.addEventListener("click", (e) => {
@@ -135,31 +141,10 @@ export class DatePicker {
         monthsBtnWrapper.appendChild(monthBtn);
       });
     }
-    this.headerElement.appendChild(monthNameElement);
-    headerButtons.appendChild(nextButton);
-    headerButtons.appendChild(prevButton); 
-    if(this.options.switchType){
-      const changeTypeButton = document.createElement("div")
-      changeTypeButton.textContent= (this.options.culture == "en" ? "شمسی" : "میلادی")
-      changeTypeButton.addEventListener("click" , e =>{
-        this.goToday()
-        if(this.options.culture == "en"){
-          var convertDate :DayValue= this.dateUtil.convertToJalali(this.months[this.activeIndex].value)   
-        }
-        else{
-          var convertDate :DayValue=  this.dateUtil.convertToGregorian(this.months[this.activeIndex].value)
-        }
-        this.options.lid=(this.options.culture == "en" ? 1: 2)
-        this.options.culture = (this.options.culture == "en" ? "fa" : "en") 
-        this.monthValues = this.dateUtil.getMonthValueList(convertDate, convertDate);
-        this.months = []
-        this.monthValues.map((x) => this.months.push(new Month(this, x)));
-        this.renderAsync()
-      })
-     this.headerElement.appendChild(changeTypeButton)
-    }
-    
-    this.headerElement.appendChild(headerButtons)
+    // headerTitles.appendChild(secondMonthName)
+    this.headerElement.appendChild(prevButton)
+    this.headerElement.appendChild(headerTitles)
+    this.headerElement.appendChild(nextButton)
     return this.headerElement;
   }
   protected activeMonth(): Month{
@@ -308,6 +293,7 @@ export class DatePicker {
   protected createMountFooter(): Node {
     //create related element
     var footerElement = document.createElement("div");
+    footerElement.setAttribute("data-datepicker-footer" , "")
     if (this.options.todayButton == true) {
       const todayButton = document.createElement("button");
       todayButton.addEventListener("click", (e) => {
@@ -317,7 +303,30 @@ export class DatePicker {
       todayButton.innerHTML = this.options.lid == 1 ? "امروز" : "Today";
       footerElement.appendChild(todayButton);
     }
-
+    if(this.options.switchType){
+      const changeTypeButton = document.createElement("button")
+      changeTypeButton.setAttribute("data-datepicker-chaneType-btn" , "")
+      changeTypeButton.textContent= (this.options.culture == "en" ? "شمسی" : "میلادی")
+      changeTypeButton.addEventListener("click" , e =>{
+        this.goToday()
+        if(this.options.culture == "en"){
+          var convertDate :DayValue= this.dateUtil.convertToJalali(this.months[this.activeIndex].value)   
+        }
+        else{
+          var convertDate :DayValue=  this.dateUtil.convertToGregorian(this.months[this.activeIndex].value)
+        }
+        if(this.options.secondCulture){
+          this.options.secondCulture = (this.options.secondCulture == "en" ? "fa" : "en") 
+        }
+        this.options.lid=(this.options.culture == "en" ? 1: 2)
+        this.options.culture = (this.options.culture == "en" ? "fa" : "en") 
+        this.monthValues = this.dateUtil.getMonthValueList(convertDate, convertDate);
+        this.months = []
+        this.monthValues.map((x) => this.months.push(new Month(this, x)));
+        this.renderAsync()
+      })
+      footerElement.appendChild(changeTypeButton)
+    }
     return footerElement;
   }
   async renderAsync(): Promise<void> {

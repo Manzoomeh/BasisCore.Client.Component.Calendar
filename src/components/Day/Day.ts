@@ -3,6 +3,7 @@ import { DayValue, DayNumber } from "../type-alias";
 export class Day {
   readonly month: Month;
   readonly value: DayNumber;
+  readonly secondValue : DayNumber;
   readonly id: number;
   readonly dayOfWeek: number;
   readonly isHoliday: boolean;
@@ -22,6 +23,14 @@ export class Day {
       this.currentDay,
       this.month.range.options.culture
     );
+    if(this.month.range.options.secondCulture && this.month.range.options.secondCulture == "en"){
+      this.secondValue =this.month.range.dateUtil.getGregorianDaysNumber(this.currentDay)
+    }
+    else if (this.month.range.options.secondCulture && this.month.range.options.secondCulture == "fa"){
+      this.secondValue =this.month.range.dateUtil.getJalaliDaysNumber(this.currentDay)
+
+    }
+    
     this.isHoliday = this.month.range.dateUtil.getIsHoliday(
       this.currentDay,
       this.month.range.options.culture

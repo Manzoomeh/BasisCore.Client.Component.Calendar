@@ -315,4 +315,22 @@ export class BasisCoreDateUtil implements IDateUtil {
     };
     return jalaliDate;
   }
+  getGregorianDaysNumber(day : DayValue ) : DayNumber{
+    const basisDate = this.getObj(day.year, day.month, day.day);
+    return basisDate.mdate
+  }
+  getGregorianMonthsName(month : MonthValue): string{
+    const first = this.getObj(month.year, month.month,1).mmonth;
+    const last = this.getObj(month.year, month.month,28).mmonth;
+    return this.sMonthsNameCultureEn[first] + " - " + this.sMonthsNameCultureEn[last]
+  }
+  getJalaliMonthsName(month : MonthValue): string{
+    const first = this.getObj(month.year, month.month,1).smonth;
+    const last = this.getObj(month.year, month.month,28).smonth;
+    return this.sMonthsNameFa[first] + " - " + this.sMonthsNameFa[last]
+  }
+  getJalaliDaysNumber(day : DayValue ) : DayNumber{
+    const basisDate = this.getObj(day.year, day.month, day.day);
+    return basisDate.sdate
+  }
 }

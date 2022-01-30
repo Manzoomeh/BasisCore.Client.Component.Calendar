@@ -34,13 +34,13 @@ export interface ICalenderOptions {
 }
 export interface IDatePickerOptions {
   dateProvider?: DateUtilProvider;
-  culture?: Culture;
-  secondCulture?: Culture;
+  culture?: Culture;  
   lid?: Lid;
   todayButton?: boolean;
   selectDate?: boolean;
   yearsList? : boolean ; 
   monthList? : boolean;
   rangeDates? : boolean;
-  switchType?: boolean
+  switchType?: boolean;
+  secondCulture?: Culture;
 }
