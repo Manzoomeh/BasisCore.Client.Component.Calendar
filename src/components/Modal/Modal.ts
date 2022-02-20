@@ -1,5 +1,7 @@
 import { DateRange } from "../calendar";
 import IWidget from "../../basiscore/BasisPanel/IWidget";
+
+
 export class Modal {
   public cover: HTMLElement;
   public readonly owner : DateRange
@@ -13,10 +15,12 @@ export class Modal {
     });
   }
   openModal(modalContent: HTMLElement) {
+    
     let modalBody = document.createElement("div");
     // let modalInside = this.generateNoteList();
     let modalInside = modalContent;
     this.cover.setAttribute("data-cover", "");
+    this.cover.setAttribute("style", `height:${ this.owner.wrapper.scrollHeight}px`)
     this.cover.addEventListener("click", (e) => {
     if(this.owner.Owner && this.owner.Owner.dc){        
         const widgetName = this.owner.Owner.dc.resolve<IWidget>("widget");

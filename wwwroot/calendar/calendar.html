@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.basiscore.net/_js/basiscore-2.2.1.min.js"></script>
+        <title>Calendar</title>
+        <style>
+            @font-face {
+            font-family: IRANSans1;
+            font-style: normal;
+            font-weight: normal;
+            src: url('../fonts/IRANSansWeb.eot');
+            src: url('../fonts/IRANSansWeb.ttf') format('embedded-opentype'),
+                /* IE6-8 */
+            url('../fonts/IRANSansWeb.woff') format('woff'),
+                /* FF39+,Chrome36+, Opera24+*/
+            url('../fonts/IRANSansWeb.woff2') format('woff2');
+        }
+        #basis-calendar,input , button,[data-modal-form]{
+            font-family: IRANSans1;
+        }
+        </style>
+
+        <script>
+            const host = {
+                repositories: {
+                    "bc.calendar": "/basiscore.calendar.component.js",
+                    "bc.datepicker": "/basiscore.datepicker.component.js"
+                }
+            }
+        </script>
+    </head>
+
+    <body>
+     
+        <Basis core="component.bc.calendar" run="atclient" sourceid="db.form" from="1400/9/1" to="1400/9/30" options="mySetting" rkey="008F8B55-2998-4D0B-A574-90188D8A79F0"></Basis>
+
+        <script>   
+                var mySetting = {
+                dateProvider: "basisCalendar",
+                culture: "fa",
+                lid: 1,
+                todayButton: false,
+                dmnid : 6,
+                baseUrl: {
+                    
+                    "userid" : "https://trust-login.com/api/userid",
+                    "viewnote" :"https://api-ticketing.basiscore.com/${rkey}/viewnote",
+                    "usernotes" :"https://api-ticketing.basiscore.com/${rkey}/usernotes",
+                    "removenote":"https://api-ticketing.basiscore.com/${rkey}/removeNote",
+                    "addnote":"https://api-ticketing.basiscore.com/${rkey}/addnote",
+                    "reminder" : "http://api-ticketing.basiscore.com/${rkey}/notereminder"
+                },
+                labels: {
+                    "list":"لیست یادداشت‌ها",
+                    "new" : "یادداشت جدید",
+                    "edit":"ویرایش یادداشت",
+                    "mainTitle":"تقویم"
+                }
+            }
+        </script>
+    </body>
+
+</html>

@@ -1,0 +1,82 @@
+<style>
+  [bc-calendar-note-operation] {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    box-sizing: border-box;
+    box-shadow: 0px 5px 10px rgba(0, 75, 133, 0.1);
+    border-radius: 5px;
+    padding: 5px !important;
+    list-style: none;
+    transform: scaleY(0);
+    overflow: hidden;
+    -webkit-transition: transform 0.3s ease;
+    transition: transform 0.3s ease;
+    transform-origin: top;
+    position: absolute;
+    left:-40px
+  }
+  [bc-calendar-note-operation] li {
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 5px;
+    align-items: center;
+    direction: ltr;
+    color: #000 !important;
+  }
+  [bc-calendar-note-operation] li:last-child {
+    margin-bottom: 0;
+  }
+  [bc-calendar-note-operation] li:hover {
+    background: rgba(0, 75, 133, 0.1);
+    cursor: pointer;
+  }
+  .open_drop_down {
+    transform: scaleY(1) !important;
+  }
+  [bc-calendar-note-operation] li svg{
+      margin-bottom: 0 !important;
+      margin-right: 15px;
+  }
+</style>
+<ul bc-calendar-note-operation="">
+  <li bc-calendar-edit-note="">
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 15 15"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M0 11.8754V15H3.12457L12.34 5.78461L9.21539 2.66005L0 11.8754ZM14.7563 3.36828C15.0812 3.04333 15.0812 2.5184 14.7563 2.19345L12.8066 0.243716C12.4816 -0.0812387 11.9567 -0.0812387 11.6317 0.243716L10.1069 1.7685L13.2315 4.89307L14.7563 3.36828Z"
+        fill="#323232"
+      />
+    </svg>
+    <span>ویرایش</span>
+  </li>
+  <li bc-calendar-delete-note="">
+    <svg
+      width="12"
+      height="15"
+      viewBox="0 0 12 15"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M0.833333 13.3333C0.833333 14.25 1.58333 15 2.5 15H9.16667C10.0833 15 10.8333 14.25 10.8333 13.3333V3.33333H0.833333V13.3333ZM2.88333 7.4L4.05833 6.225L5.83333 7.99167L7.6 6.225L8.775 7.4L7.00833 9.16667L8.775 10.9333L7.6 12.1083L5.83333 10.3417L4.06667 12.1083L2.89167 10.9333L4.65833 9.16667L2.88333 7.4ZM8.75 0.833333L7.91667 0H3.75L2.91667 0.833333H0V2.5H11.6667V0.833333H8.75Z"
+        fill="#323232"
+      />
+    </svg>
+    <span>حذف</span>
+  </li>
+  <li bc-calendar-share-note="">
+    <svg width="15" height="10" viewBox="0 0 15 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4.47668 3.07692H10.4456V4.61538H4.47668V3.07692ZM13.5047 3.84615H14.9223C14.9223 1.72308 13.251 0 11.1917 0H8.20725V1.46154H11.1917C12.4676 1.46154 13.5047 2.53077 13.5047 3.84615ZM1.41762 3.84615C1.41762 2.53077 2.45471 1.46154 3.73057 1.46154H6.71503V0H3.73057C1.6713 0 0 1.72308 0 3.84615C0 5.96923 1.6713 7.69231 3.73057 7.69231H6.71503V6.23077H3.73057C2.45471 6.23077 1.41762 5.16154 1.41762 3.84615ZM12.6839 3.84615H11.1917V6.15385H8.95337V7.69231H11.1917V10H12.6839V7.69231H14.9223V6.15385H12.6839V3.84615Z" fill="#323232"/>
+        </svg>
+        
+        
+    <span>اشتراک‌گذاری</span>
+  </li>
+</ul>

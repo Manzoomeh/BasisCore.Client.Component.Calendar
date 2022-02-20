@@ -102,21 +102,22 @@
     <body>
  
 
-		<basis core="component.bc.datepicker" name="from" run="atclient"   setting-object="mySetting"></basis>
+		<basis core="component.bc.datepicker" name="from" run="atclient"   options="mySetting"></basis>
         
       
         <script>
             var mySetting = {
                 dateProvider: "basisCalendar",
                 displayNote: true,
-                culture: "en",
-                secondCulture:"fa" ,
-                lid: 2,
+                culture: "fa",
+                secondCulture:"en" ,
+                lid: 1,
                 yearsList : true,
                 monthList:true,
                 rangeDates: true,
-                switchType : true,
-                todayButton : true
+                switchType : false,
+                todayButton : true,
+                type:"load|click"
                
             }
         

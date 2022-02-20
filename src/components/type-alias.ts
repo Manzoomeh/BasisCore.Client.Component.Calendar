@@ -61,3 +61,5 @@ export enum ReminderType {
   email,
   sms,
 }
+
+export declare type Type = "load" | "click";

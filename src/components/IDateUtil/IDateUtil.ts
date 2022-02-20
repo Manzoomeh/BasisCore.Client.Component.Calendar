@@ -17,7 +17,7 @@ export interface IDateUtil {
   getBasisDayId(day: DayValue): number;
   getIsHoliday(day: DayValue, culture: Culture): boolean;
   getIsLeapYear(year: YearValue, culture: Culture): boolean;
-  getDayNames(lid: Lid): string[];
+  getDayNames(lid: Lid , culture : Culture): string[];
   getDayShortNames(lid: Lid , culture:Culture): string[];
   getMonthValueList(from: DayValue, to: DayValue): MonthValue[];
   getCurrentDate(): DayValue;
@@ -26,4 +26,8 @@ export interface IDateUtil {
   prevMonth(month: Month, culture: Culture): MonthValue;
   convertToGregorian(day : MonthValue ) : DayValue
   convertToJalali(day : MonthValue ) : DayValue
+  getGregorianDaysNumber(day : DayValue ) : DayNumber
+  getGregorianMonthsName(month : MonthValue): string
+  getJalaliDaysNumber(day : DayValue ) : DayNumber
+  getJalaliMonthsName(month : MonthValue): string
 }

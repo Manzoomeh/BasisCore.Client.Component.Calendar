@@ -2,10 +2,13 @@ import { Day } from "../Day/Day";
 import { Modal } from "../Modal/Modal";
 import { DateRange } from "../calendar";
 import { INote } from "../Interface/Interface";
-import layout from  "../../asset/reminderForm.html"
-import listLayout from "../../asset/reminderList.html"
-import { node } from "webpack";
+import layout from "../UiCalendar/asset/shareForm.html";
+import listLayout from "../../asset/reminderList.html";
 import IWidget from "../../basiscore/BasisPanel/IWidget";
+import newForm from "../UiCalendar/asset/layout.html";
+import moreBox from "../UiCalendar/asset/more.html";
+import emailBox from "../UiCalendar/asset/emailBox.html";
+
 export class UiCalendar {
   private readonly day: Day;
   readonly range: DateRange;
@@ -14,28 +17,60 @@ export class UiCalendar {
     this.day = day;
     this.range = owner;
     this.modal = new Modal(owner);
-    if(this.range.Owner && this.range.Owner.dc){        
+    if (this.range.Owner && this.range.Owner.dc) {
       const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
-       widgetName.title= this.range.options.labels["mainTitle"]       
-  }    
+      widgetName.title = this.range.options.labels["mainTitle"];
+    }
+  }
+  hexToRgb(hex) {
+    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+      return r + r + g + g + b + b;
+    });
+
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+      ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16),
+        }
+      : null;
   }
   generateDaysUi(): Node {
     let dayElement = document.createElement("div");
     let spanElement = document.createElement("span");
+    let secondCulture = document.createElement("span");
+    const dateWrapper = document.createElement("div");
     dayElement.setAttribute("data-calendar-day", "");
+    secondCulture.setAttribute("data-calendar-second-day", "");
+    dateWrapper.setAttribute("bc-calendar-date-wrppaer", "");
+    secondCulture.textContent = this.day.secondValue + "";
     spanElement.textContent = this.day.currentDay.day + "";
     dayElement.setAttribute("data-id1", this.day.dateId.toString());
-    dayElement.appendChild(spanElement);
+    dateWrapper.appendChild(spanElement);
+    dateWrapper.appendChild(secondCulture);
+    dayElement.appendChild(dateWrapper);
     let ulElement = document.createElement("ul");
     let noteElement = document.createElement("div");
     var todayNote = this.range.getDayNotes(this.day.dateId);
-    noteElement.setAttribute("data-calendar-note-list", "");
+    noteElement.setAttribute("data-calendar-note-lists", "");
     noteElement.appendChild(ulElement);
     if (todayNote != undefined) {
       todayNote.map((x) => {
         let liElement = document.createElement("li");
         liElement.textContent = x.note;
-        liElement.style.background = `#${x.color}`;
+        const color: object = this.hexToRgb(`#${x.color}`);
+        if(color){
+          liElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},0.3)`;
+          liElement.style.color = `rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
+        }
+        else{
+          liElement.style.background = `#999999`;
+          liElement.style.color = `#fff`;
+        }
+       
         ulElement.appendChild(liElement);
       });
       dayElement.appendChild(noteElement);
@@ -44,242 +79,293 @@ export class UiCalendar {
       dayElement.setAttribute("data-today", "");
     }
     dayElement.addEventListener("click", (e) => {
-      if(this.range.Owner && this.range.Owner.dc){        
-          const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
-           widgetName.title= this.range.options.labels["list"]       
-      }     
+      if (this.range.Owner && this.range.Owner.dc) {
+        const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
+        widgetName.title = this.range.options.labels["list"];
+      }
       let modalInside = this.generateNoteList();
       this.modal.openModal(modalInside);
     });
     return dayElement;
   }
-  generateNoteForm(note?: INote): Node {
-    let formWrapper = document.createElement("form");
-    let titleWrapper = document.createElement("div");
-    let descWrapper = document.createElement("div");
-    let titleInput = document.createElement("textarea");
-    let descInput = document.createElement("textarea");
-    let colorTimeWrapper = document.createElement("div");
-    let colorInput = document.createElement("input");
-    let timeInput = document.createElement("input");
-    let colorDiv = document.createElement("div");
-    let colorSpan = document.createElement("span");
+  generateNoteForm(note?: INote): HTMLElement {
+    const editCodeWrapper: HTMLElement = document.createElement("div");
+    editCodeWrapper.innerHTML = newForm;
+
+    let titleInput: HTMLInputElement = editCodeWrapper.querySelector(
+      "[data-calendar-title-input]"
+    );
+    
+    let descInput: HTMLInputElement = editCodeWrapper.querySelector(
+      "[data-calendar-description-textarea]"
+    );
+    let timeInput: HTMLInputElement = editCodeWrapper.querySelector(
+      "[bc-calendar-time]"
+    );
+    let submitBtn =  editCodeWrapper.querySelector(
+      "[new-form-submit-button]"
+    );
+   
     let btnWrapper = document.createElement("div");
-    let submitBtn = document.createElement("button");
+    
     let cancelBtn = document.createElement("button");
-    titleWrapper.setAttribute("data-calendar-form-row", "");
-    descWrapper.setAttribute("data-calendar-form-row", "");
-    btnWrapper.setAttribute("data-calendar-form-row", "");
-    colorTimeWrapper.setAttribute("data-calendar-form-row", "");
-    formWrapper.setAttribute("data-calendar-input-wrapper", "");
-    colorSpan.setAttribute("data-calendar-code-color", "");
-    colorInput.setAttribute("data-calendar-color-input", "");
-    timeInput.setAttribute("data-calendar-time-input", "");
-    colorDiv.setAttribute("data-calendar-color-add", "");
-    submitBtn.setAttribute("data-calendar-submit", "");
-    cancelBtn.setAttribute("data-calendar-cancel", "");
-    titleInput.setAttribute("type", "text");
-    descInput.setAttribute("type", "text");
-    colorInput.setAttribute("type", "color");
-    timeInput.setAttribute("type", "time");
-    titleInput.setAttribute("placeHolder", "متن");
-    descInput.setAttribute("placeHolder", "توضیحات");
-    submitBtn.textContent = "ثبت";
+
+   
     cancelBtn.textContent = "لغو";
     if (note) {
       titleInput.value = note.note;
-      colorInput.value = `#${note.color}`;
-      colorSpan.textContent = `#${note.color}`;
       descInput.value = note.description;
       timeInput.value = note.time;
     }
+
     submitBtn.addEventListener("click", async (e) => {
       e.preventDefault();
       let formData = new FormData();
-      formData.append("id", this.day.dateId.toString());
+      formData.append("usedforid", (note.id).toString());
       formData.append("time", timeInput.value ? timeInput.value : "00:00");
       formData.append("userid", this.range.userId.toString());
       formData.append("ownerid", "0");
       formData.append("note", titleInput.value ? titleInput.value : "");
       formData.append("description", descInput.value ? descInput.value : "");
-      formData.append("color", colorInput.value ? colorInput.value : "");
-      let apiLink = this.range.options.baseUrl
-      this.range.sendAsyncData(
-        formData,
-        apiLink["addnote"]
-      );
-
+      let apiLink = this.range.options.baseUrl;
+      this.range.sendAsyncData(formData, `http://api-ticketing.basiscore.com/${this.range.rKey}/editnote`);
       if (this.range.options.displayNote) {
         await this.range.refreshNotesAsync();
       }
-      this.modal.closeModal();
+      // this.modal.closeModal();
       this.range.renderAsync();
     });
-    titleWrapper.appendChild(titleInput);
-    descWrapper.appendChild(descInput);
-    colorDiv.appendChild(colorSpan);
-    colorDiv.appendChild(colorInput);
-    colorTimeWrapper.appendChild(colorDiv);
-    colorTimeWrapper.appendChild(timeInput);
-    btnWrapper.appendChild(submitBtn);
-    btnWrapper.appendChild(cancelBtn);
-    formWrapper.appendChild(colorTimeWrapper);
-    formWrapper.appendChild(titleWrapper);
-    formWrapper.appendChild(descWrapper);
-    formWrapper.appendChild(btnWrapper);
-    return formWrapper;
+
+
+    const dropDowns = editCodeWrapper.querySelectorAll("[bc-calendar-drop-down-btn]");
+    dropDowns.forEach((el) => {
+      el.addEventListener("click", function (element) {
+        this.nextElementSibling.classList.toggle("open_drop_down");
+      });
+    });
+   
+
+    return editCodeWrapper;
   }
-  async loadReminderList(form:HTMLElement, note: INote) : Promise<void>{
+  async loadReminderList(form: HTMLElement, note: INote): Promise<void> {
     let formData = new FormData();
-    let reminderListWrapper = document.createElement("div")
+    let reminderListWrapper = document.createElement("div");
     formData.append("creatoruser", this.range.userId.toString());
     formData.append("usedforid", note.id.toString());
     formData.append("userid", this.range.userId.toString());
-    const data =await this.range.sendAsyncData(
+    const data = await this.range.sendAsyncData(
       formData,
       `http://api-ticketing.basiscore.com/${this.range.rKey}/viewnote`
     );
-     const reminderList =  data[0].reminder
-    if(reminderList.length>0){
+    const reminderList = data[0].reminder;
+    if (reminderList.length > 0) {
       reminderList.map((x) => {
-        reminderListWrapper.innerHTML = listLayout   
-        let reminderNumber = reminderListWrapper.querySelector("[data-calendar-reminder-input]") as HTMLInputElement
-        let reminderTimeType = reminderListWrapper.querySelector("[data-calendar-reminder-select]") as HTMLInputElement
-        let reminderAction = reminderListWrapper.querySelector("[data-calendar-reminder-action]") as HTMLInputElement
-        reminderNumber.value=x.num 
-        reminderTimeType.value = x.timetype
-        reminderAction.value = x.actionID
+        reminderListWrapper.innerHTML = listLayout;
+        let reminderNumber = reminderListWrapper.querySelector(
+          "[data-calendar-reminder-input]"
+        ) as HTMLInputElement;
+        let reminderTimeType = reminderListWrapper.querySelector(
+          "[data-calendar-reminder-select]"
+        ) as HTMLInputElement;
+        let reminderAction = reminderListWrapper.querySelector(
+          "[data-calendar-reminder-action]"
+        ) as HTMLInputElement;
+        reminderNumber.value = x.num;
+        reminderTimeType.value = x.timetype;
+        reminderAction.value = x.actionID;
         // reminderListWrapper.appendChild(reminderNumber)
-      })
-      
-
+      });
     }
-    let formInside = form.querySelector("[data-calendar-reminder-list]")
-    formInside.appendChild(reminderListWrapper)
-    return null
+    let formInside = form.querySelector("[data-calendar-reminder-list]");
+    formInside.appendChild(reminderListWrapper);
+    return null;
   }
-  generateReminderForm(note?: INote): Node {
+  generateReminderForm(note? : INote): Node{
     let formWrapper = document.createElement("form");
-    formWrapper.innerHTML = layout
-    this.loadReminderList(formWrapper, note)
-    const reminderSubmit = formWrapper.querySelector("[data-reminder-submit]")
-    let plusBtn = formWrapper.querySelector("[plus-row]")
-    let minusBtn = formWrapper.querySelector("[minus-row]")
-    let formReminderWrapper = formWrapper.querySelector("[data-calendar-form-row-reminder]")
-    plusBtn.addEventListener("click" , (e) =>{
-      let rowContent = formWrapper.querySelector("[data-calendar-form-row-reminder-sample]")   
-      let rowInside = document.createElement("div")
-      let rowContentHtml = rowContent.outerHTML
-      rowInside.innerHTML = rowContentHtml
-      formReminderWrapper.appendChild(rowInside)
-    })  
-    reminderSubmit.addEventListener("click" ,async (e) =>{
-      e.preventDefault()
-      let reminderObj = []
-      let childs = formReminderWrapper.childNodes
-      for(let i = 0 ; i < childs.length ; i++){
-        if(childs[i].nodeName == "DIV"){
-          
-          let currentElement = childs[i] as HTMLElement
-          let reminderNum = currentElement.querySelector("[data-calendar-reminder-input]")  as HTMLInputElement
-          let reminderTimeType = currentElement.querySelector("[data-calendar-reminder-select]") as HTMLInputElement
-          let reminderActionId = currentElement.querySelector("[data-calendar-reminder-action]") as HTMLInputElement
-          reminderObj.push({"id":"0" , "num":`${reminderNum.value}`,"timetype":`${reminderTimeType.value}`,"actionID":`${reminderActionId.value}`})
-        }
-      }
-      const form = new FormData();
-      form.append("reminder", `${reminderObj}`);      
-      const data = await this.range.sendAsyncData(
-        form,
-        `/ticketing/${this.range.rKey}/usernotes`
-      );
-    })
-    
-    return formWrapper;
+    formWrapper.innerHTML = layout;
+    return formWrapper
   }
-  
+ 
+
   generateNoteList(): HTMLElement {
     let listWrapper = document.createElement("div");
     listWrapper.setAttribute("data-calendar-note-list", "");
     let boxElement = document.createElement("div");
+    const modalHeader = document.createElement("div");
+    const modalBody = document.createElement("div");
     const newBtn = document.createElement("div");
+    const currentDate = document.createElement("div");
+    const closeBtn = document.createElement("div");
+    const modalBtns = document.createElement("div");
+    modalHeader.setAttribute("data-calendar-modal-header", "");
+    modalBody.setAttribute("data-calendar-modal-body", "");
     newBtn.setAttribute("data-calendar-new-btn", "");
-    newBtn.textContent = `ثبت یادداشت جدید`;
-    newBtn.addEventListener("click", (e) => {
-      if(this.range.Owner && this.range.Owner.dc){        
-        const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
-         widgetName.title= this.range.options.labels["new"]       
-    }
-      boxElement.innerHTML = "";
-      boxElement.appendChild(this.generateNoteForm());
-      boxElement.classList.add("calendar-animated");
-      boxElement.setAttribute("data-calendar-box-animated", "");
-      boxElement.style.height = "0px";
-      setTimeout(() => (boxElement.style.height = "260px"), 100);
+    closeBtn.setAttribute("data-calendar-close-btn", "");
+    modalBtns.setAttribute("data-calendar-modal-btns", "");
+    currentDate.setAttribute("data-calendar-modal-header-date", "");
+    newBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M9.9 4.5H8.1V8.1H4.5V9.9H8.1V13.5H9.9V9.9H13.5V8.1H9.9V4.5ZM9 0C4.032 0 0 4.032 0 9C0 13.968 4.032 18 9 18C13.968 18 18 13.968 18 9C18 4.032 13.968 0 9 0ZM9 16.2C5.031 16.2 1.8 12.969 1.8 9C1.8 5.031 5.031 1.8 9 1.8C12.969 1.8 16.2 5.031 16.2 9C16.2 12.969 12.969 16.2 9 16.2Z" fill="#004B85"/>
+    </svg>
+    `;
+    closeBtn.innerHTML = `<svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path opacity="0.8" d="M8.05223 7.49989L13.3519 13.3409C13.6968 13.7208 13.6968 14.3351 13.3519 14.7151C13.0072 15.095 12.4498 15.095 12.1051 14.7151L6.80521 8.87405L1.50552 14.7151C1.16063 15.095 0.603404 15.095 0.258671 14.7151C-0.0862237 14.3351 -0.0862237 13.7208 0.258671 13.3409L5.55836 7.49989L0.258671 1.65889C-0.0862237 1.27896 -0.0862237 0.66466 0.258671 0.284728C0.430473 0.0952063 0.656366 0 0.882097 0C1.10783 0 1.33356 0.0952063 1.50552 0.284728L6.80521 6.12572L12.1051 0.284728C12.277 0.0952063 12.5028 0 12.7285 0C12.9542 0 13.18 0.0952063 13.3519 0.284728C13.6968 0.66466 13.6968 1.27896 13.3519 1.65889L8.05223 7.49989Z" fill="black"/>
+    </svg>
+    `;
+
+    closeBtn.addEventListener("click", (e) => {
+      this.modal.closeModal();
     });
+    currentDate.innerHTML = `<span>${this.day.currentDay.day}</span> <span>${this.day.month.monthName}</span> <span>${this.day.currentDay.year}</span>`;
+    modalBtns.appendChild(closeBtn);
+    modalBtns.appendChild(newBtn);
+    modalHeader.appendChild(modalBtns);
+    modalHeader.appendChild(currentDate);
+
+    newBtn.addEventListener("click", (e) => {
+      if (this.range.Owner && this.range.Owner.dc) {
+        const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
+        widgetName.title = this.range.options.labels["new"];
+      }
+      const newBox: Element = document.createElement("div");
+      modalBody.innerHTML = "";
+      newBox.innerHTML = newForm;
+      const dropDowns = newBox.querySelectorAll("[bc-calendar-drop-down]");
+      dropDowns.forEach((el) => {
+        const dropDownBtn  = el.querySelector("[bc-calendar-drop-down-btn]")
+        const liItems = el.querySelectorAll("li")
+        liItems.forEach((LIelement) => {
+          LIelement.addEventListener("click" , function(element){
+            const liText = element.target as HTMLElement
+            dropDownBtn.textContent = liText.innerText
+          })
+        })
+        el.addEventListener("click", function (element) {
+          dropDownBtn.nextElementSibling.classList.toggle("open_drop_down");       
+         
+        });
+      });
+
+      modalBody.appendChild(newBox);
+      const submitBtn:HTMLElement =modalBody.querySelector("[new-form-submit-button]")
+      const timeInput = modalBody.querySelector("[bc-calendar-time]") as HTMLInputElement
+      const titleInput = modalBody.querySelector("[data-calendar-title-input]") as HTMLInputElement
+      const descInput = modalBody.querySelector("[data-calendar-description-textarea]") as HTMLInputElement
+      submitBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        let formData = new FormData();
+        formData.append("id", this.day.dateId.toString());
+        formData.append("time", timeInput.value ? timeInput.value : "00:00");
+        formData.append("userid", this.range.userId.toString());
+        formData.append("ownerid", "0");
+        formData.append("note", titleInput.value ? titleInput.value : "");
+        formData.append("description", descInput.value ? descInput.value : "");
+        let apiLink = this.range.options.baseUrl;
+        this.range.sendAsyncData(formData, `http://api-ticketing.basiscore.com/${this.range.rKey}/addnote`);
+        if (this.range.options.displayNote) {
+          await this.range.refreshNotesAsync();
+        }
+        // this.modal.closeModal();
+        this.range.renderAsync();
+      });
+
+
+    });
+
     var todayNote = this.range.getDayNotes(this.day.dateId);
     if (todayNote.length == 0) {
       let divElement = document.createElement("div");
       divElement.setAttribute("data-calendar-no-message", "");
-      divElement.textContent = "یادداشتی ثبت نکرده اید.";
-      listWrapper.appendChild(divElement);
+      const emptyListText = "هیچ یادآوری در این روز وجود ندارد.";
+      const emptyListIcon = `<svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M30.6 47.6C30.6 45.7222 32.1222 44.2 34 44.2C35.8778 44.2 37.4 45.7222 37.4 47.6C37.4 49.4778 35.8778 51 34 51C32.1222 51 30.6 49.4778 30.6 47.6ZM30.6 20.4C30.6 18.5222 32.1222 17 34 17C35.8778 17 37.4 18.5222 37.4 20.4V34C37.4 35.8778 35.8778 37.4 34 37.4C32.1222 37.4 30.6 35.8778 30.6 34V20.4ZM33.966 0C15.198 0 0 15.232 0 34C0 52.768 15.198 68 33.966 68C52.768 68 68 52.768 68 34C68 15.232 52.768 0 33.966 0ZM34 61.2C18.972 61.2 6.8 49.028 6.8 34C6.8 18.972 18.972 6.8 34 6.8C49.028 6.8 61.2 18.972 61.2 34C61.2 49.028 49.028 61.2 34 61.2Z" fill="#D0D0D0"/>
+      </svg>
+      `;
+      divElement.innerHTML = emptyListIcon + emptyListText;
+      modalBody.appendChild(divElement);
     }
     todayNote.map((x) => {
-      const editBtn = document.createElement("div");
-      const reminderBtn = document.createElement("div");
       const delBtn = document.createElement("div");
-      editBtn.setAttribute("data-calendar-event-btn", "");
-      reminderBtn.setAttribute("data-calendar-event-btn", "");
-      delBtn.setAttribute("data-calendar-event-btn", "");
-      editBtn.innerHTML = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
-        <title>edit</title>
-        <path d="M11 3h-7c-0.828 0-1.58 0.337-2.121 0.879s-0.879 1.293-0.879 2.121v14c0 0.828 0.337 1.58 0.879 2.121s1.293 0.879 2.121 0.879h14c0.828 0 1.58-0.337 2.121-0.879s0.879-1.293 0.879-2.121v-7c0-0.552-0.448-1-1-1s-1 0.448-1 1v7c0 0.276-0.111 0.525-0.293 0.707s-0.431 0.293-0.707 0.293h-14c-0.276 0-0.525-0.111-0.707-0.293s-0.293-0.431-0.293-0.707v-14c0-0.276 0.111-0.525 0.293-0.707s0.431-0.293 0.707-0.293h7c0.552 0 1-0.448 1-1s-0.448-1-1-1zM17.793 1.793l-9.5 9.5c-0.122 0.121-0.217 0.28-0.263 0.465l-1 4c-0.039 0.15-0.042 0.318 0 0.485 0.134 0.536 0.677 0.862 1.213 0.728l4-1c0.167-0.041 0.33-0.129 0.465-0.263l9.5-9.5c0.609-0.609 0.914-1.41 0.914-2.207s-0.305-1.598-0.914-2.207-1.411-0.915-2.208-0.915-1.598 0.305-2.207 0.914zM19.207 3.207c0.219-0.219 0.504-0.328 0.793-0.328s0.574 0.109 0.793 0.328 0.328 0.504 0.328 0.793-0.109 0.574-0.328 0.793l-9.304 9.304-2.114 0.529 0.529-2.114z"></path>
-        </svg>
-        `;
-      // reminderBtn.innerHTML = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
-      //   <title>share-2</title>
-      //   <path d="M16.214 18.098c0.025-0.033 0.048-0.067 0.070-0.104 0.020-0.035 0.038-0.071 0.054-0.107 0.073-0.108 0.156-0.209 0.248-0.301 0.363-0.363 0.861-0.586 1.414-0.586s1.051 0.223 1.414 0.586 0.586 0.861 0.586 1.414-0.223 1.051-0.586 1.414-0.861 0.586-1.414 0.586-1.051-0.223-1.414-0.586-0.586-0.861-0.586-1.414c0-0.325 0.077-0.631 0.214-0.902zM16.301 6.056c-0.009-0.017-0.018-0.034-0.028-0.051s-0.020-0.034-0.031-0.050c-0.154-0.283-0.242-0.608-0.242-0.955 0-0.553 0.223-1.051 0.586-1.414s0.861-0.586 1.414-0.586 1.051 0.223 1.414 0.586 0.586 0.861 0.586 1.414-0.223 1.051-0.586 1.414-0.861 0.586-1.414 0.586-1.051-0.223-1.414-0.586c-0.108-0.108-0.204-0.228-0.285-0.358zM7.699 10.944c0.009 0.017 0.018 0.034 0.028 0.051s0.020 0.034 0.031 0.050c0.154 0.283 0.242 0.608 0.242 0.955s-0.088 0.672-0.243 0.956c-0.011 0.016-0.021 0.033-0.031 0.050s-0.019 0.033-0.027 0.050c-0.081 0.13-0.177 0.25-0.285 0.358-0.363 0.363-0.861 0.586-1.414 0.586s-1.051-0.223-1.414-0.586-0.586-0.861-0.586-1.414 0.223-1.051 0.586-1.414 0.861-0.586 1.414-0.586 1.051 0.223 1.414 0.586c0.108 0.108 0.204 0.228 0.285 0.358zM14.15 6.088l-5.308 3.097c-0.004-0.005-0.009-0.009-0.014-0.014-0.722-0.722-1.724-1.171-2.828-1.171s-2.106 0.449-2.828 1.172-1.172 1.724-1.172 2.828 0.449 2.106 1.172 2.828 1.724 1.172 2.828 1.172 2.106-0.449 2.828-1.172c0.005-0.005 0.009-0.009 0.014-0.014l5.309 3.094c-0.098 0.347-0.151 0.714-0.151 1.092 0 1.104 0.449 2.106 1.172 2.828s1.724 1.172 2.828 1.172 2.106-0.449 2.828-1.172 1.172-1.724 1.172-2.828-0.449-2.106-1.172-2.828-1.724-1.172-2.828-1.172-2.106 0.449-2.828 1.172c-0.003 0.003-0.007 0.007-0.010 0.010l-5.312-3.095c0.098-0.346 0.15-0.71 0.15-1.087s-0.052-0.742-0.15-1.088l5.308-3.098c0.004 0.005 0.009 0.009 0.014 0.014 0.722 0.723 1.724 1.172 2.828 1.172s2.106-0.449 2.828-1.172 1.172-1.724 1.172-2.828-0.449-2.106-1.172-2.828-1.724-1.172-2.828-1.172-2.106 0.449-2.828 1.172-1.172 1.724-1.172 2.828c0 0.377 0.052 0.742 0.15 1.088z"></path>
-      //   </svg>`;
-       reminderBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5f5f5f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell">
-       <path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"></path>
-       </svg>`;
-      delBtn.innerHTML = `<svg version="1.1"  width="15" height="15"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-        width="533.333px" height="533.333px" viewBox="0 0 533.333 533.333" style="enable-background:new 0 0 533.333 533.333;"
-        xml:space="preserve">
-     <g>
-       <path d="M100,533.333h333.333l33.333-366.667h-400L100,533.333z M333.334,66.667V0H200v66.667H33.333v100l33.333-33.333h400
-         L500,166.667v-100H333.334z M300,66.667h-66.667V33.333H300V66.667z"/>
-     </g>
-     </svg>`;
-      let divElement = document.createElement("div");
-      let colorSpan = document.createElement("span");
-      let textSpan = document.createElement("span");
-      colorSpan.style.background = `#${x.color}`;
-      textSpan.textContent = x.note;
-      divElement.setAttribute("data-calendar-note-item", "");
-      colorSpan.setAttribute("data-calendar-color-span", "");      
-      reminderBtn.addEventListener("click", (e) => {
-        boxElement.innerHTML = "";
-        boxElement.classList.add("calendar-animated");
-        boxElement.setAttribute("data-calendar-box-animated", "");
-        boxElement.style.height = "0px";
-        setTimeout(() => (boxElement.style.height = "260px"), 100);
 
-        boxElement.appendChild(this.generateReminderForm(x));
-      });
-      editBtn.addEventListener("click", (e) => {
-        if(this.range.Owner && this.range.Owner.dc){        
-          const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
-           widgetName.title= this.range.options.labels["edit"]       
+      const divElement: HTMLElement = document.createElement("div");
+      const divElementHeader: HTMLElement = document.createElement("div");
+      const textSpan: HTMLElement = document.createElement("div");
+      const description: HTMLElement = document.createElement("div");
+      const moreButton: HTMLElement = document.createElement("div");
+      const color: object = this.hexToRgb(`#${x.color}`);
+      if(color){
+        divElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},0.2)`;
+        divElement.style.color = `rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
       }
-        boxElement.innerHTML = "";
-        boxElement.classList.add("calendar-animated");
-        boxElement.setAttribute("data-calendar-box-animated", "");
-        boxElement.style.height = "0px";
-        setTimeout(() => (boxElement.style.height = "260px"), 100);
-        boxElement.appendChild(this.generateNoteForm(x));
+      else{
+        divElement.style.background = `#999999`;
+        divElement.style.color = `#fff`;
+        description.style.color= "#fff"
+      }      
+      textSpan.textContent = x.note;
+      description.textContent = x.description;
+      moreButton.innerHTML = `<svg width="5" height="17" viewBox="0 0 5 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2.35707 6.63415C1.28564 6.63415 0.428502 7.46341 0.428502 8.5C0.428502 9.53658 1.28564 10.3659 2.35707 10.3659C3.4285 10.3659 4.28564 9.53658 4.28564 8.5C4.28564 7.46341 3.4285 6.63415 2.35707 6.63415ZM4.28564 1.86585C4.28564 2.90244 3.4285 3.73171 2.35707 3.73171C1.28564 3.73171 0.428502 2.90244 0.428502 1.86585C0.428502 0.829268 1.28564 0 2.35707 0C3.4285 0 4.28564 0.829268 4.28564 1.86585ZM4.28564 15.1341C4.28564 16.1707 3.4285 17 2.35707 17C1.28564 17 0.428502 16.1707 0.428502 15.1341C0.428502 14.0976 1.28564 13.2683 2.35707 13.2683C3.4285 13.2683 4.28564 14.0976 4.28564 15.1341Z" fill="#525252"/>
+      </svg>
+      `;
+      textSpan.setAttribute("bc-calendar-note-title", "");
+      description.setAttribute("bc-calendar-note-description", "");
+      divElement.setAttribute("data-calendar-note-item", "");
+      divElementHeader.setAttribute("data-calendar-note-header", "");
+      moreButton.setAttribute("data-calendar-more-button", "");
+      const moreButtonBox = document.createElement("div");
+      moreButtonBox.innerHTML = moreBox;
+      moreButton.appendChild(moreButtonBox);
+      moreButton.addEventListener("click", (e) => {
+        const moreButtonDropDown = moreButtonBox.querySelector(
+          "[bc-calendar-note-operation]"
+        );
+        moreButtonDropDown.classList.toggle("open_drop_down");
       });
-      delBtn.addEventListener("click", async (e) => {
+      const shareBtn: HTMLElement = moreButtonBox.querySelector(
+        "[bc-calendar-share-note]"
+      );
+      const editBtn: HTMLElement = moreButtonBox.querySelector(
+        "[bc-calendar-edit-note]"
+      );
+      const removeBtn: HTMLElement = moreButtonBox.querySelector(
+        "[bc-calendar-delete-note]"
+      );
+      shareBtn.addEventListener("click", (e) => {
+        modalBody.innerHTML = "";
+        modalBody.appendChild(this.generateReminderForm(x));
+        const shareHeader = modalHeader.querySelector("[data-calendar-modal-header-date]")
+        shareHeader.innerHTML=""
+        shareHeader.textContent= `به اشتراک گذاری`
+        const shareSubmit = modalBody.querySelector("[data-calendar-submit]")
+        const emailInput = modalBody.querySelector("[data-calendar-share-input]") as HTMLInputElement
+        const emailWrapper= modalBody.querySelector("[data-calendar-share-note-wrapper]")
+        shareSubmit.addEventListener("click" , function(e){
+          e.preventDefault()
+          const newEmail = document.createElement("div")
+          newEmail.innerHTML = emailBox
+          newEmail.querySelector("span").innerHTML = emailInput.value
+          emailWrapper.appendChild(newEmail)
+        })
+      });
+
+      editBtn.addEventListener("click", (e) => {
+        if (this.range.Owner && this.range.Owner.dc) {
+          const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
+          widgetName.title = this.range.options.labels["edit"];
+        }
+        modalBody.innerHTML = "";
+        modalBody.appendChild(this.generateNoteForm(x));  
+
+      
+      const timeInput = modalBody.querySelector("[bc-calendar-time]") as HTMLInputElement
+      const titleInput = modalBody.querySelector("[data-calendar-title-input]") as HTMLInputElement
+      const descInput = modalBody.querySelector("[data-calendar-description-textarea]") as HTMLInputElement
+      
+
+
+
+      });
+      removeBtn.addEventListener("click", async (e) => {
         e.preventDefault();
         let formData = new FormData();
         formData.append("userid", this.range.userId.toString());
@@ -287,42 +373,35 @@ export class UiCalendar {
         formData.append("usedforid", `${x.id}`);
         this.range.sendAsyncData(
           formData,
-          `ticketing/${this.range.rKey}/removenote`
+          `http://api-ticketing.basiscore.com/${this.range.rKey}/removenote`         
         );
         if (this.range.options.displayNote) {
           await this.range.refreshNotesAsync();
         }
         this.range.renderAsync();
-      });
-      reminderBtn.addEventListener("click", async (e) => {
-        e.preventDefault();
-        let formData = new FormData();
-        formData.append("userid", this.range.userId.toString());
-        formData.append("usedforid", `${x.id}`);
-        formData.append("_root.reminder__1.id", `${x.id}`);
-        formData.append("_root.reminder__1.num", `${x.id}`);
-        formData.append("_root.reminder__1.timetype", `${x.id}`);
-        formData.append("_root.reminder__1.actionID", `${x.id}`);
-        this.range.sendAsyncData(
-          formData,
-          `ticketing/${this.range.rKey}/removenote`
-        );
-        if (this.range.options.displayNote) {
-          await this.range.refreshNotesAsync();
-        }
-        this.range.renderAsync();
-      });
-
-      divElement.appendChild(colorSpan);
-      divElement.appendChild(textSpan);
-      divElement.appendChild(editBtn);
-      divElement.appendChild(reminderBtn);
-      divElement.appendChild(delBtn);
-      listWrapper.appendChild(divElement);
+        this.modal.closeModal()
+      });     
+      divElementHeader.appendChild(textSpan);
+      divElementHeader.appendChild(moreButton);
+      divElement.appendChild(divElementHeader);
+      divElement.appendChild(description);
+      modalBody.appendChild(divElement);
     });
+    boxElement.appendChild(modalHeader);
+    boxElement.appendChild(modalBody);
     boxElement.setAttribute("data-calendar-drop-down-view", "");
-    listWrapper.appendChild(newBtn);
     listWrapper.insertBefore(boxElement, listWrapper.nextSibling);
+    boxElement.addEventListener("click" , function(element){
+      const thisElement = element.target as HTMLLIElement
+      const dropDowns = boxElement.querySelectorAll("[bc-calendar-drop-down] ul")
+      dropDowns.forEach((el) => {
+        if(thisElement.getAttribute("bc-calendar-drop-down-btn") == null ){
+            el.classList.remove("open_drop_down")
+          }
+        
+      });
+   
+    })
     return listWrapper;
   }
 }

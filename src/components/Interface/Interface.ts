@@ -1,13 +1,9 @@
 import {
   Lid,
-  DayValue,
-  MonthValue,
-  DayNumber,
-  YearValue,
-  MonthNumber,
   Culture,
   DateUtilProvider,
   ReminderType,
+  Type
 } from "../type-alias";
 export interface INote {
   id: number;
@@ -29,18 +25,20 @@ export interface ICalenderOptions {
   lid?: Lid;
   dmnid? :number;
   baseUrl? : object,
-  labels? : object
+  labels? : object , 
+  theme? : string
   
 }
 export interface IDatePickerOptions {
   dateProvider?: DateUtilProvider;
-  culture?: Culture;
-  secondCulture?: Culture;
+  culture?: Culture;  
   lid?: Lid;
   todayButton?: boolean;
-  selectDate?: boolean;
   yearsList? : boolean ; 
   monthList? : boolean;
   rangeDates? : boolean;
-  switchType?: boolean
+  switchType?: boolean;
+  secondCulture?: Culture;
+  theme?: string,
+  type?: Type 
 }

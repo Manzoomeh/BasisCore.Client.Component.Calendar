@@ -1,14 +1,9 @@
 import "../asset/style.css";
+import "../asset/calendar-basic.css";
 import { Month } from "./Month/Month";
 import {
-  Lid,
   DayValue,
   MonthValue,
-  DayNumber,
-  YearValue,
-  MonthNumber,
-  Culture,
-  DateUtilProvider,
   ReminderType,
 } from "./type-alias";
 import { ICalenderOptions, INote } from "./Interface/Interface";
@@ -17,6 +12,7 @@ import { BasisCoreDateUtil } from "./BasisCoreDateUtil/BasisCoreDateUtil";
 import { PersianDateUtil } from "./PersianDateUtil/PersianDateUtil";
 import { UiCalendar } from "./UiCalendar/UiCalendar";
 import IUserDefineComponent from "../basiscore/IUserDefineComponent";
+import { electron } from "webpack";
 export class DateRange {
   public readonly dateUtil: IDateUtil;
   public readonly months: Array<Month> = new Array<Month>();
@@ -34,6 +30,7 @@ export class DateRange {
     culture: "fa",
     secondCulture: "en",
     lid: 1,
+    theme : "basic"
   };
 
   public  constructor(
@@ -73,6 +70,7 @@ export class DateRange {
     this.getRKey();
     const form = new FormData();
     form.append("rkey", this.rKey);
+    console.log("2222", this.options)
     form.append("dmnid", this.options.dmnid.toString());
     let apiLink = this.options.baseUrl
     let userIdObj = await this.sendAsyncData(form, apiLink["userid"] );    
@@ -174,14 +172,17 @@ export class DateRange {
     const headerElement = document.createElement("div");
     const monthNameElement = document.createElement("div");
     const controlElement = document.createElement("div");
-    const monthsControlElement = document.createElement("div");
+    const secondMonthName = document.createElement("div")
+    const calendarHeader : HTMLElement = document.createElement("div")
     headerElement.setAttribute("data-calendar-Header", "");
     monthNameElement.setAttribute("data-calendar-title", "");
     controlElement.setAttribute("data-calendar-tools", "");
-    monthsControlElement.setAttribute("data-months-tools", "");
+    secondMonthName.setAttribute("data-calendar-second-culture","")
     monthNameElement.textContent =
-      this.months[this.activeIndex].monthName +
+      this.months[this.activeIndex].monthName + " " +
       this.months[this.activeIndex].value.year;
+    secondMonthName.textContent= this.months[this.activeIndex].secondMonthName
+    monthNameElement.appendChild(secondMonthName)
     if (this.monthValues.length == 1) {
       const nextButton = document.createElement("button");
       const prevButton = document.createElement("button");
@@ -191,8 +192,14 @@ export class DateRange {
       prevButton.addEventListener("click", (e) => {
         this.prevMonth();
       });
-      nextButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon__svg"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></path></svg>`;
-      prevButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon__svg"><path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"></path></svg>`;
+      nextButton.innerHTML = `<svg width="11" height="20" viewBox="0 0 11 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0.37999 19.01C0.86999 19.5 1.65999 19.5 2.14999 19.01L10.46 10.7C10.85 10.31 10.85 9.68005 10.46 9.29005L2.14999 0.980049C1.65999 0.490049 0.86999 0.490049 0.37999 0.980049C-0.11001 1.47005 -0.11001 2.26005 0.37999 2.75005L7.61999 10L0.36999 17.25C-0.11001 17.73 -0.11001 18.5301 0.37999 19.01Z" fill="#323232"/>
+      </svg>
+      `;
+      prevButton.innerHTML = `<svg width="11" height="20" viewBox="0 0 11 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10.6201 0.990059C10.1301 0.500059 9.34006 0.500059 8.85006 0.990059L0.540059 9.30006C0.150059 9.69006 0.150059 10.3201 0.540059 10.7101L8.85006 19.0201C9.34006 19.5101 10.1301 19.5101 10.6201 19.0201C11.1101 18.5301 11.1101 17.7401 10.6201 17.2501L3.38006 10.0001L10.6301 2.75006C11.1101 2.27006 11.1101 1.47006 10.6201 0.990059Z" fill="#323232"/>
+      </svg>
+      `;
       nextButton.setAttribute("data-calendar-next", "");
       prevButton.setAttribute("data-calendar-prev", "");
       controlElement.appendChild(nextButton);
@@ -201,9 +208,15 @@ export class DateRange {
       todayButton.addEventListener("click", (e) => {
         this.goToday();
       });
+      const todayIcon = `<svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 9H4V11H6V9ZM10 9H8V11H10V9ZM14 9H12V11H14V9ZM16 2H15V0H13V2H5V0H3V2H2C0.89 2 0.00999999 2.9 0.00999999 4L0 18C0 19.1 0.89 20 2 20H16C17.1 20 18 19.1 18 18V4C18 2.9 17.1 2 16 2ZM16 18H2V7H16V18Z" fill="white"/>
+      </svg>
+      `
+      const todayText = document.createElement("span")
+      todayText.innerText= this.options.lid == 1 ? "امروز" : "Today";
       todayButton.setAttribute("data-calendar-today-btn", "");
-      todayButton.innerHTML = this.options.lid == 1 ? "امروز" : "Today";
-      controlElement.appendChild(todayButton);
+      todayButton.innerHTML = todayText.innerText + todayIcon
+      headerElement.appendChild(todayButton);
     } else {
       const monthsBtnWrapper = document.createElement("div");
       this.monthValues.map((x, index) => {
@@ -220,23 +233,33 @@ export class DateRange {
         });
         monthsBtnWrapper.appendChild(monthBtn);
       });
-      monthsControlElement.appendChild(monthsBtnWrapper);
     }
-    headerElement.appendChild(controlElement);
-    headerElement.appendChild(monthsControlElement);
-    headerElement.appendChild(monthNameElement);
+    calendarHeader.setAttribute("bc-calendar-calendar-header","")
+    calendarHeader.appendChild(controlElement);
+    calendarHeader.appendChild(monthNameElement);
+    headerElement.appendChild(calendarHeader)
+    
     return headerElement;
   }
   protected generateDaysName(): Node {
-    const daysName = this.dateUtil.getDayNames(this.options.lid);
+    const daysName = this.dateUtil.getDayNames(this.options.lid , this.options.culture);
+    const secondDayName = this.dateUtil.getDayNames(2, "en");
     const weekNameWrapper: Element = document.createElement("div");
     weekNameWrapper.setAttribute("data-calendar-day-names", "");
     for (const index in daysName) {
+      let enIndex = parseInt(index) - 1
+      if(enIndex == -1){
+        enIndex= 6
+      }
       const dayWrapper: Element = document.createElement("div");
       const faSpan: Element = document.createElement("span");
+      const enSpan: Element = document.createElement("span")
       dayWrapper.setAttribute("data-calendar-day-name", "");
+      enSpan.setAttribute("data-calendar-second-day-name" , "")
       faSpan.textContent = daysName[index];
+      enSpan.textContent= secondDayName[enIndex]
       dayWrapper.appendChild(faSpan);
+      dayWrapper.appendChild(enSpan)
       weekNameWrapper.appendChild(dayWrapper);
     }
     return weekNameWrapper;

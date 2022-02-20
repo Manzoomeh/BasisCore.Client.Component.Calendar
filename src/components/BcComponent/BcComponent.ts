@@ -24,7 +24,7 @@ export default class BcComponent implements IComponentManager {
     this.rKey = await this.owner.getAttributeValueAsync("rkey");
     this.owner.addTrigger([this.sourceId]);
     const settingObject = await this.owner.getAttributeValueAsync(
-      "setting-object"
+      "options"
     );
     this.options = eval(settingObject);
     const initFrom = await this.owner.getAttributeValueAsync("from");

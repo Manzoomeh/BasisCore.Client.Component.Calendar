@@ -11,10 +11,14 @@ export class UiDatePicker {
   generateDaysUi(parentElement : HTMLElement): void {
     let dayElement = document.createElement("div");
     let spanElement = document.createElement("span");
+    let secondDayNumber = document.createElement("span")
     dayElement.setAttribute("data-datepicker-day", "");
+    secondDayNumber.setAttribute("data-datepicker-second-culture-day" , "")    
+    secondDayNumber.textContent= (this.day.secondValue ? this.day.secondValue +"" : "") ;
     spanElement.textContent = this.day.currentDay.day + "";
     dayElement.setAttribute("data-datepicker-id", this.day.dateId.toString());
     dayElement.appendChild(spanElement);
+    dayElement.appendChild(secondDayNumber)
     if (this.day.isToday == true) {
       dayElement.setAttribute("data-datepicker-today", "");
     }
@@ -41,23 +45,31 @@ export class UiDatePicker {
   generateDaysUiWithDateRange(parentElement : HTMLElement): void {
     let dayElement = document.createElement("div");
     let spanElement = document.createElement("span");
+    let secondDayNumber = document.createElement("span")
     dayElement.setAttribute("data-datepicker-day", "");
-    spanElement.textContent = this.day.currentDay.day + "";
+    secondDayNumber.setAttribute("data-datepicker-second-culture-day" , "")    
+    secondDayNumber.textContent= (this.day.secondValue ? this.day.secondValue +"" : "") ;
+    spanElement.textContent = this.day.currentDay.day + "";    
     dayElement.setAttribute("data-datepicker-id", this.day.dateId.toString());
     dayElement.appendChild(spanElement);
+    dayElement.appendChild(secondDayNumber)
     if (this.day.isToday == true) {
       dayElement.setAttribute("data-datepicker-today", "");
     }    
-    dayElement.addEventListener("click", (e) => {
+    dayElement.addEventListener("click", (e) => {      
       const selectDate =
         this.day.currentDay.year +
         "/" +
         this.day.currentDay.month +
         "/" +
         this.day.currentDay.day;
-      this.range.datesArray.push(this.day.currentDay)   
-      this.disabledDays(parentElement)
+      this.range.datesArray.push(this.day.currentDay) 
       if(this.range.datesArray.length == 1){
+        if(parentElement.querySelector("[data-datepicker-start-day]")){
+          parentElement.querySelector("[data-datepicker-start-day]").removeAttribute("data-datepicker-start-day")
+        }
+        dayElement.setAttribute("data-datepicker-start-day","") 
+        this.disabledDays(parentElement)
         this.range.datePickerInput.value = selectDate;
         this.range.datePickerInput.setAttribute(
           "data-datepicker-dateid",
@@ -69,6 +81,9 @@ export class UiDatePicker {
         );
       }
       else if(this.range.datesArray.length > 1){
+        if(parentElement.querySelector("[data-datepicker-end-day]")){
+          parentElement.querySelector("[data-datepicker-end-day]").removeAttribute("data-datepicker-end-day")
+        }
         this.range.datePickerInput.value += " - " + selectDate;
         this.range.datePickerInput.setAttribute(
           "data-datepicker-to-dateid",
@@ -78,35 +93,49 @@ export class UiDatePicker {
           "data-datepicker-to-sstring",
           selectDate
         );
+        dayElement.setAttribute("data-datepicker-end-day","")
+        const startDayId = this.range.dateUtil.getBasisDayId(this.range.datesArray[0])
+        const lastDayId = this.range.dateUtil.getBasisDayId(this.range.datesArray[1])
         this.range.datesArray=[]
-        this.enableDays(parentElement)
-        this.range.wrapper.remove();
+        this.enableDays(parentElement , startDayId, lastDayId)
+        if(this.range.options.type == "click"){
+          this.range.wrapper.remove();
+        }
+       
       }
      
     });
     parentElement.appendChild(dayElement);
-    this.disabledDays(parentElement)
-
+   
   }
   private disabledDays(parentElement:HTMLElement): void{
     if(this.range.datesArray.length >= 1){
-      const selectedDateId :number = this.range.dateUtil.getBasisDayId(this.range.datesArray[0])
+      const selectedDateId :number = this.range.dateUtil.getBasisDayId(this.range.datesArray[0])      
       const dates =Array.from(parentElement.querySelectorAll("[data-datepicker-day]"))
       dates.map((x) => {
         const dateId = x.getAttribute("data-datepicker-id")        
         if(parseInt(dateId) < selectedDateId){
           x.setAttribute("data-disabled" , "")
         }
+        else if(parseInt(dateId) == selectedDateId){
+          x.setAttribute("data-datepicker-selected" , "")          
+        }
+     
       })
 
     }
     return null
   }
-  private enableDays(parentElement:HTMLElement): void{
+  private enableDays(parentElement:HTMLElement , startDay : number , lastDayId : number): void{
     if(this.range.datesArray.length == 0){
-      const dates =Array.from(parentElement.querySelectorAll("[data-disabled]"))
+      const dates =Array.from(parentElement.querySelectorAll("[data-datepicker-day]"))
       dates.map((x) => { 
+          const dateId = x.getAttribute("data-datepicker-id")
           x.removeAttribute("data-disabled")
+          if(parseInt(dateId) < lastDayId && parseInt(dateId) > startDay){
+            x.setAttribute("data-datepicker-hover" , "")
+          
+          }
       })
 
     }

@@ -1,0 +1,75 @@
+[data-calendar-day-names]{
+    background-color: #F3F3F3;
+    border-radius: 5px 5px 0px 0px;
+}
+[data-calendar-next], [data-calendar-prev]{
+    border: none;
+    background: none;
+}
+[data-calendar-month-container]{
+    clear: both;
+}
+
+[data-calendar-title]{
+    width: auto;float: left; padding: 0; margin: 0; background: none;font-size: 38px;
+    width: 200px;
+text-align: left;
+}
+[data-calendar-tools]{
+    float: left;
+    margin-left: 65px;
+}
+
+[data-calendar-today-btn]{
+    float: right;
+    font-size: 14px;
+    width: 86px;
+height: 42px;
+background: #004B85;
+border-radius: 5px;color: #fff;border: none;
+}
+[data-calendar-day]{
+ height: 132px;
+}
+[data-today]{
+    background: #F7F9FF;
+}
+[data-id1]:hover{
+    background: #fff;
+    border:  0.5px solid #004B85;
+}
+[data-today]:hover{
+    background: #F7F9FF;
+}
+[data-id1]:hover span{
+    color: #00A693;
+}
+[data-calendar-day]:not([data-id1]){
+    background: #fff;
+}
+[data-id1]:hover:after {
+    content: "";
+    background: none;
+    border: none;
+
+}
+[data-calendar-day] span{
+    font-size: 24px;
+}
+[data-calendar-today-btn] svg{
+    margin-right: 15px;
+}
+[data-calendar-no-message]{
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height:41px;
+    text-align: center;
+    background: #fff;
+    color: #D0D0D0;
+    border: none;
+    display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+}

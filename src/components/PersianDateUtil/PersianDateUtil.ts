@@ -78,7 +78,7 @@ export class PersianDateUtil implements IDateUtil {
     };
     return basisCoreObjToday;
   }
-  getDayNames(lid: Lid): string[] {
+  getDayNames(lid: Lid, culture:Culture): string[] {
     let weekName: string[] =
       lid == 1
         ? [
@@ -113,6 +113,18 @@ export class PersianDateUtil implements IDateUtil {
     return null
   }
   convertToJalali(day : MonthValue ) : DayValue{
+    return null
+  }
+  getGregorianDaysNumber(day : DayValue) : DayNumber{
+    return null
+  }
+  getGregorianMonthsName(month : MonthValue): string{
+    return null
+  }
+  getJalaliMonthsName(month : MonthValue): string{
+    return null
+  }
+  getJalaliDaysNumber(day : DayValue ) : DayNumber{
     return null
   }
 }

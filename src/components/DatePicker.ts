@@ -1,12 +1,12 @@
-import "../asset/date-picker-style.css";
+import "../asset/datepicker-style.css";
 import { Month } from "./Month/Month";
-import { DayValue, MonthNumber, MonthValue, YearValue } from "./type-alias";
+import { DayValue, MonthNumber, MonthValue } from "./type-alias";
 import { IDatePickerOptions } from "./Interface/Interface";
 import { IDateUtil } from "./IDateUtil/IDateUtil";
 import { BasisCoreDateUtil } from "./BasisCoreDateUtil/BasisCoreDateUtil";
 import { PersianDateUtil } from "./PersianDateUtil/PersianDateUtil";
 import { UiDatePicker } from "./UiDatePicker/UiDatePicker";
-import { Day } from "./Day/Day";
+import {DatePickerThemes} from "./DatePickerThemes/DatePickerThemes"
 export class DatePicker {
   public readonly dateUtil: IDateUtil;
   public  months: Array<Month> = new Array<Month>();
@@ -22,14 +22,14 @@ export class DatePicker {
     {
       dateProvider: "basisCalendar",
       culture: "fa",
-      secondCulture: "en",
       lid: 1,
       todayButton: false,
-      selectDate: false,
       yearsList : false,
       monthList : false,
       rangeDates : false,
-      switchType : false
+      switchType : false,
+      theme :"basic",
+      type: "load"
     };
 
   public constructor(
@@ -50,6 +50,8 @@ export class DatePicker {
     this.monthValues = this.dateUtil.getMonthValueList(from, to);
     this.monthValues.map((x) => this.months.push(new Month(this, x)));
     this.bodyElement =  document.createElement("div");
+ 
+
   }
 
   nextMonth(): void {
@@ -87,15 +89,22 @@ export class DatePicker {
     const prevButton = document.createElement("button");
     const yearNumber = document.createElement("span")
     const monthName = document.createElement("span")
-    const headerButtons = document.createElement("div")
+    const headerTitles = document.createElement("div")
+    headerTitles.setAttribute("data-datepicker-button-full" , "")
+    const secondMonthNameElement = document.createElement("div")
+    const secondMonthName = document.createElement("span")
+    secondMonthName.setAttribute("data-datepicker-second-title","")
+    secondMonthName.textContent= this.months[this.activeIndex].secondMonthName
+    secondMonthNameElement.appendChild(secondMonthName)
     this.headerElement.setAttribute("data-datepicker-header", "");    
     monthNameElement.setAttribute("data-datepicker-title", "");
     yearNumber.setAttribute("data-datepicker-year-number" , "")
-    headerButtons.setAttribute("data-datepicker-buttons" , "")
     yearNumber.textContent= this.months[this.activeIndex].value.year + ""
     monthName.textContent = this.months[this.activeIndex].monthName 
     monthNameElement.appendChild(monthName)
     monthNameElement.appendChild(yearNumber)
+    headerTitles.appendChild(monthNameElement)
+    headerTitles.appendChild(secondMonthName)
     if (this.options.yearsList == true) {
       yearNumber.setAttribute("data-datepicker-yearnumber-select" , "")
       yearNumber.addEventListener("click", (e) => {
@@ -135,12 +144,22 @@ export class DatePicker {
         monthsBtnWrapper.appendChild(monthBtn);
       });
     }
-    this.headerElement.appendChild(monthNameElement);
-    headerButtons.appendChild(nextButton);
-    headerButtons.appendChild(prevButton); 
+    // headerTitles.appendChild(secondMonthName)
+    const headerTitle = document.createElement("div")
+    headerTitle.setAttribute("data-datepicker-header-title","")
+    headerTitle.appendChild(prevButton)
+    headerTitle.appendChild(headerTitles)
+    headerTitle.appendChild(nextButton)
+    this.headerElement.appendChild(headerTitle)
+    //hello
     if(this.options.switchType){
-      const changeTypeButton = document.createElement("div")
-      changeTypeButton.textContent= (this.options.culture == "en" ? "شمسی" : "میلادی")
+      const changeTypeButton = document.createElement("button")
+      changeTypeButton.setAttribute("data-datepicker-chaneType-btn" , "")
+      changeTypeButton.innerHTML= `<svg width="21" height="22" viewBox="0 0 21 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18.6154 16.9231L16.9231 18.6154H18.1923C18.1923 20.0158 17.0542 21.1538 15.6538 21.1538C15.2265 21.1538 14.8204 21.0481 14.4692 20.8577L13.8515 21.4754C14.3719 21.8054 14.9896 22 15.6538 22C17.5238 22 19.0385 20.4854 19.0385 18.6154H20.3077L18.6154 16.9231ZM13.1154 18.6154C13.1154 17.215 14.2535 16.0769 15.6538 16.0769C16.0812 16.0769 16.4873 16.1827 16.8385 16.3731L17.4562 15.7554C16.9358 15.4254 16.3181 15.2308 15.6538 15.2308C13.7838 15.2308 12.2692 16.7454 12.2692 18.6154H11L12.6923 20.3077L14.3846 18.6154H13.1154Z" fill="#767676"/>
+      <path d="M10.5299 8.37692H6.76923V12.1846H10.5299V8.37692ZM9.77778 0V1.52308H3.76068V0H2.25641V1.52308H1.50427C0.669402 1.52308 0.00752136 2.20846 0.00752136 3.04615L0 13.7077C0 14.5454 0.669402 15.2308 1.50427 15.2308H12.0342C12.8615 15.2308 13.5385 14.5454 13.5385 13.7077V3.04615C13.5385 2.20846 12.8615 1.52308 12.0342 1.52308H11.2821V0H9.77778ZM12.0342 13.7077H1.50427V5.33077H12.0342V13.7077Z" fill="#767676"/>
+      </svg>
+      `
       changeTypeButton.addEventListener("click" , e =>{
         this.goToday()
         if(this.options.culture == "en"){
@@ -149,6 +168,9 @@ export class DatePicker {
         else{
           var convertDate :DayValue=  this.dateUtil.convertToGregorian(this.months[this.activeIndex].value)
         }
+        if(this.options.secondCulture){
+          this.options.secondCulture = (this.options.secondCulture == "en" ? "fa" : "en") 
+        }
         this.options.lid=(this.options.culture == "en" ? 1: 2)
         this.options.culture = (this.options.culture == "en" ? "fa" : "en") 
         this.monthValues = this.dateUtil.getMonthValueList(convertDate, convertDate);
@@ -156,10 +178,8 @@ export class DatePicker {
         this.monthValues.map((x) => this.months.push(new Month(this, x)));
         this.renderAsync()
       })
-     this.headerElement.appendChild(changeTypeButton)
+      this.headerElement.appendChild(changeTypeButton)
     }
-    
-    this.headerElement.appendChild(headerButtons)
     return this.headerElement;
   }
   protected activeMonth(): Month{
@@ -248,7 +268,7 @@ export class DatePicker {
     this.bodyElement.appendChild(monthList)
   }
   protected generateDaysName(): Node {
-    const daysName = this.dateUtil.getDayShortNames(this.options.lid , this.options.culture);
+    const daysName = this.dateUtil.getDayNames(this.options.lid , this.options.culture);
     const weekNameWrapper: Element = document.createElement("div");
     weekNameWrapper.setAttribute("datepicker-header", "");
     if(this.options.culture == "en"){
@@ -290,8 +310,6 @@ export class DatePicker {
       }
       else{
         new UiDatePicker(this, x ).generateDaysUiWithDateRange(mainElement);
-       
-
       }
       
     });
@@ -308,6 +326,7 @@ export class DatePicker {
   protected createMountFooter(): Node {
     //create related element
     var footerElement = document.createElement("div");
+    footerElement.setAttribute("data-datepicker-footer" , "")
     if (this.options.todayButton == true) {
       const todayButton = document.createElement("button");
       todayButton.addEventListener("click", (e) => {
@@ -317,7 +336,7 @@ export class DatePicker {
       todayButton.innerHTML = this.options.lid == 1 ? "امروز" : "Today";
       footerElement.appendChild(todayButton);
     }
-
+    
     return footerElement;
   }
   async renderAsync(): Promise<void> {
@@ -330,23 +349,38 @@ export class DatePicker {
     //Extra process..
     this.wrapper.appendChild(headerPart);
     this.wrapper.appendChild(bodyPart);
-    this.wrapper.appendChild(footerPart);
+    this.wrapper.appendChild(footerPart);    
+    const styles=document.createElement("style")
+    const nameStyle = this.options.theme
+    const styleName = `styleLayout_${nameStyle}`
+    const themeStyle= new DatePickerThemes(styleName).getStyle()
+    
+    styles.innerHTML =themeStyle
+      this.wrapper.appendChild(styles)
+
   }
   public async createUIAsync(container?: Element): Promise<void> {
     this.datePickerInput = container as HTMLInputElement;
-
     this.wrapper = document.createElement("div");
-
-    container.addEventListener("click", (e) => {
-      e.stopPropagation();
+    if(this.options.type == "load"){
       container.parentNode.insertBefore(this.wrapper, container.nextSibling);
-    });
-    this.wrapper.addEventListener("click", (e) => {
-      e.stopPropagation();
-    });
-    window.addEventListener("click", () => {
-      this.wrapper.remove();
-    });
+    }
+    else{
+      container.addEventListener("click", (e) => {
+        e.stopPropagation();
+        container.parentNode.insertBefore(this.wrapper, container.nextSibling);
+      });
+      window.addEventListener("click", () => {
+        this.wrapper.remove();
+      });
+      this.wrapper.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+    }
+  
+   
+    
+  
     return this.renderAsync();
   }
 }

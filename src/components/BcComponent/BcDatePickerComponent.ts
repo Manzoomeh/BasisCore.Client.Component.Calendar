@@ -5,7 +5,7 @@ import IUserDefineComponent from "../../basiscore/IUserDefineComponent";
 import { SourceId } from "../../basiscore/type-alias";
 import { DayNumber, DayValue, MonthNumber } from "../type-alias";
 import { IDatePickerOptions } from "../Interface/Interface";
-import { visitFunctionBody } from "typescript";
+
 
 export default class BcComponent implements IComponentManager {
   readonly owner: IUserDefineComponent;
@@ -14,26 +14,36 @@ export default class BcComponent implements IComponentManager {
   private to: DayValue;
   private container: HTMLElement;
   private sourceId: SourceId;
-  private options : IDatePickerOptions;
+  private options : IDatePickerOptions = {
+    culture: "fa",
+    lid : 1,
+    type:"load"
+  };
   constructor(owner: IUserDefineComponent) {
     this.owner = owner;
   }
   public async initializeAsync(): Promise<void> {
-    const name = await this.owner.getAttributeValueAsync("name");
-    this.container = document.createElement("input");
-    this.container.classList.add("date-picker-input");
-    this.container.setAttribute("name", name);
-    this.owner.setContent(this.container);
+    const name = await this.owner.getAttributeValueAsync("name");    
     this.sourceId = await this.owner.getAttributeValueAsync("sourceid");
     this.owner.addTrigger([this.sourceId]);
     const settingObject = await this.owner.getAttributeValueAsync(
-      "setting-object"
+      "options"
     );
-    this.options = eval(settingObject);
+    settingObject ? this.options = eval(settingObject) : null
+    if(this.options.type == "load" || !this.options.type ){
+      this.container = document.createElement("div");
+    }
+    else{
+      this.container = document.createElement("input");
+    }
+    
+    this.container.classList.add("date-picker-input");
+    this.container.setAttribute("name", name);
+    this.owner.setContent(this.container);
     const initFrom = await this.owner.getAttributeValueAsync("from");
     const initTo = await this.owner.getAttributeValueAsync("to");
     if (!initFrom || !initTo) {
-      if(this.options.culture == "fa"){
+      if(this.options.culture == "fa" || this.options.culture){      
          this.loadDefaultFaCalendar()
       }
       else if(this.options.culture == "en"){
@@ -66,6 +76,7 @@ export default class BcComponent implements IComponentManager {
     this.dateRange.createUIAsync(this.container);
   }
   loadDefaultFaCalendar(){
+
     const from = new Date()
         .toLocaleDateString("fa-IR")
         .replace(/([۰-۹])/g, (token) =>

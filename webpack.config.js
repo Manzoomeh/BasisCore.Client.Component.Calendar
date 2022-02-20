@@ -78,9 +78,14 @@ module.exports = {
       {
         test: /\.html$/i,
         type: "asset/source",
+      },
+      {
+        test: /\.csss$/i,
+        type: "asset/source",
       }
     ],
   },
+
   resolve: {
     extensions: [".ts", ".d.ts", ".tsx", ".js", ".jsx", ".css",".html"],
   },
