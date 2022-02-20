@@ -52,7 +52,11 @@ body{
      color: rgba(0,0,0,.38);
      display: grid;
      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+<<<<<<< HEAD
      /* border-bottom: 1px solid rgba(0,0,0,.38); */
+=======
+     border-bottom: 1px solid rgba(0,0,0,.38);
+>>>>>>> 42c793301a53ca31b0cb476f7ea2d226395f9d0c
      margin-bottom: 10px;
  }
  [datepicker-header-en]{

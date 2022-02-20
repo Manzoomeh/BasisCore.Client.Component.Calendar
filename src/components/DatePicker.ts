@@ -145,6 +145,7 @@ export class DatePicker {
       });
     }
     // headerTitles.appendChild(secondMonthName)
+<<<<<<< HEAD
     const headerTitle = document.createElement("div")
     headerTitle.setAttribute("data-datepicker-header-title","")
     headerTitle.appendChild(prevButton)
@@ -180,6 +181,11 @@ export class DatePicker {
       })
       this.headerElement.appendChild(changeTypeButton)
     }
+=======
+    this.headerElement.appendChild(prevButton)
+    this.headerElement.appendChild(headerTitles)
+    this.headerElement.appendChild(nextButton)
+>>>>>>> 42c793301a53ca31b0cb476f7ea2d226395f9d0c
     return this.headerElement;
   }
   protected activeMonth(): Month{
@@ -336,7 +342,34 @@ export class DatePicker {
       todayButton.innerHTML = this.options.lid == 1 ? "امروز" : "Today";
       footerElement.appendChild(todayButton);
     }
+<<<<<<< HEAD
     
+=======
+    if(this.options.switchType){
+      const changeTypeButton = document.createElement("button")
+      changeTypeButton.setAttribute("data-datepicker-chaneType-btn" , "")
+      changeTypeButton.textContent= (this.options.culture == "en" ? "شمسی" : "میلادی")
+      changeTypeButton.addEventListener("click" , e =>{
+        this.goToday()
+        if(this.options.culture == "en"){
+          var convertDate :DayValue= this.dateUtil.convertToJalali(this.months[this.activeIndex].value)   
+        }
+        else{
+          var convertDate :DayValue=  this.dateUtil.convertToGregorian(this.months[this.activeIndex].value)
+        }
+        if(this.options.secondCulture){
+          this.options.secondCulture = (this.options.secondCulture == "en" ? "fa" : "en") 
+        }
+        this.options.lid=(this.options.culture == "en" ? 1: 2)
+        this.options.culture = (this.options.culture == "en" ? "fa" : "en") 
+        this.monthValues = this.dateUtil.getMonthValueList(convertDate, convertDate);
+        this.months = []
+        this.monthValues.map((x) => this.months.push(new Month(this, x)));
+        this.renderAsync()
+      })
+      footerElement.appendChild(changeTypeButton)
+    }
+>>>>>>> 42c793301a53ca31b0cb476f7ea2d226395f9d0c
     return footerElement;
   }
   async renderAsync(): Promise<void> {
