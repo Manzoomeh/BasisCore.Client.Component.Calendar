@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="js/basiscore-2.4.16.min.js"></script>
+        <title>Print Command - Simple</title>
+        <style>
+            .date-picker-input {
+                border: none;
+                background: none;
+            }
+            input:focus,
+            select:focus,
+            textarea:focus,
+            button:focus {
+                outline: none;
+            }
+            .date-picker-wrapper {
+                background: rgba(0, 0, 0, 0.04);
+                border-radius: 4px 4px 0 0;
+                padding: 0 5px;
+                width: 200px;
+                display: flex;
+                border-bottom: 1px solid #000;
+                direction: ltr;
+                height: 50px;
+                margin-left: 15px;
+            }
+
+            .date-picker-wrapper button {
+                background: none;
+                border: none;
+            }
+            .date-picker-wrapper span {
+                font-size: 12px;
+            }
+            .date-picker-input-wrapper {
+                direction: rtl;
+                text-align: right;
+            }
+            .form-inside {
+                direction: rtl;
+                display: flex;
+                margin-bottom: 15px;
+                align-items: end;
+            }
+            .filter-submit {
+                background: #4d576e;
+                color: #fff;
+                border: none;
+                font-family: inherit;
+                border-radius: 4px;
+                height: 30px;
+                padding: 5px 10px;
+                cursor: pointer;
+            }
+            [data-calendar-tools] {
+                width: auto;
+                position: absolute;
+                left: 0;
+                top: 20px;
+            }
+            [data-months-tools] {
+                width: auto;
+                position: absolute;
+                right: 0;
+                top: 20px;
+            }
+        </style>
+
+        <script>
+            const host = {
+
+
+
+
+
+                repositories: {
+
+
+
+
+
+                    "bc.calendar": "/basiscore.calendar.component.js",
+                    "bc.datepicker": "/basiscore.datepicker.component.js"
+
+
+
+
+
+                }
+
+            }
+        </script>
+    </head>
+<style>
+	input{border: 1px solid #ccc !important;}
+</style>
+    <body>
+ 
+
+		<basis core="component.bc.datepicker" name="from" run="atclient"   options="mySetting"></basis>
+        
+      
+        <script>
+            var mySetting = {
+                dateProvider: "basisCalendar",
+                displayNote: true,
+                culture: "fa",
+                lid: 1,
+                yearsList : true,
+                monthList:true,
+                rangeDates: true,
+                switchType : false,
+             
+            }
+          
+           
+        </script>
+    </body>
+
+</html>

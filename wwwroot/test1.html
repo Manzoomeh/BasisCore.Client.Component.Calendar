@@ -1,0 +1,247 @@
+<style>
+  [new-note-btn] {
+    width: 83px;
+    text-align: center;
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  [new-note-btn-active] {
+    background-color: #00a693;
+    color: #fff;
+    border-radius: 5px;
+  }
+  [new-note-btns] {
+    display: flex;
+    padding: 5px;
+    background: #f2fbfa;
+    width: 249px;
+    border-radius: 5px;
+    direction: rtl;
+    height: 35px;
+  }
+  [new-note-btn]:hover {
+    cursor: pointer;
+  }
+  [bc-calendar-drop-down] {
+    width: 125px;
+    margin-right: 15px;
+  }
+  [bc-calendar-drop-down] p {
+    background: #f7f7f8;
+    height: 45px;
+    padding: 0;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    margin-top: 0;
+    position: relative;
+    padding-right: 25px;
+    cursor: pointer;
+  }
+  [bc-calendar-drop-down] ul {
+    transform: scaleY(0);
+    overflow: hidden;
+    -webkit-transition: transform 0.3s ease;
+    transition: transform 0.3s ease;
+    transform-origin: top;
+  }
+  [bc-calendar-drop-down] p::after {
+    content: "\2304";
+    position: absolute;
+    top: 5px;
+    right: 10px;
+  }
+  [bc-calendar-drop-down] ul {
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+    box-shadow: 0px 5px 10px rgba(0, 75, 133, 0.1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  [bc-calendar-drop-down] ul li {
+    padding: 5px 5px;
+    direction: rtl;
+    text-align: right;
+    display: flex;
+    color: #000;
+    cursor: pointer;
+  }
+  .open_drop_down {
+    transform: scaleY(1) !important;
+  }
+  [new-note-header] {
+    display: flex;
+    direction: rtl;
+    height: 45px;
+    margin-bottom: 10px;
+    justify-content: space-between;
+  }
+  [bc-calendar-cat-color] {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-left: 5px;
+  }
+  [bc-calendar-cat-color-red] {
+    background-color: #b40020;
+  }
+  [bc-calendar-cat-color-black] {
+    background-color: #000;
+  }
+  [new-note-new-form] input,
+  [new-note-new-form] textarea {
+    background: #f7f7f8;
+    border-radius: 5px;
+    padding: 10px 18px;
+    width: 100%;
+    border: none;
+    direction: rtl;
+    text-align: right;
+    box-sizing: border-box;
+  }
+  [new-note-new-form] input::placeholder,[new-note-new-form] textarea::placeholder,
+  [new-note-reminder-input] input::placeholder
+   {
+    color: rgba(3, 2, 41, 0.2);
+  }
+  [new-note-new-form] div{margin-bottom: 10px;}
+  [new-note-clock]{
+      width: 40px; height: 44px; border:none ; background-color: rgba(0, 75, 133, 0.1);
+      border-radius: 5px; display: flex; justify-content: center; align-items: center;
+  }
+  [new-note-select-time]{
+      display: flex; direction: rtl;
+      height: 44px;
+  }
+  [new-note-reminder-form]{
+      margin-top: 20px; border-top:  0.5px solid #D0D0D0;;
+  }
+  [new-note-reminder-form-title]{
+    font-size: 18px; font-weight: bold;direction: rtl; text-align: right;
+    margin-top: 15px;margin-bottom: 20px;
+  }
+  [new-note-reminder-form-title] span{display: block; clear: both;color: #767676; font-size: 8px;}
+  [new-note-reminder-form] [new-note-btns]{width:160px; }
+  [new-note-reminder-input] input{
+    background: #fff;
+    border-radius: 5px;
+    padding: 10px 5px;
+    width: 100px;
+    border: none;
+    direction: rtl;
+    text-align: right; 
+    border: 0.5px solid #C4C4C4;
+    height: 45px;
+    box-sizing: border-box;
+  }
+  [new-note-reminder-form-body]{
+    display: flex;
+direction: rtl;
+justify-content: space-between;
+  }
+  [new-note-reminder-input]{
+      display: flex;
+  }
+  [bc-calendar-drop-down-white] p{background: #fff; border: 0.5px solid #C4C4C4}
+  [new-form-cancel-button]{
+    border: 1px solid #605BFF; background-color: #fff; text-align: center;
+    color: #004B85; padding: 10px 15px;
+    border-radius: 5px;width: 90px;
+  }
+  [new-form-submit-button]{
+    border-radius: 5px; background-color:#004B85; padding: 10px 15px; text-align: center;
+    color: #fff;width: 90px; border: 1px solid #004B85;
+    margin-left: 20px;
+  }
+  [new-form-submit-cancel-buttons]{
+    float: right;
+  }
+</style>
+<div >
+  <div new-note-header="">
+    <div new-note-btns="">
+      <div new-note-btn="" new-note-btn-active="">وظیفه</div>
+      <div new-note-btn="">یادداشت</div>
+      <div new-note-btn="">رویداد</div>
+    </div>
+    <div bc-calendar-drop-down="">
+      <p bc-calendar-drop-down-btn >دسته بندی</p>
+      <ul>
+        <li>
+          <span bc-calendar-cat-color bc-calendar-cat-color-red></span>جلسات
+        </li>
+        <li>
+          <span bc-calendar-cat-color bc-calendar-cat-color-black></span>وظیفه
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div new-note-new-form="">
+    <div>
+      <input type="text" data-calendar-title-input="" placeholder="تیتر" />
+    </div>
+    <div>
+      <textarea data-calendar-description-textarea="" placeholder="موضوع"></textarea>
+    </div>
+    <div new-note-select-time>
+      <button new-note-clock><svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path opacity="0.7" d="M20 3.86L15.4 0L14.11 1.53L18.71 5.39L20 3.86ZM5.88 1.53L4.6 0L0 3.85L1.29 5.38L5.88 1.53ZM10 2.14C5.03 2.14 1 6.17 1 11.14C1 16.11 5.02 20.14 10 20.14C14.97 20.14 19 16.11 19 11.14C19 6.17 14.97 2.14 10 2.14ZM10 18.14C6.13 18.14 3 15.01 3 11.14C3 7.27 6.13 4.14 10 4.14C13.87 4.14 17 7.27 17 11.14C17 15.01 13.87 18.14 10 18.14ZM8.54 12.67L6.41 10.54L5.35 11.6L8.53 14.78L14.53 8.78L13.47 7.72L8.54 12.67Z" fill="#004B85"/>
+        </svg>
+        </button>
+        <div bc-calendar-drop-down="" bc-calendar-drop-down-white="">
+            <p bc-calendar-drop-down-btn>7:00 ق ظ</p>
+            <ul>
+              <li>
+                8:00 ق ظ
+              </li>
+              <li>
+              9:00 ق ظ
+              </li>
+            </ul>
+          </div>
+      </div>
+  </div>
+  <div new-note-reminder-form="">
+    <p new-note-reminder-form-title="">به شما یادآوری کنیم ؟ 
+        <span>قبل از تاریخ انتخاب شده به شما یادآوری می‌کنیم</span>
+    </p>
+    <div new-note-reminder-form-body="">
+    <div new-note-btns="">
+        <div new-note-btn="" new-note-btn-active="">ایمیل</div>
+        <div new-note-btn="">موبایل</div>
+        
+      </div>
+      <div new-note-reminder-input="">
+        <input type="text" placeholder="تعداد" />
+        <div bc-calendar-drop-down="" bc-calendar-drop-down-white="">
+            <p bc-calendar-drop-down-btn>روز </p>
+            <ul>
+              <li>
+                روز
+              </li>
+              <li>
+                ساعت
+              </li>
+              <li>
+                دقیقه
+              </li>
+            </ul>
+          </div>
+      </div>
+      
+    </div>
+  </div>
+  <div new-form-submit-cancel-buttons="">
+    <button new-form-cancel-button="">انصراف</button>
+    <button new-form-submit-button="">ثبت </button>
+    
+  </div>
+</div>
+

@@ -1,0 +1,13 @@
+
+[data-datepicker-day-name]{
+ padding: 0;
+}
+[data-datepicker-day-name] span{font-size: 10px;}
+[data-datepicker-day]{ padding: 0; font-size: 14px;margin-bottom:7px}
+#basis-datepicker{width: 360px;}
+[data-datepicker-today] { background: #fff}
+[data-datepicker-today] span{color: #555;}
+[data-datepicker-hover]{background-color: rgba(228, 231, 244, 0.3);}
+[data-datepicker-start-day],[data-datepicker-end-day]{background-color: #004B85; border-radius:5px}
+[data-datepicker-start-day] span,[data-datepicker-end-day] span{color: #fff;}
+[data-datepicker-second-culture-day]{font-family: Arial, Helvetica, sans-serif;}
