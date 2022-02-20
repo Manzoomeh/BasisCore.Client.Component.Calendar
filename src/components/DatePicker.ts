@@ -145,7 +145,7 @@ export class DatePicker {
       });
     }
     // headerTitles.appendChild(secondMonthName)
-<<<<<<< HEAD
+
     const headerTitle = document.createElement("div")
     headerTitle.setAttribute("data-datepicker-header-title","")
     headerTitle.appendChild(prevButton)
@@ -181,11 +181,11 @@ export class DatePicker {
       })
       this.headerElement.appendChild(changeTypeButton)
     }
-=======
+
     this.headerElement.appendChild(prevButton)
     this.headerElement.appendChild(headerTitles)
     this.headerElement.appendChild(nextButton)
->>>>>>> 42c793301a53ca31b0cb476f7ea2d226395f9d0c
+
     return this.headerElement;
   }
   protected activeMonth(): Month{
@@ -342,9 +342,7 @@ export class DatePicker {
       todayButton.innerHTML = this.options.lid == 1 ? "امروز" : "Today";
       footerElement.appendChild(todayButton);
     }
-<<<<<<< HEAD
-    
-=======
+
     if(this.options.switchType){
       const changeTypeButton = document.createElement("button")
       changeTypeButton.setAttribute("data-datepicker-chaneType-btn" , "")
@@ -369,7 +367,7 @@ export class DatePicker {
       })
       footerElement.appendChild(changeTypeButton)
     }
->>>>>>> 42c793301a53ca31b0cb476f7ea2d226395f9d0c
+
     return footerElement;
   }
   async renderAsync(): Promise<void> {

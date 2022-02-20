@@ -38,10 +38,6 @@ export interface IDatePickerOptions {
   monthList? : boolean;
   rangeDates? : boolean;
   switchType?: boolean;
-  secondCulture?: Culture;
-<<<<<<< HEAD
-  theme?: string,
+  secondCulture?: Culture; theme?: string,
   type?: Type 
-=======
->>>>>>> 42c793301a53ca31b0cb476f7ea2d226395f9d0c
 }
