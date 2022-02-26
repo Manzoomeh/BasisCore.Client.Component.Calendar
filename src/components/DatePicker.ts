@@ -182,9 +182,9 @@ export class DatePicker {
       this.headerElement.appendChild(changeTypeButton)
     }
 
-    this.headerElement.appendChild(prevButton)
-    this.headerElement.appendChild(headerTitles)
-    this.headerElement.appendChild(nextButton)
+    // this.headerElement.appendChild(prevButton)
+    // this.headerElement.appendChild(headerTitles)
+    // this.headerElement.appendChild(nextButton)
 
     return this.headerElement;
   }

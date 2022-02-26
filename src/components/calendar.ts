@@ -44,7 +44,7 @@ export class DateRange {
     this.options = { ...DateRange.defaultCalenderOptions, ...(options as any) };
     this.rKey = rkey;
     this.Owner = owner;
-    this.getUserId()
+    // this.getUserId()
     this.dateUtil =
       this.options.dateProvider == "basisCalendar"
         ? new BasisCoreDateUtil()
@@ -70,11 +70,11 @@ export class DateRange {
     this.getRKey();
     const form = new FormData();
     form.append("rkey", this.rKey);
-    console.log("2222", this.options)
-    form.append("dmnid", this.options.dmnid.toString());
+    form.append("dmnid", "6");
     let apiLink = this.options.baseUrl
     let userIdObj = await this.sendAsyncData(form, apiLink["userid"] );    
     this.userId =parseInt(userIdObj[0].userid) 
+
     return null;
   }
   public async refreshNotesAsync(): Promise<void> {
@@ -318,9 +318,18 @@ export class DateRange {
     return this.renderAsync();
   }
   async sendAsyncData(form: FormData, url: string ) {
+    var data = new URLSearchParams();
+  for (var p of form) {
+    let name = p[0];
+    let value = p[1];
+    data.append(name, value.toString());
+}
     const response = await fetch(url, {
       method: "POST",
-      body: form,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: data
     });
     return response.json();
   }
