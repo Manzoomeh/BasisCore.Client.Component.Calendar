@@ -5,7 +5,7 @@ import IUserDefineComponent from "../../basiscore/IUserDefineComponent";
 import { SourceId } from "../../basiscore/type-alias";
 import { DayNumber, DayValue, MonthNumber } from "../type-alias";
 import { IDatePickerOptions } from "../Interface/Interface";
-
+import { IPartValue } from "../../basiscore/ISchemaBaseComponent";
 
 export default class BcComponent implements IComponentManager {
   readonly owner: IUserDefineComponent;
@@ -14,45 +14,40 @@ export default class BcComponent implements IComponentManager {
   private to: DayValue;
   private container: HTMLElement;
   private sourceId: SourceId;
-  private options : IDatePickerOptions = {
+  private options: IDatePickerOptions = {
     culture: "fa",
-    lid : 1,
-    type:"load"
+    lid: 1,
+    type: "load",
   };
   constructor(owner: IUserDefineComponent) {
     this.owner = owner;
   }
+
   public async initializeAsync(): Promise<void> {
-    const name = await this.owner.getAttributeValueAsync("name");    
+    const name = await this.owner.getAttributeValueAsync("name");
     this.sourceId = await this.owner.getAttributeValueAsync("sourceid");
     this.owner.addTrigger([this.sourceId]);
-    const settingObject = await this.owner.getAttributeValueAsync(
-      "options"
-    );
-    settingObject ? this.options = eval(settingObject) : null
-    if(this.options.type == "load" || !this.options.type ){
+    const settingObject = await this.owner.getAttributeValueAsync("options");
+    settingObject ? (this.options = eval(settingObject)) : null;
+    if (this.options.type == "load" || !this.options.type) {
       this.container = document.createElement("div");
-    }
-    else{
+    } else {
       this.container = document.createElement("input");
     }
-    
+
     this.container.classList.add("date-picker-input");
     this.container.setAttribute("name", name);
     this.owner.setContent(this.container);
     const initFrom = await this.owner.getAttributeValueAsync("from");
     const initTo = await this.owner.getAttributeValueAsync("to");
     if (!initFrom || !initTo) {
-      if(this.options.culture == "fa" || this.options.culture){      
-         this.loadDefaultFaCalendar()
-      }
-      else if(this.options.culture == "en"){
-         this.loadDefaultEnCalendar()
-      
+      if (this.options.culture == "fa" || this.options.culture) {
+        this.loadDefaultFaCalendar();
+      } else if (this.options.culture == "en") {
+        this.loadDefaultEnCalendar();
       }
     } else {
-       this.loadCalendar(initFrom, initTo, this.options);
-     
+      this.loadCalendar(initFrom, initTo, this.options);
     }
   }
   public async runAsync(source?: ISource): Promise<boolean> {
@@ -75,23 +70,61 @@ export default class BcComponent implements IComponentManager {
     this.dateRange = new DatePicker(this.from, this.to, obj);
     this.dateRange.createUIAsync(this.container);
   }
-  loadDefaultFaCalendar(){
-
+  loadDefaultFaCalendar() {
     const from = new Date()
-        .toLocaleDateString("fa-IR")
-        .replace(/([۰-۹])/g, (token) =>
-          String.fromCharCode(token.charCodeAt(0) - 1728)
-        );
-        this.loadCalendar(from, from, this.options);
+      .toLocaleDateString("fa-IR")
+      .replace(/([۰-۹])/g, (token) =>
+        String.fromCharCode(token.charCodeAt(0) - 1728)
+      );
+    this.loadCalendar(from, from, this.options);
   }
-  loadDefaultEnCalendar(){
+  loadDefaultEnCalendar() {
     var date = new Date();
     var curr_date = date.getDate();
     var curr_month = date.getMonth() + 1; //Months are zero based
     var curr_year = date.getFullYear();
-    const from : string = curr_year + "/" + curr_month + "/" + curr_date
+    const from: string = curr_year + "/" + curr_month + "/" + curr_date;
     this.loadCalendar(from, from, this.options);
   }
 
+  setValues(values: IPartValue[]) {
+    if (values && values.length == 1) {
+      this.dateRange.datePickerInput.value = values[0].value;
+    }
+  }
 
+  getValuesForValidate() {
+    return this.dateRange.datePickerInput.value;
+  }
+
+  getAddedValues(): IPartValue[] {
+    let retVal: IPartValue[] = null;
+    const value = this.dateRange.datePickerInput.value;
+    if (value?.length > 0) {
+      retVal = new Array<IPartValue>();
+      retVal.push({ value: value });
+    }
+    return retVal;
+  }
+
+  getEditedValues(baseValues: IPartValue[]): IPartValue[] {
+    let retVal: IPartValue[] = null;
+    const baseValue = baseValues[0].value;
+    const baseId = baseValues[0].id;
+    const value = this.dateRange.datePickerInput.value;
+    if (value?.length > 0 && value != baseValue) {
+      retVal = new Array<IPartValue>();
+      retVal.push({ id: baseId, value: value });
+    }
+    return retVal;
+  }
+
+  getDeletedValues(baseValues: IPartValue[]): IPartValue[] {
+    let retVal: IPartValue[] = null;
+    const value = this.dateRange.datePickerInput.value;
+    if (value?.length == 0) {
+      retVal = baseValues;
+    }
+    return retVal;
+  }
 }
