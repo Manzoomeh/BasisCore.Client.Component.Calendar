@@ -22,7 +22,7 @@ export class Modal {
     this.cover.setAttribute("data-cover", "");
     this.cover.setAttribute("style", `height:${ this.owner.wrapper.scrollHeight}px`)
     this.cover.addEventListener("click", (e) => {
-    if(this.owner.Owner && this.owner.Owner.dc){        
+    if(this.owner?.Owner?.dc?.isRegistered("widget")){        
         const widgetName = this.owner.Owner.dc.resolve<IWidget>("widget");
          widgetName.title= this.owner.options.labels["mainTitle"]       
     }

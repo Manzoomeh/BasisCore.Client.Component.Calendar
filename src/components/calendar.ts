@@ -12,7 +12,6 @@ import { BasisCoreDateUtil } from "./BasisCoreDateUtil/BasisCoreDateUtil";
 import { PersianDateUtil } from "./PersianDateUtil/PersianDateUtil";
 import { UiCalendar } from "./UiCalendar/UiCalendar";
 import IUserDefineComponent from "../basiscore/IUserDefineComponent";
-import { electron } from "webpack";
 export class DateRange {
   public readonly dateUtil: IDateUtil;
   public readonly months: Array<Month> = new Array<Month>();
@@ -318,18 +317,9 @@ export class DateRange {
     return this.renderAsync();
   }
   async sendAsyncData(form: FormData, url: string ) {
-    var data = new URLSearchParams();
-  for (var p of form) {
-    let name = p[0];
-    let value = p[1];
-    data.append(name, value.toString());
-}
     const response = await fetch(url, {
       method: "POST",
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: data
+      body: form,
     });
     return response.json();
   }

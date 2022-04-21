@@ -14,30 +14,16 @@ module.exports = {
         type: "assign",
       },
     },
-    calendarComponent: {
+    'calendar-component': {
       import: "./src/BcComponentLoader.ts",
       filename: "basiscore.calendar.component.js",
       library: {
-        name: "bc",
+        name: "calendar",
         type: "assign",
       },
     },
-    datePicker: {
-      import: "./src/datePickerLoader.ts",
-      filename: "basiscore.datePicker.js",
-      library: {
-        name: "[name]",
-        type: "assign",
-      },
-    },
-    datePickerComponent: {
-      import: "./src/BcComponentDatePickerLoader.ts",
-      filename: "basiscore.datepicker.component.js",
-      library: {
-        name: "bc",
-        type: "assign",
-      },
-    },
+
+    
   },
   devtool: "source-map",
   output: {
@@ -45,6 +31,25 @@ module.exports = {
   },
   devServer: {
     static: path.resolve(__dirname, "wwwroot"),
+    onBeforeSetupMiddleware: function (server) {      
+      server.app.use("/trustlogin", trustHttpServer);
+      server.app.use("/ticketing", ticketingHttpServer);
+    },
+    open: true,
+    port: 3001,
+  },
+  devServer: {
+    static: [
+      {
+        directory: path.resolve(__dirname, "wwwroot"),
+      },
+      {
+        directory: path.resolve(__dirname, "node_modules/alasql/dist"),
+      },
+      {
+        directory: path.resolve(__dirname, "node_modules/bclib/dist"),
+      },
+    ],
     onBeforeSetupMiddleware: function (server) {      
       server.app.use("/trustlogin", trustHttpServer);
       server.app.use("/ticketing", ticketingHttpServer);

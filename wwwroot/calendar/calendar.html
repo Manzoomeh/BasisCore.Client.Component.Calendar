@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="https://cdn.basiscore.net/_js/basiscore-2.2.1.min.js"></script>
+        <script src="/bclib.js"></script>
         <title>Calendar</title>
         <style>
             @font-face {
@@ -27,8 +27,8 @@
         <script>
             const host = {
                 repositories: {
-                    "bc.calendar": "/basiscore.calendar.component.js",
-                    "bc.datepicker": "/basiscore.datepicker.component.js"
+                    "calendar.calendar": "/basiscore.calendar.component.js",
+                    "calendar.datepicker": "/basiscore.calendar.component.js"
                 }
             }
         </script>
@@ -36,7 +36,7 @@
 
     <body>
      
-        <Basis core="component.bc.calendar" run="atclient" sourceid="db.form" from="1400/9/1" to="1400/9/30" options="mySetting" rkey="008F8B55-2998-4D0B-A574-90188D8A79F0"></Basis>
+        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="1400/9/1" to="1400/9/30" options="mySetting" rkey="9FCD0D90-D763-48FA-B96D-0B73366153FB"></Basis>
 
         <script>   
                 var mySetting = {
@@ -48,11 +48,11 @@
                 baseUrl: {
                     
                     "userid" : "https://trust-login.com/api/userid",
-                    "viewnote" :"https://api-ticketing.basiscore.com/${rkey}/viewnote",
-                    "usernotes" :"https://api-ticketing.basiscore.com/${rkey}/usernotes",
-                    "removenote":"https://api-ticketing.basiscore.com/${rkey}/removeNote",
-                    "addnote":"https://api-ticketing.basiscore.com/${rkey}/addnote",
-                    "reminder" : "http://api-ticketing.basiscore.com/${rkey}/notereminder"
+                    "viewnote" :"https://api-ticketing.basiscore.com/9FCD0D90-D763-48FA-B96D-0B73366153FB/viewnote",
+                    "usernotes" :"https://api-ticketing.basiscore.com/9FCD0D90-D763-48FA-B96D-0B73366153FB/usernotes",
+                    "removenote":"https://api-ticketing.basiscore.com/9FCD0D90-D763-48FA-B96D-0B73366153FB/removeNote",
+                    "addnote":"https://api-ticketing.basiscore.com/9FCD0D90-D763-48FA-B96D-0B73366153FB/addnote",
+                    "reminder" : "http://api-ticketing.basiscore.com/9FCD0D90-D763-48FA-B96D-0B73366153FB/notereminder"
                 },
                 labels: {
                     "list":"لیست یادداشت‌ها",

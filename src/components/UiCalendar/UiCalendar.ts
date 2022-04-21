@@ -17,7 +17,7 @@ export class UiCalendar {
     this.day = day;
     this.range = owner;
     this.modal = new Modal(owner);
-    if (this.range.Owner && this.range.Owner.dc) {
+    if (this.range?.Owner?.dc?.isRegistered("widget") ) {
       const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
       widgetName.title = this.range.options.labels["mainTitle"];
     }
@@ -79,7 +79,7 @@ export class UiCalendar {
       dayElement.setAttribute("data-today", "");
     }
     dayElement.addEventListener("click", (e) => {
-      if (this.range.Owner && this.range.Owner.dc) {
+      if (this.range?.Owner?.dc?.isRegistered("widget") ) {
         const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
         widgetName.title = this.range.options.labels["list"];
       }
@@ -128,7 +128,7 @@ export class UiCalendar {
       formData.append("note", titleInput.value ? titleInput.value : "");
       formData.append("description", descInput.value ? descInput.value : "");
       let apiLink = this.range.options.baseUrl;
-      this.range.sendAsyncData(formData, `http://api-ticketing.basiscore.com/${this.range.rKey}/editnote`);
+      this.range.sendAsyncData(formData, `https://api-ticketing.basiscore.com/${this.range.rKey}/editnote`);
       if (this.range.options.displayNote) {
         await this.range.refreshNotesAsync();
       }
@@ -153,9 +153,10 @@ export class UiCalendar {
     formData.append("creatoruser", this.range.userId.toString());
     formData.append("usedforid", note.id.toString());
     formData.append("userid", this.range.userId.toString());
+    let apiLink = this.range.options.baseUrl["viewnote"]
     const data = await this.range.sendAsyncData(
       formData,
-      `http://api-ticketing.basiscore.com/${this.range.rKey}/viewnote`
+      apiLink
     );
     const reminderList = data[0].reminder;
     if (reminderList.length > 0) {
@@ -222,7 +223,7 @@ export class UiCalendar {
     modalHeader.appendChild(currentDate);
 
     newBtn.addEventListener("click", (e) => {
-      if (this.range.Owner && this.range.Owner.dc) {
+      if (this.range?.Owner?.dc?.isRegistered("widget") ) {
         const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
         widgetName.title = this.range.options.labels["new"];
       }
@@ -259,13 +260,14 @@ export class UiCalendar {
         formData.append("ownerid", "0");
         formData.append("note", titleInput.value ? titleInput.value : "");
         formData.append("description", descInput.value ? descInput.value : "");
-        let apiLink = this.range.options.baseUrl;
-        this.range.sendAsyncData(formData, `http://api-ticketing.basiscore.com/${this.range.rKey}/addnote`);
+        let apiLink = this.range.options.baseUrl["addnote"]
+        this.range.sendAsyncData(formData, apiLink);
         if (this.range.options.displayNote) {
           await this.range.refreshNotesAsync();
         }
         // this.modal.closeModal();
         this.range.renderAsync();
+        this.modal.closeModal()
       });
 
 
@@ -349,7 +351,7 @@ export class UiCalendar {
       });
 
       editBtn.addEventListener("click", (e) => {
-        if (this.range.Owner && this.range.Owner.dc) {
+        if (this.range?.Owner?.dc?.isRegistered("widget") ) {
           const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
           widgetName.title = this.range.options.labels["edit"];
         }
@@ -371,9 +373,10 @@ export class UiCalendar {
         formData.append("userid", this.range.userId.toString());
         formData.append("ownerid", `0`);
         formData.append("usedforid", `${x.id}`);
+        let apilink = this.range.options.baseUrl["removenote"]
         this.range.sendAsyncData(
           formData,
-          `http://api-ticketing.basiscore.com/${this.range.rKey}/removenote`         
+          apilink     
         );
         if (this.range.options.displayNote) {
           await this.range.refreshNotesAsync();

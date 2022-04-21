@@ -1,3 +1,5 @@
 import BcComponent from "./components/BcComponent/BcComponent";
+import BcDatePickerComponent from "./components/BcComponent/BcDatePickerComponent";
 const calendar = BcComponent;
-export { calendar };
+const datepicker = BcDatePickerComponent;
+export { calendar, datepicker};

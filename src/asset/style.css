@@ -544,6 +544,7 @@ align-items: center;
   width: 125px;
   margin-right: 15px;
   z-index: 1;
+  height: 40px;
 }
 [bc-calendar-drop-down] p {
   background: #f7f7f8;
@@ -588,6 +589,9 @@ align-items: center;
   display: flex;
   color: #000;
   cursor: pointer;
+}
+[bc-calendar-drop-down-for-cats]{
+  width: 100%;
 }
 .open_drop_down {
   transform: scaleY(1) !important;
