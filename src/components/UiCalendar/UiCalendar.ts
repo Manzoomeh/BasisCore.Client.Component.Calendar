@@ -198,8 +198,14 @@ export class UiCalendar {
     formWrapper.innerHTML = layout;
     const plusBtn = formWrapper.querySelector("[data-calendar-add-sharing]")
     const sharingParent= formWrapper.querySelector("[data-calendar-share-form-uniqe]")
+    const submitShareForm = formWrapper.querySelector("[data-reminder-submit]")
+    const sharingInputUniqe = formWrapper.querySelector("#data-calendar-share-input-uniqe") as HTMLInputElement
+    sharingInputUniqe.addEventListener("keyup", (e) =>{
+      submitShareForm.removeAttribute("disabled")
+    })
     plusBtn.addEventListener("click" , (e) => {
-      const sharingInputUniqe = formWrapper.querySelector("#data-calendar-share-input-uniqe") as HTMLInputElement
+     
+       
       if(sharingInputUniqe.value){
         const newSharingEmail = document.createElement("div")
         const newSharingEmailInput = document.createElement("input")
@@ -219,8 +225,7 @@ export class UiCalendar {
         newSharingEmail.appendChild(newSharingMinus)
         sharingParent.parentNode.insertBefore(newSharingEmail,sharingParent)
         sharingInputUniqe.value=""
-        const submitShareForm = formWrapper.querySelector("[data-reminder-submit]")
-        submitShareForm.removeAttribute("disabled")
+        
       }
     })
     return formWrapper
@@ -427,6 +432,8 @@ export class UiCalendar {
         shareHeader.textContent= `به اشتراک گذاری`
         const shareSubmit = modalBody.querySelector("[data-calendar-submit]")
         const shareAlert= modalBody.querySelector("[data-calendar-tooltip]") as HTMLElement
+        const shareAlertSuccess= modalBody.querySelector("[data-calendar-tooltip-successfull]") as HTMLElement
+        
         const obj = { 
           noteid : x.id,
           creatoruser:  this.range.userId
@@ -473,7 +480,13 @@ export class UiCalendar {
          
           if(data.errorid == 3){
             shareAlert.style.display="block"
+            shareAlertSuccess.style.display="none"
           }
+          else if(data.errorid == 5){
+            shareAlert.style.display="none"
+            shareAlertSuccess.style.display="block"
+          }
+    
           
         })
       });
