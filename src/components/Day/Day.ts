@@ -29,8 +29,7 @@ export class Day {
     else if (this.month.range.options.secondCulture && this.month.range.options.secondCulture == "fa"){
       this.secondValue =this.month.range.dateUtil.getJalaliDaysNumber(this.currentDay)
 
-    }
-    
+    }    
     this.isHoliday = this.month.range.dateUtil.getIsHoliday(
       this.currentDay,
       this.month.range.options.culture

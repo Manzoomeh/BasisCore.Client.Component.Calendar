@@ -29,6 +29,7 @@ export default class BcComponent implements IComponentManager {
     this.options = eval(settingObject);
     const initFrom = await this.owner.getAttributeValueAsync("from");
     const initTo = await this.owner.getAttributeValueAsync("to");
+    
     if (!initFrom || !initTo) {
       const from = new Date()
         .toLocaleDateString("fa-IR")
@@ -39,6 +40,9 @@ export default class BcComponent implements IComponentManager {
     } else {
       this.loadCalendar(initFrom, initTo, this.options, this.rKey);
     }
+    
+    
+    
   }
   public async runAsync(source?: ISource): Promise<boolean> {
     if (source?.id === this.sourceId) {
@@ -58,7 +62,8 @@ export default class BcComponent implements IComponentManager {
       };
       this.loadCalendar(from, to, this.options, this.rKey);
     }
-
+ 
+ 
     return true;
   }
   async loadCalendar(from: string, to: string, obj: object, rKey: string) {

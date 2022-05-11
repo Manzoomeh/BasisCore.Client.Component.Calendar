@@ -1,31 +1,40 @@
 <form data-calendar-input-wrapper="">
-	
-    <div data-calendar-form-row="" data-calendar-form-row-reminder>
-		<div data-calendar-reminder-list ></div>
-		<div data-calendar-form-row-reminder-inline data-calendar-form-row-reminder-sample>
-		<div  data-calendar-form-row-reminder-inline>
-		<div>
-		<input type="text" data-calendar-reminder-input name="_root.reminder__1.num" />
-        <select data-calendar-reminder-select="" name="_root.reminder__1.timetype">
-			<option value="1">روز</option>
-			<option value="2">ساعت</option>
-			<option value="3">دقیقه</option>
-		</select>
-	</div>
-	<div>
-		<span>از طریق</span>
-		<select data-calendar-reminder-action="" name="_root.reminder__1.actionID">
-			<option value="1">Email</option>
-			<option value="2">SMS</option>
-			
-		</select>
-	</div>
-	</div>
-	<div plus-row >+</div>
-	</div>
-    </div>
-    <div data-calendar-form-row="" data-reminder-form-btns>
-        <button data-calendar-submit data-reminder-submit="">ثبت</button>
-        <button data-calendar-cancel="">لغو</button>
-    </div>
+	<div new-note-reminder-form="">
+		<p new-note-reminder-form-title="">
+		  به شما یادآوری کنیم ؟
+		  <span>قبل از تاریخ انتخاب شده به شما یادآوری می‌کنیم</span>
+		</p>
+		<div new-note-reminder-form-body="">
+			<input type="hidden" bc-calendar-action-id="" value="1" />
+		  <div >
+			  <div  class="tabWrapper">
+			<div class="tabs">
+				<div class="tabContainer">
+			<div new-note-btn="" bc-calendar-change-button="" class="tabButton" data-id="1"  tab-button-status="active">ایمیل</div>
+			<div new-note-btn="" bc-calendar-change-button="" class="tabButton" data-id="2" tab-button-status="">موبایل</div>
+			<span class="tabActive"></span>
+		</div>
+			</div>
+			</div>
+		  </div>
+		  <div new-note-reminder-input="">
+			<input type="text" placeholder="تعداد" bc-calendar-time-num="">
+		
+			<div bc-calendar-drop-down="" bc-calendar-drop-down-white="" >
+				<input bc-calendar-dropdown-id="" type="hidden" value="1" />
+			  <p bc-calendar-drop-down-btn="">روز</p>
+			  <ul>
+				<li data-id="1">روز</li>
+				<li data-id="2">ساعت</li>
+				<li data-id="3">دقیقه</li>
+			  </ul>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  <div new-form-submit-cancel-buttons="">
+		<button data-calendar-cancel="">لغو</button>
+		  <button data-calendar-submit="" data-reminder-submit="">ثبت</button>
+		
+	  </div>
 </form>

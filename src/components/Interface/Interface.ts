@@ -15,6 +15,14 @@ export interface INote {
   isNew: boolean;
   hasReminder: boolean;
   reminderType: ReminderType;
+  catid : number
+}
+
+export interface ICatNote{
+  id : number , 
+  color : string,
+  count: string,
+  title: string
 }
 
 export interface ICalenderOptions {

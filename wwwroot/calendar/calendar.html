@@ -36,7 +36,7 @@
 
     <body>
      
-        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="1400/9/1" to="1400/9/30" options="mySetting" rkey="9FCD0D90-D763-48FA-B96D-0B73366153FB"></Basis>
+        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="1400/9/1" to="1400/9/30" options="mySetting" rkey="50DF1ABE-8B73-4BA7-A390-232CBBE24C56"></Basis>
 
         <script>   
                 var mySetting = {
@@ -45,14 +45,15 @@
                 lid: 1,
                 todayButton: false,
                 dmnid : 6,
-                baseUrl: {
-                    
+                baseUrl: {                   
                     "userid" : "https://trust-login.com/api/userid",
-                    "viewnote" :"https://api-ticketing.basiscore.com/9FCD0D90-D763-48FA-B96D-0B73366153FB/viewnote",
-                    "usernotes" :"https://api-ticketing.basiscore.com/9FCD0D90-D763-48FA-B96D-0B73366153FB/usernotes",
-                    "removenote":"https://api-ticketing.basiscore.com/9FCD0D90-D763-48FA-B96D-0B73366153FB/removeNote",
-                    "addnote":"https://api-ticketing.basiscore.com/9FCD0D90-D763-48FA-B96D-0B73366153FB/addnote",
-                    "reminder" : "http://api-ticketing.basiscore.com/9FCD0D90-D763-48FA-B96D-0B73366153FB/notereminder"
+                    "viewnote" :"https://basispanel.ir/user/fa/50DF1ABE-8B73-4BA7-A390-232CBBE24C56/viewcalendarnote",
+                    "usernotes" :"https://basispanel.ir/user/50DF1ABE-8B73-4BA7-A390-232CBBE24C56/calendarnotes",
+                    "removenote":"http://basispanel.ir/user/50DF1ABE-8B73-4BA7-A390-232CBBE24C56/removenote",
+                    "addnote":"https://basispanel.ir/user/50DF1ABE-8B73-4BA7-A390-232CBBE24C56/addcalendarnote",
+                    "reminder" : "http://basispanel.ir/user/50DF1ABE-8B73-4BA7-A390-232CBBE24C56/editnotereminder",
+                    "catlist":"https://basispanel.ir/user/50DF1ABE-8B73-4BA7-A390-232CBBE24C56/fa/notecatlist",
+                    "sharing" :"https://basispanel.ir/user/50DF1ABE-8B73-4BA7-A390-232CBBE24C56/sharing"
                 },
                 labels: {
                     "list":"لیست یادداشت‌ها",

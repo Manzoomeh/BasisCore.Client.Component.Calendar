@@ -8,21 +8,21 @@
     </div>
  
   </div> -->
+  
   <div new-note-new-form="">
     <div>
-      <input type="text" data-calendar-title-input="" placeholder="تیتر" />
+      <input type="text" data-calendar-title-input=""  placeholder="تیتر" />
     </div>
     <div>
+     
       <div bc-calendar-drop-down=""  bc-calendar-drop-down-for-cats="">
+        <input type="hidden" id="note-category" name="catid" bc-calendar-dropdown-id="" />
         <p bc-calendar-drop-down-btn>دسته بندی</p>
-        <ul>
-          <li>
-            <span bc-calendar-cat-color bc-calendar-cat-color-red></span>جلسات
-          </li>
-          <li>
-            <span bc-calendar-cat-color bc-calendar-cat-color-black></span>وظیفه
-          </li>
+       
+        <ul id="da-bc-calendar-cats-list" >
+        
         </ul>
+
       </div>
     </div>
     <div>
@@ -48,18 +48,19 @@
         </svg>
       </button>
       <div bc-calendar-time-input="" >
-        <input type="text"  bc-calendar-time="" />
+        <input type="text"  bc-calendar-time=""  placeholder="زمان با فرمت 18:45 وارد شود" />
       </div>
-      <div bc-calendar-drop-down="" bc-calendar-drop-down-white="">
+      <!-- <div bc-calendar-drop-down="" bc-calendar-drop-down-white="">
+        <input type="hidden" name="timeUnit" bc-calendar-dropdown-id="" />
         <p bc-calendar-drop-down-btn>قبل از ظهر</p>
         <ul>
-          <li>قبل از ظهر</li>
-          <li>بعد از ظهر</li>
+          <li data-id="1">قبل از ظهر</li>
+          <li data-id="2">بعد از ظهر</li>
         </ul>
-      </div>
+      </div> -->
     </div>
   </div>
-  <div new-note-reminder-form="">
+  <!-- <div new-note-reminder-form="">
     <p new-note-reminder-form-title="">
       به شما یادآوری کنیم ؟
       <span>قبل از تاریخ انتخاب شده به شما یادآوری می‌کنیم</span>
@@ -81,7 +82,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <div new-form-submit-cancel-buttons="">
     <button new-form-cancel-button="">انصراف</button>
     <button new-form-submit-button="">ثبت</button>
