@@ -20,7 +20,11 @@ export class Modal {
     // let modalInside = this.generateNoteList();
     let modalInside = modalContent;
     this.cover.setAttribute("data-cover", "");
-    this.cover.setAttribute("style", `height:${ this.owner.wrapper.scrollHeight}px`)
+    // console.log(document.querySelector("[data-bc-bp-main-container]").clientHeight)
+    if(document.querySelector("[data-bc-bp-main-container]")){
+      this.cover.setAttribute("style", `height:${ document.querySelector("[data-bc-bp-main-container]").clientHeight}px`)
+    }
+    
     this.cover.addEventListener("click", (e) => {
     if(this.owner?.Owner?.dc?.isRegistered("widget")){        
         const widgetName = this.owner.Owner.dc.resolve<IWidget>("widget");

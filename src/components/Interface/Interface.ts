@@ -15,7 +15,9 @@ export interface INote {
   isNew: boolean;
   hasReminder: boolean;
   reminderType: ReminderType;
-  catid : number
+  catid : number,
+  creator : number,
+  creatoruser : number
 }
 
 export interface ICatNote{

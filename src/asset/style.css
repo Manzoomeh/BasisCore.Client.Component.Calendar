@@ -222,9 +222,9 @@ select {
   height: 100%;
   display: flex;
   justify-content: flex-start;
-  z-index: 99;
-  align-items: center;
-  flex-direction: column;
+  z-index: 99999999;
+  align-items: start;
+  flex-direction: center;
 }
 [data-modal-form] {
   width: 460px;
@@ -842,8 +842,8 @@ margin-left: -60px;
   color: #00A693;
 }
 [data-calendar-remove-sharing]{
-  width: 35px;
-  height: 35px;
+  width: 41px;
+  height: 41px;
   border-radius: 5px;
   display: flex;
   align-items: center;
@@ -872,8 +872,8 @@ margin-left: -60px;
    background: rgba(0, 75, 133, 0.1);;
 }
 [data-calendar-add-sharing]{
-  width: 35px;
-  height:35px;
+  width: 41px;
+  height:41px;
   border-radius: 5px;
   display: flex;
   align-items: center;
@@ -890,6 +890,7 @@ margin-left: -60px;
   padding: 10px;
   padding-top:0;
   margin-bottom: 0 !important;
+  position: relative;
 }
 [data-calendar-share-form-uniqe]{
   position: relative;

@@ -14,9 +14,12 @@ export class UiDatePicker {
     let secondDayNumber = document.createElement("span")
     dayElement.setAttribute("data-datepicker-day", "");
     secondDayNumber.setAttribute("data-datepicker-second-culture-day" , "")    
+    secondDayNumber.setAttribute("sys-text" , "")
+    spanElement.setAttribute("sys-text","")
     secondDayNumber.textContent= (this.day.secondValue ? this.day.secondValue +"" : "") ;
     spanElement.textContent = this.day.currentDay.day + "";
     dayElement.setAttribute("data-datepicker-id", this.day.dateId.toString());
+    dayElement.setAttribute("sys-inherit","")
     dayElement.appendChild(spanElement);
     dayElement.appendChild(secondDayNumber)
     if (this.day.isToday == true) {
@@ -48,9 +51,12 @@ export class UiDatePicker {
     let secondDayNumber = document.createElement("span")
     dayElement.setAttribute("data-datepicker-day", "");
     secondDayNumber.setAttribute("data-datepicker-second-culture-day" , "")    
+    secondDayNumber.setAttribute("sys-text" , "")
+    spanElement.setAttribute("sys-text","")
     secondDayNumber.textContent= (this.day.secondValue ? this.day.secondValue +"" : "") ;
     spanElement.textContent = this.day.currentDay.day + "";    
     dayElement.setAttribute("data-datepicker-id", this.day.dateId.toString());
+    dayElement.setAttribute("sys-inherit","")
     dayElement.appendChild(spanElement);
     dayElement.appendChild(secondDayNumber)
     if (this.day.isToday == true) {

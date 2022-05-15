@@ -135,7 +135,9 @@ export class DateRange {
         isNew: false,
         hasReminder: false,
         reminderType: ReminderType.none,
-        catid : x.catid
+        catid : x.catid,
+        creator : x.creator,
+        creatoruser : x.creatoruser
       })
     );
   }
@@ -262,6 +264,7 @@ export class DateRange {
     const secondDayName = this.dateUtil.getDayNames(2, "en");
     const weekNameWrapper: Element = document.createElement("div");
     weekNameWrapper.setAttribute("data-calendar-day-names", "");
+   
     for (const index in daysName) {
       let enIndex = parseInt(index) - 1
       if(enIndex == -1){
@@ -271,8 +274,10 @@ export class DateRange {
       const faSpan: Element = document.createElement("span");
       const enSpan: Element = document.createElement("span")
       dayWrapper.setAttribute("data-calendar-day-name", "");
+      dayWrapper.setAttribute("sys-text", "");
       dayWrapper.setAttribute("sys-bg","")
       enSpan.setAttribute("data-calendar-second-day-name" , "")
+      enSpan.setAttribute("sys-text","")
       faSpan.textContent = daysName[index];
       enSpan.textContent= secondDayName[enIndex]
       dayWrapper.appendChild(faSpan);

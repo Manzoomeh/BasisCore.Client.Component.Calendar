@@ -94,10 +94,12 @@ export class DatePicker {
     const secondMonthNameElement = document.createElement("div")
     const secondMonthName = document.createElement("span")
     secondMonthName.setAttribute("data-datepicker-second-title","")
+    secondMonthName.setAttribute("sys-text","")
     secondMonthName.textContent= this.months[this.activeIndex].secondMonthName
     secondMonthNameElement.appendChild(secondMonthName)
     this.headerElement.setAttribute("data-datepicker-header", "");    
     monthNameElement.setAttribute("data-datepicker-title", "");
+    monthNameElement.setAttribute("sys-text" , "")
     yearNumber.setAttribute("data-datepicker-year-number" , "")
     yearNumber.textContent= this.months[this.activeIndex].value.year + ""
     monthName.textContent = this.months[this.activeIndex].monthName 
@@ -128,6 +130,8 @@ export class DatePicker {
     prevButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon__svg"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></path></svg>`;
     nextButton.setAttribute("data-datepicker-next", "");
     prevButton.setAttribute("data-datepicker-prev", "");
+    nextButton.setAttribute("sys-bg","")
+    prevButton.setAttribute("sys-bg","")
     } else {
       const monthsBtnWrapper = document.createElement("div");
       this.monthValues.map((x, index) => {
@@ -157,8 +161,8 @@ export class DatePicker {
       const changeTypeButton = document.createElement("button")
       changeTypeButton.setAttribute("data-datepicker-chaneType-btn" , "")
       changeTypeButton.innerHTML= `<svg width="21" height="22" viewBox="0 0 21 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M18.6154 16.9231L16.9231 18.6154H18.1923C18.1923 20.0158 17.0542 21.1538 15.6538 21.1538C15.2265 21.1538 14.8204 21.0481 14.4692 20.8577L13.8515 21.4754C14.3719 21.8054 14.9896 22 15.6538 22C17.5238 22 19.0385 20.4854 19.0385 18.6154H20.3077L18.6154 16.9231ZM13.1154 18.6154C13.1154 17.215 14.2535 16.0769 15.6538 16.0769C16.0812 16.0769 16.4873 16.1827 16.8385 16.3731L17.4562 15.7554C16.9358 15.4254 16.3181 15.2308 15.6538 15.2308C13.7838 15.2308 12.2692 16.7454 12.2692 18.6154H11L12.6923 20.3077L14.3846 18.6154H13.1154Z" fill="#767676"/>
-      <path d="M10.5299 8.37692H6.76923V12.1846H10.5299V8.37692ZM9.77778 0V1.52308H3.76068V0H2.25641V1.52308H1.50427C0.669402 1.52308 0.00752136 2.20846 0.00752136 3.04615L0 13.7077C0 14.5454 0.669402 15.2308 1.50427 15.2308H12.0342C12.8615 15.2308 13.5385 14.5454 13.5385 13.7077V3.04615C13.5385 2.20846 12.8615 1.52308 12.0342 1.52308H11.2821V0H9.77778ZM12.0342 13.7077H1.50427V5.33077H12.0342V13.7077Z" fill="#767676"/>
+      <path sys-text="" d="M18.6154 16.9231L16.9231 18.6154H18.1923C18.1923 20.0158 17.0542 21.1538 15.6538 21.1538C15.2265 21.1538 14.8204 21.0481 14.4692 20.8577L13.8515 21.4754C14.3719 21.8054 14.9896 22 15.6538 22C17.5238 22 19.0385 20.4854 19.0385 18.6154H20.3077L18.6154 16.9231ZM13.1154 18.6154C13.1154 17.215 14.2535 16.0769 15.6538 16.0769C16.0812 16.0769 16.4873 16.1827 16.8385 16.3731L17.4562 15.7554C16.9358 15.4254 16.3181 15.2308 15.6538 15.2308C13.7838 15.2308 12.2692 16.7454 12.2692 18.6154H11L12.6923 20.3077L14.3846 18.6154H13.1154Z" fill="#767676"/>
+      <path sys-text="" d="M10.5299 8.37692H6.76923V12.1846H10.5299V8.37692ZM9.77778 0V1.52308H3.76068V0H2.25641V1.52308H1.50427C0.669402 1.52308 0.00752136 2.20846 0.00752136 3.04615L0 13.7077C0 14.5454 0.669402 15.2308 1.50427 15.2308H12.0342C12.8615 15.2308 13.5385 14.5454 13.5385 13.7077V3.04615C13.5385 2.20846 12.8615 1.52308 12.0342 1.52308H11.2821V0H9.77778ZM12.0342 13.7077H1.50427V5.33077H12.0342V13.7077Z" fill="#767676"/>
       </svg>
       `
       changeTypeButton.addEventListener("click" , e =>{
@@ -284,6 +288,7 @@ export class DatePicker {
       const dayWrapper: Element = document.createElement("div");
       const faSpan: Element = document.createElement("span");
       dayWrapper.setAttribute("data-datepicker-day-name", "");
+      faSpan.setAttribute("sys-text" , "")
       faSpan.textContent = daysName[index];
       dayWrapper.appendChild(faSpan);
       weekNameWrapper.appendChild(dayWrapper);
@@ -308,6 +313,7 @@ export class DatePicker {
     for (var j = 0; j < firstDayInMonth; j++) {
       let dayElement = document.createElement("div");
       dayElement.setAttribute("data-datepicker-day", "");
+      dayElement.setAttribute("sys-inherit","")
       mainElement.appendChild(dayElement);
     }
     this.months[this.activeIndex].days.map((x) => {
@@ -323,6 +329,7 @@ export class DatePicker {
     for (var j = 0; j < 6 - lastDayInMonth; j++) {
       let dayElement = document.createElement("div");
       dayElement.setAttribute("data-datepicker-day", "");
+      dayElement.setAttribute("sys-inherit","")
       mainElement.appendChild(dayElement);
     }
     this.bodyElement.append(mainElement);
@@ -346,7 +353,7 @@ export class DatePicker {
     if(this.options.switchType){
       const changeTypeButton = document.createElement("button")
       changeTypeButton.setAttribute("data-datepicker-chaneType-btn" , "")
-      changeTypeButton.textContent= (this.options.culture == "en" ? "شمسی" : "میلادی")
+      // changeTypeButton.textContent= (this.options.culture == "en" ? "شمسی" : "میلادی")
       changeTypeButton.addEventListener("click" , e =>{
         this.goToday()
         if(this.options.culture == "en"){
@@ -374,6 +381,7 @@ export class DatePicker {
     this.wrapper.innerHTML = "";
     this.bodyElement.innerHTML=""
     this.wrapper.setAttribute("id", "basis-datepicker");
+    this.wrapper.setAttribute("sys-inherit","")
     const headerPart = this.createMountHeader();
     const bodyPart = this.createMountBody();
     const footerPart = this.createMountFooter();
