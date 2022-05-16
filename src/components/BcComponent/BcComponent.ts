@@ -29,14 +29,12 @@ export default class BcComponent implements IComponentManager {
     this.options = eval(settingObject);
     const initFrom = await this.owner.getAttributeValueAsync("from");
     const initTo = await this.owner.getAttributeValueAsync("to");
-    console.log("from is " , initFrom)
     if (!initFrom || !initTo) {
       const from = new Date()
         .toLocaleDateString("fa-IR")
         .replace(/([۰-۹])/g, (token) =>
           String.fromCharCode(token.charCodeAt(0) - 1728)
         );
-        console.log("from is " , from)
       this.loadCalendar(from, from, this.options, this.rKey );
     } else {
       this.loadCalendar(initFrom, initTo, this.options, this.rKey);

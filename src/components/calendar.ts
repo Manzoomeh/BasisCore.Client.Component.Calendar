@@ -270,8 +270,7 @@ export class DateRange {
     const daysName = this.dateUtil.getDayNames(this.options.lid , this.options.culture);
     const secondDayName = this.dateUtil.getDayNames(2, "en");
     const weekNameWrapper: Element = document.createElement("div");
-    weekNameWrapper.setAttribute("data-calendar-day-names", "");
-   
+    weekNameWrapper.setAttribute("data-calendar-day-names", "");   
     for (const index in daysName) {
       let enIndex = parseInt(index) - 1
       if(enIndex == -1){
@@ -343,12 +342,13 @@ export class DateRange {
     this.wrapper.appendChild(footerPart);
   }
   public async createUIAsync(container: Element): Promise<void> {
-    if (this.options.displayNote) {
-      //load notes from server;
-      await this.refreshNotesAsync();
-    }
+    
     this.wrapper = container;
-    return this.renderAsync();
+    this.renderAsync();
+    if (this.options.displayNote) {
+      await this.refreshNotesAsync();
+      this.renderAsync();
+    }
   }
   async sendAsyncData(form: FormData, url: string ) {
     var data = new URLSearchParams();

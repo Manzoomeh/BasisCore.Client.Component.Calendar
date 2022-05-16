@@ -42,14 +42,12 @@ export class UiCalendar {
       : null;
   }
   generateDaysUi(): Node {
-    
     let dayElement = document.createElement("div");
     let spanElement = document.createElement("span");
     let secondCulture = document.createElement("span");
     const dateWrapper = document.createElement("div");
     dayElement.setAttribute("data-calendar-day", "");
     dayElement.setAttribute("data-sys-inherit","")
-      
     secondCulture.setAttribute("data-calendar-second-day", "");
     dateWrapper.setAttribute("bc-calendar-date-wrppaer", "");
     secondCulture.textContent = this.day.secondValue + "";
@@ -486,6 +484,7 @@ export class UiCalendar {
           })
           shareItem.setAttribute("data-calendar-sharing-item","")
           shareUserName.setAttribute("data-calendar-sharing-username","")
+          shareUserName.setAttribute("data-sys-text","")
           shareUserName.textContent = e.name
           shareItemSpan.textContent =`( ${e.username} )` 
           shareUserName.appendChild(shareItemSpan)

@@ -123,10 +123,8 @@
             function setDates(el , event){
 		event.preventDefault()
 		const input = document.querySelectorAll(['[class="date-picker-input"]'])[0]
-        console.log("sssss", input)
 		const fromDate = input.getAttribute("data-datepicker-sstring");
 		const toDate = input.getAttribute("data-datepicker-to-sstring");
-        console.log("fromDate" , fromDate , toDate)
 		$bc.setSource("db.form" , [{"from": fromDate, "to" : toDate }] )
 	}
             var mySetting1 = {
