@@ -347,6 +347,16 @@ select {
   cursor: pointer;
   font-weight: normal;
 }
+[data-calendar-month-wrapper]{
+  background: #fff;
+  border: 1px solid #E9E9EA;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 14px;
+  width: 150px;
+  height: 42px;
+  cursor: pointer;
+}
 [data-calendar-no-message] {
   font-size: 12px;
   direction: rtl;

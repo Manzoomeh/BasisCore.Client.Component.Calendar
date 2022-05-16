@@ -191,7 +191,7 @@ export class DateRange {
     const calendarHeader : HTMLElement = document.createElement("div")
     headerElement.setAttribute("data-calendar-Header", "");
     monthNameElement.setAttribute("data-calendar-title", "");
-    monthNameElement.setAttribute("sys-text","")
+    monthNameElement.setAttribute("data-sys-text","")
     controlElement.setAttribute("data-calendar-tools", "");
     secondMonthName.setAttribute("data-calendar-second-culture","")
     monthNameElement.textContent =
@@ -199,6 +199,21 @@ export class DateRange {
       this.months[this.activeIndex].value.year;
     secondMonthName.textContent= this.months[this.activeIndex].secondMonthName
     monthNameElement.appendChild(secondMonthName)
+    const todayButton = document.createElement("button");
+    const todayWrapper = document.createElement("div")
+    todayButton.addEventListener("click", (e) => {
+      this.goToday();
+    });
+    const todayIcon = `<svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 9H4V11H6V9ZM10 9H8V11H10V9ZM14 9H12V11H14V9ZM16 2H15V0H13V2H5V0H3V2H2C0.89 2 0.00999999 2.9 0.00999999 4L0 18C0 19.1 0.89 20 2 20H16C17.1 20 18 19.1 18 18V4C18 2.9 17.1 2 16 2ZM16 18H2V7H16V18Z" fill="white"/>
+    </svg>
+    `
+    const todayText = document.createElement("span")
+    todayText.innerText= this.options.lid == 1 ? "امروز" : "Today";
+    todayButton.setAttribute("data-calendar-today-btn", "");
+    todayButton.setAttribute("data-sys-button","")
+    todayButton.innerHTML = todayText.innerText + todayIcon
+    todayWrapper.appendChild(todayButton);
     if (this.monthValues.length == 1) {
       const nextButton = document.createElement("button");
       const prevButton = document.createElement("button");
@@ -210,35 +225,24 @@ export class DateRange {
       });
 
       nextButton.innerHTML = `<svg width="11"  height="20" viewBox="0 0 11 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path sys-text=""  d="M0.37999 19.01C0.86999 19.5 1.65999 19.5 2.14999 19.01L10.46 10.7C10.85 10.31 10.85 9.68005 10.46 9.29005L2.14999 0.980049C1.65999 0.490049 0.86999 0.490049 0.37999 0.980049C-0.11001 1.47005 -0.11001 2.26005 0.37999 2.75005L7.61999 10L0.36999 17.25C-0.11001 17.73 -0.11001 18.5301 0.37999 19.01Z" fill="#323232"/>
+      <path data-sys-text=""  d="M0.37999 19.01C0.86999 19.5 1.65999 19.5 2.14999 19.01L10.46 10.7C10.85 10.31 10.85 9.68005 10.46 9.29005L2.14999 0.980049C1.65999 0.490049 0.86999 0.490049 0.37999 0.980049C-0.11001 1.47005 -0.11001 2.26005 0.37999 2.75005L7.61999 10L0.36999 17.25C-0.11001 17.73 -0.11001 18.5301 0.37999 19.01Z" fill="#323232"/>
       </svg>
       `;
       prevButton.innerHTML = `<svg width="11" height="20" viewBox="0 0 11 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path sys-text=""  d="M10.6201 0.990059C10.1301 0.500059 9.34006 0.500059 8.85006 0.990059L0.540059 9.30006C0.150059 9.69006 0.150059 10.3201 0.540059 10.7101L8.85006 19.0201C9.34006 19.5101 10.1301 19.5101 10.6201 19.0201C11.1101 18.5301 11.1101 17.7401 10.6201 17.2501L3.38006 10.0001L10.6301 2.75006C11.1101 2.27006 11.1101 1.47006 10.6201 0.990059Z" fill="#323232"/>
+      <path data-sys-text=""  d="M10.6201 0.990059C10.1301 0.500059 9.34006 0.500059 8.85006 0.990059L0.540059 9.30006C0.150059 9.69006 0.150059 10.3201 0.540059 10.7101L8.85006 19.0201C9.34006 19.5101 10.1301 19.5101 10.6201 19.0201C11.1101 18.5301 11.1101 17.7401 10.6201 17.2501L3.38006 10.0001L10.6301 2.75006C11.1101 2.27006 11.1101 1.47006 10.6201 0.990059Z" fill="#323232"/>
       </svg>
       `;
       nextButton.setAttribute("data-calendar-next", "");
       prevButton.setAttribute("data-calendar-prev", "");
       controlElement.appendChild(nextButton);
       controlElement.appendChild(prevButton);
-      const todayButton = document.createElement("button");
-      todayButton.addEventListener("click", (e) => {
-        this.goToday();
-      });
-      const todayIcon = `<svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M6 9H4V11H6V9ZM10 9H8V11H10V9ZM14 9H12V11H14V9ZM16 2H15V0H13V2H5V0H3V2H2C0.89 2 0.00999999 2.9 0.00999999 4L0 18C0 19.1 0.89 20 2 20H16C17.1 20 18 19.1 18 18V4C18 2.9 17.1 2 16 2ZM16 18H2V7H16V18Z" fill="white"/>
-      </svg>
-      `
-      const todayText = document.createElement("span")
-      todayText.innerText= this.options.lid == 1 ? "امروز" : "Today";
-      todayButton.setAttribute("data-calendar-today-btn", "");
-      todayButton.setAttribute("sys-button","")
-      todayButton.innerHTML = todayText.innerText + todayIcon
-      headerElement.appendChild(todayButton);
+     
     } else {
-      const monthsBtnWrapper = document.createElement("div");
+      const monthsBtnWrapper = document.createElement("select");
+      monthsBtnWrapper.setAttribute("data-calendar-month-wrapper" , "")
       this.monthValues.map((x, index) => {
-        const monthBtn = document.createElement("button");
+        const monthBtn = document.createElement("option");
+
         monthBtn.setAttribute("data-calendar-month-btn", "");
         monthBtn.textContent = this.dateUtil.getMonthName(
           x,
@@ -251,10 +255,13 @@ export class DateRange {
         });
         monthsBtnWrapper.appendChild(monthBtn);
       });
+      todayWrapper.appendChild(monthsBtnWrapper)
     }
+    
     calendarHeader.setAttribute("bc-calendar-calendar-header","")
     calendarHeader.appendChild(controlElement);
     calendarHeader.appendChild(monthNameElement);
+    headerElement.appendChild(todayWrapper)
     headerElement.appendChild(calendarHeader)
     
     return headerElement;
@@ -274,10 +281,10 @@ export class DateRange {
       const faSpan: Element = document.createElement("span");
       const enSpan: Element = document.createElement("span")
       dayWrapper.setAttribute("data-calendar-day-name", "");
-      dayWrapper.setAttribute("sys-text", "");
-      dayWrapper.setAttribute("sys-bg","")
+      dayWrapper.setAttribute("data-sys-text", "");
+      dayWrapper.setAttribute("data-sys-bg","")
       enSpan.setAttribute("data-calendar-second-day-name" , "")
-      enSpan.setAttribute("sys-text","")
+      enSpan.setAttribute("data-sys-text","")
       faSpan.textContent = daysName[index];
       enSpan.textContent= secondDayName[enIndex]
       dayWrapper.appendChild(faSpan);
@@ -299,8 +306,8 @@ export class DateRange {
     for (var j = 0; j < firstDayInMonth; j++) {
       let dayElement = document.createElement("div");
       dayElement.setAttribute("data-calendar-day", "");
-      dayElement.setAttribute("sys-inherit","")
-      dayElement.setAttribute("sys-text","")
+      dayElement.setAttribute("data-sys-inherit","")
+      dayElement.setAttribute("data-sys-text","")
       mainElement.appendChild(dayElement);
     }
     this.months[this.activeIndex].days.map((x) => {
@@ -311,8 +318,8 @@ export class DateRange {
     for (var j = 0; j < 6 - lastDayInMonth; j++) {
       let dayElement = document.createElement("div");
       dayElement.setAttribute("data-calendar-day", "");
-      dayElement.setAttribute("sys-inherit","")
-      dayElement.setAttribute("sys-text","")
+      dayElement.setAttribute("data-sys-inherit","")
+      dayElement.setAttribute("data-sys-text","")
       mainElement.appendChild(dayElement);
     }
     bodyElement.append(mainElement);

@@ -1,6 +1,6 @@
 import { Day } from "../Day/Day";
 import { DatePicker } from "../DatePicker";
-
+declare const $bc: any;
 export class UiDatePicker {
   private readonly day: Day;
   readonly range: DatePicker;
@@ -14,12 +14,12 @@ export class UiDatePicker {
     let secondDayNumber = document.createElement("span")
     dayElement.setAttribute("data-datepicker-day", "");
     secondDayNumber.setAttribute("data-datepicker-second-culture-day" , "")    
-    secondDayNumber.setAttribute("sys-text" , "")
-    spanElement.setAttribute("sys-text","")
+    secondDayNumber.setAttribute("data-sys-text" , "")
+    spanElement.setAttribute("data-sys-text","")
     secondDayNumber.textContent= (this.day.secondValue ? this.day.secondValue +"" : "") ;
     spanElement.textContent = this.day.currentDay.day + "";
     dayElement.setAttribute("data-datepicker-id", this.day.dateId.toString());
-    dayElement.setAttribute("sys-inherit","")
+    dayElement.setAttribute("data-sys-inherit","")
     dayElement.appendChild(spanElement);
     dayElement.appendChild(secondDayNumber)
     if (this.day.isToday == true) {
@@ -51,18 +51,20 @@ export class UiDatePicker {
     let secondDayNumber = document.createElement("span")
     dayElement.setAttribute("data-datepicker-day", "");
     secondDayNumber.setAttribute("data-datepicker-second-culture-day" , "")    
-    secondDayNumber.setAttribute("sys-text" , "")
-    spanElement.setAttribute("sys-text","")
+    secondDayNumber.setAttribute("data-sys-text" , "")
+    spanElement.setAttribute("data-sys-text","")
     secondDayNumber.textContent= (this.day.secondValue ? this.day.secondValue +"" : "") ;
     spanElement.textContent = this.day.currentDay.day + "";    
     dayElement.setAttribute("data-datepicker-id", this.day.dateId.toString());
-    dayElement.setAttribute("sys-inherit","")
+    dayElement.setAttribute("data-sys-inherit","")
     dayElement.appendChild(spanElement);
     dayElement.appendChild(secondDayNumber)
     if (this.day.isToday == true) {
       dayElement.setAttribute("data-datepicker-today", "");
     }    
-    dayElement.addEventListener("click", (e) => {      
+    
+    dayElement.addEventListener("click", (e) => {   
+      
       const selectDate =
         this.day.currentDay.year +
         "/" +
@@ -85,6 +87,9 @@ export class UiDatePicker {
           "data-datepicker-sstring",
           selectDate
         );
+        
+        this.range.fromdate = selectDate
+        
       }
       else if(this.range.datesArray.length > 1){
         if(parentElement.querySelector("[data-datepicker-end-day]")){
@@ -100,6 +105,10 @@ export class UiDatePicker {
           selectDate
         );
         dayElement.setAttribute("data-datepicker-end-day","")
+        const spans = dayElement.querySelectorAll("span")
+          spans.forEach(e => {
+            e.setAttribute("data-sys-text-white","")     
+          })
         const startDayId = this.range.dateUtil.getBasisDayId(this.range.datesArray[0])
         const lastDayId = this.range.dateUtil.getBasisDayId(this.range.datesArray[1])
         this.range.datesArray=[]
@@ -107,6 +116,10 @@ export class UiDatePicker {
         if(this.range.options.type == "click"){
           this.range.wrapper.remove();
         }
+        if(this.range.options.sourceid){
+          $bc.setSource(this.range.options.sourceid ,  [{"from": this.range.fromdate, "to" : selectDate }]);
+        }
+        
        
       }
      
@@ -124,7 +137,11 @@ export class UiDatePicker {
           x.setAttribute("data-disabled" , "")
         }
         else if(parseInt(dateId) == selectedDateId){
-          x.setAttribute("data-datepicker-selected" , "")          
+          x.setAttribute("data-datepicker-selected" , "")  
+          const spans = x.querySelectorAll("span")
+          spans.forEach(e => {
+            e.setAttribute("data-sys-text-white","")     
+          })
         }
      
       })

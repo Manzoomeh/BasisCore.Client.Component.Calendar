@@ -48,7 +48,7 @@ export class UiCalendar {
     let secondCulture = document.createElement("span");
     const dateWrapper = document.createElement("div");
     dayElement.setAttribute("data-calendar-day", "");
-    dayElement.setAttribute("sys-inherit","")
+    dayElement.setAttribute("data-sys-inherit","")
       
     secondCulture.setAttribute("data-calendar-second-day", "");
     dateWrapper.setAttribute("bc-calendar-date-wrppaer", "");
@@ -60,10 +60,10 @@ export class UiCalendar {
     dayElement.appendChild(dateWrapper);
     if(this.day.isHoliday){
       dayElement.setAttribute("data-calendar-holiday" ,"")
-      dayElement.setAttribute("sys-text-secondary" ,"")      
+      dayElement.setAttribute("data-sys-text-secondary" ,"")      
     }
     else{
-      dayElement.setAttribute("sys-text","")
+      dayElement.setAttribute("data-sys-text","")
     }
     let ulElement = document.createElement("ul");
     let noteElement = document.createElement("div");
@@ -124,13 +124,13 @@ export class UiCalendar {
     const catsList= editCodeWrapper.querySelector("#da-bc-calendar-cats-list")
     this.range.categories.forEach((e) => {
       const catLi = document.createElement("li")
-      catLi.setAttribute("sys-input-text","")
+      catLi.setAttribute("data-sys-input-text","")
       const catSpan=document.createElement("span")
       const catTitle = document.createElement("span")
       catSpan.setAttribute("style",`background-color:${e.color}`)
       catSpan.setAttribute("bc-calendar-cat-color","")
       catTitle.textContent= e.title
-      catTitle.setAttribute("sys-text","")
+      catTitle.setAttribute("data-sys-text","")
       catLi.appendChild(catSpan)
       catLi.appendChild(catTitle)
       catLi.setAttribute("data-id" , e.id.toString())
@@ -220,10 +220,10 @@ export class UiCalendar {
         const newSharingMinus = document.createElement("div")
         newSharingEmail.setAttribute("data-calendar-share-form","")
         newSharingMinus.setAttribute("data-calendar-remove-sharing","")
-        newSharingMinus.setAttribute("sys-bg-secondary","")
+        newSharingMinus.setAttribute("data-sys-bg-secondary","")
         newSharingEmailInput.setAttribute("data-calendar-share-input","")
         newSharingEmailInput.setAttribute("type","text")
-        newSharingEmailInput.setAttribute("sys-input-text","")
+        newSharingEmailInput.setAttribute("data-sys-input-text","")
         newSharingMinus.innerHTML=`<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M2.04028 0.0603034L0.0603845 2.0402L4.02018 6L0.0603845 9.9598L2.04028 11.9397L6.00008 7.9799L9.95988 11.9397L11.9398 9.9598L7.97998 6L11.9398 2.0402L9.95988 0.0603037L6.00008 4.0201L2.04028 0.0603034Z" fill="#B40020"></path>
         </svg>`
@@ -283,13 +283,13 @@ export class UiCalendar {
     modalBtns.setAttribute("data-calendar-modal-btns", "");
     currentDate.setAttribute("data-calendar-modal-header-date", "");
     currentDate.setAttribute("data-calendar-modal-header-date", "");
-    currentDate.setAttribute("sys-text","")
+    currentDate.setAttribute("data-sys-text","")
     newBtn.innerHTML = `<svg  width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path sys-text="" d="M9.9 4.5H8.1V8.1H4.5V9.9H8.1V13.5H9.9V9.9H13.5V8.1H9.9V4.5ZM9 0C4.032 0 0 4.032 0 9C0 13.968 4.032 18 9 18C13.968 18 18 13.968 18 9C18 4.032 13.968 0 9 0ZM9 16.2C5.031 16.2 1.8 12.969 1.8 9C1.8 5.031 5.031 1.8 9 1.8C12.969 1.8 16.2 5.031 16.2 9C16.2 12.969 12.969 16.2 9 16.2Z" fill="#004B85"/>
+    <path data-sys-text="" d="M9.9 4.5H8.1V8.1H4.5V9.9H8.1V13.5H9.9V9.9H13.5V8.1H9.9V4.5ZM9 0C4.032 0 0 4.032 0 9C0 13.968 4.032 18 9 18C13.968 18 18 13.968 18 9C18 4.032 13.968 0 9 0ZM9 16.2C5.031 16.2 1.8 12.969 1.8 9C1.8 5.031 5.031 1.8 9 1.8C12.969 1.8 16.2 5.031 16.2 9C16.2 12.969 12.969 16.2 9 16.2Z" fill="#004B85"/>
     </svg>
     `;
     closeBtn.innerHTML = `<svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path sys-text="" opacity="0.8" d="M8.05223 7.49989L13.3519 13.3409C13.6968 13.7208 13.6968 14.3351 13.3519 14.7151C13.0072 15.095 12.4498 15.095 12.1051 14.7151L6.80521 8.87405L1.50552 14.7151C1.16063 15.095 0.603404 15.095 0.258671 14.7151C-0.0862237 14.3351 -0.0862237 13.7208 0.258671 13.3409L5.55836 7.49989L0.258671 1.65889C-0.0862237 1.27896 -0.0862237 0.66466 0.258671 0.284728C0.430473 0.0952063 0.656366 0 0.882097 0C1.10783 0 1.33356 0.0952063 1.50552 0.284728L6.80521 6.12572L12.1051 0.284728C12.277 0.0952063 12.5028 0 12.7285 0C12.9542 0 13.18 0.0952063 13.3519 0.284728C13.6968 0.66466 13.6968 1.27896 13.3519 1.65889L8.05223 7.49989Z" fill="black"/>
+    <path data-sys-text="" opacity="0.8" d="M8.05223 7.49989L13.3519 13.3409C13.6968 13.7208 13.6968 14.3351 13.3519 14.7151C13.0072 15.095 12.4498 15.095 12.1051 14.7151L6.80521 8.87405L1.50552 14.7151C1.16063 15.095 0.603404 15.095 0.258671 14.7151C-0.0862237 14.3351 -0.0862237 13.7208 0.258671 13.3409L5.55836 7.49989L0.258671 1.65889C-0.0862237 1.27896 -0.0862237 0.66466 0.258671 0.284728C0.430473 0.0952063 0.656366 0 0.882097 0C1.10783 0 1.33356 0.0952063 1.50552 0.284728L6.80521 6.12572L12.1051 0.284728C12.277 0.0952063 12.5028 0 12.7285 0C12.9542 0 13.18 0.0952063 13.3519 0.284728C13.6968 0.66466 13.6968 1.27896 13.3519 1.65889L8.05223 7.49989Z" fill="black"/>
     </svg>
     `;
 
@@ -314,13 +314,13 @@ export class UiCalendar {
       const catsList= newBox.querySelector("#da-bc-calendar-cats-list")
       this.range.categories.forEach((e) => {
         const catLi = document.createElement("li")
-        catLi.setAttribute("sys-input-text","")
+        catLi.setAttribute("data-sys-input-text","")
         const catSpan=document.createElement("span")
         const catTitle = document.createElement("span")
         catSpan.setAttribute("style",`background-color:${e.color}`)
         catSpan.setAttribute("bc-calendar-cat-color","")
         catTitle.textContent= e.title
-        catTitle.setAttribute("sys-text","")
+        catTitle.setAttribute("data-sys-text","")
         catLi.appendChild(catSpan)
         catLi.appendChild(catTitle)
         catLi.setAttribute("data-id" , e.id.toString())
@@ -381,14 +381,14 @@ export class UiCalendar {
     if (todayNote.length == 0) {
       let divElement = document.createElement("div");
       divElement.setAttribute("data-calendar-no-message", "");
-      divElement.setAttribute("sys-inherit", "");
+      divElement.setAttribute("data-sys-inherit", "");
       const emptyListText = "هیچ یادآوری در این روز وجود ندارد.";
       const emptyListIcon = `<svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M30.6 47.6C30.6 45.7222 32.1222 44.2 34 44.2C35.8778 44.2 37.4 45.7222 37.4 47.6C37.4 49.4778 35.8778 51 34 51C32.1222 51 30.6 49.4778 30.6 47.6ZM30.6 20.4C30.6 18.5222 32.1222 17 34 17C35.8778 17 37.4 18.5222 37.4 20.4V34C37.4 35.8778 35.8778 37.4 34 37.4C32.1222 37.4 30.6 35.8778 30.6 34V20.4ZM33.966 0C15.198 0 0 15.232 0 34C0 52.768 15.198 68 33.966 68C52.768 68 68 52.768 68 34C68 15.232 52.768 0 33.966 0ZM34 61.2C18.972 61.2 6.8 49.028 6.8 34C6.8 18.972 18.972 6.8 34 6.8C49.028 6.8 61.2 18.972 61.2 34C61.2 49.028 49.028 61.2 34 61.2Z" fill="#D0D0D0"/>
       </svg>
       `;
       divElement.innerHTML = emptyListIcon + emptyListText;
-      divElement.setAttribute("sys-text-disabled","")
+      divElement.setAttribute("data-sys-text-disabled","")
       modalBody.appendChild(divElement);
     }
     todayNote.map((x) => {
@@ -412,7 +412,7 @@ export class UiCalendar {
       textSpan.textContent = x.note;
       description.textContent = x.description;
       moreButton.innerHTML = `<svg width="5" height="17" viewBox="0 0 5 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path sys-text="" d="M2.35707 6.63415C1.28564 6.63415 0.428502 7.46341 0.428502 8.5C0.428502 9.53658 1.28564 10.3659 2.35707 10.3659C3.4285 10.3659 4.28564 9.53658 4.28564 8.5C4.28564 7.46341 3.4285 6.63415 2.35707 6.63415ZM4.28564 1.86585C4.28564 2.90244 3.4285 3.73171 2.35707 3.73171C1.28564 3.73171 0.428502 2.90244 0.428502 1.86585C0.428502 0.829268 1.28564 0 2.35707 0C3.4285 0 4.28564 0.829268 4.28564 1.86585ZM4.28564 15.1341C4.28564 16.1707 3.4285 17 2.35707 17C1.28564 17 0.428502 16.1707 0.428502 15.1341C0.428502 14.0976 1.28564 13.2683 2.35707 13.2683C3.4285 13.2683 4.28564 14.0976 4.28564 15.1341Z" fill="#525252"/>
+      <path data-sys-text="" d="M2.35707 6.63415C1.28564 6.63415 0.428502 7.46341 0.428502 8.5C0.428502 9.53658 1.28564 10.3659 2.35707 10.3659C3.4285 10.3659 4.28564 9.53658 4.28564 8.5C4.28564 7.46341 3.4285 6.63415 2.35707 6.63415ZM4.28564 1.86585C4.28564 2.90244 3.4285 3.73171 2.35707 3.73171C1.28564 3.73171 0.428502 2.90244 0.428502 1.86585C0.428502 0.829268 1.28564 0 2.35707 0C3.4285 0 4.28564 0.829268 4.28564 1.86585ZM4.28564 15.1341C4.28564 16.1707 3.4285 17 2.35707 17C1.28564 17 0.428502 16.1707 0.428502 15.1341C0.428502 14.0976 1.28564 13.2683 2.35707 13.2683C3.4285 13.2683 4.28564 14.0976 4.28564 15.1341Z" fill="#525252"/>
       </svg>
       `;
       textSpan.setAttribute("bc-calendar-note-title", "");
@@ -469,7 +469,7 @@ export class UiCalendar {
           const shareItemSpan = document.createElement("span")
           const removeSharing = document.createElement("div")
           removeSharing.setAttribute("data-calendar-remove-sharing","")
-          removeSharing.setAttribute("sys-bg-secondary","")
+          removeSharing.setAttribute("data-sys-bg-secondary","")
           removeSharing.innerHTML=`<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M2.04028 0.0603034L0.0603845 2.0402L4.02018 6L0.0603845 9.9598L2.04028 11.9397L6.00008 7.9799L9.95988 11.9397L11.9398 9.9598L7.97998 6L11.9398 2.0402L9.95988 0.0603037L6.00008 4.0201L2.04028 0.0603034Z" fill="#B40020"/>
           </svg>

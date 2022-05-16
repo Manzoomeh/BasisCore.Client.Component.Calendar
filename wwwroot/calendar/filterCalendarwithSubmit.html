@@ -96,7 +96,7 @@
                         <div class="date-picker-input-wrapper">
                             <span>از تاریخ
                             </span>
-                            <basis core="component.calendar.datepicker"  name="from" run="atclient" options="mySetting" OnRendered="setDates"></basis>
+                            <basis core="component.calendar.datepicker"  name="from" run="atclient" options="mySetting" ></basis>
                         </div>
 
                     </div>
@@ -105,7 +105,7 @@
                 <button class="filter-submit"  onclick="setDates(this,event)" >انتخاب</button>
             </div>
         </form>
-        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="" to="" options="mySetting1" rkey="C11BAC29-5A38-4F7E-91B2-D57E2C949E49"></Basis>
+        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="" to="" options="mySetting1" rkey="6299E4DE-2437-402F-9DBE-2959EA7E8365"></Basis>
 
         <script>
             var mySetting = {
@@ -123,10 +123,8 @@
             function setDates(el , event){
 		event.preventDefault()
 		const input = document.querySelectorAll(['[class="date-picker-input"]'])[0]
-        console.log("sssss", input)
 		const fromDate = input.getAttribute("data-datepicker-sstring");
 		const toDate = input.getAttribute("data-datepicker-to-sstring");
-        console.log("fromDate" , fromDate , toDate)
 		$bc.setSource("db.form" , [{"from": fromDate, "to" : toDate }] )
 	}
             var mySetting1 = {
@@ -138,14 +136,14 @@
                 dmnid : 6,
                 baseUrl: {
                     "userid" : "https://trust-login.com/api/userid",
-                    "viewnote" :"https://basispanel.ir/user/fa/C11BAC29-5A38-4F7E-91B2-D57E2C949E49/viewcalendarnote",
-                    "usernotes" :"https://basispanel.ir/user/C11BAC29-5A38-4F7E-91B2-D57E2C949E49/calendarnotes",
-                    "removenote":"http://basispanel.ir/user/C11BAC29-5A38-4F7E-91B2-D57E2C949E49/removenote",
-                    "addnote":"https://basispanel.ir/user/C11BAC29-5A38-4F7E-91B2-D57E2C949E49/addcalendarnote",
-                    "reminder" : "http://basispanel.ir/user/C11BAC29-5A38-4F7E-91B2-D57E2C949E49/editnotereminder",
-                    "catlist":"https://basispanel.ir/user/C11BAC29-5A38-4F7E-91B2-D57E2C949E49/fa/notecatlist",
-                    "sharing" :"https://basispanel.ir/user/C11BAC29-5A38-4F7E-91B2-D57E2C949E49/sharing",
-                    "removesharing":"https://basispanel.ir/user/C11BAC29-5A38-4F7E-91B2-D57E2C949E49/removesharing"
+                    "viewnote" :"https://basispanel.ir/user/fa/6299E4DE-2437-402F-9DBE-2959EA7E8365/viewcalendarnote",
+                    "usernotes" :"https://basispanel.ir/user/6299E4DE-2437-402F-9DBE-2959EA7E8365/calendarnotes",
+                    "removenote":"http://basispanel.ir/user/6299E4DE-2437-402F-9DBE-2959EA7E8365/removenote",
+                    "addnote":"https://basispanel.ir/user/6299E4DE-2437-402F-9DBE-2959EA7E8365/addcalendarnote",
+                    "reminder" : "http://basispanel.ir/user/6299E4DE-2437-402F-9DBE-2959EA7E8365/editnotereminder",
+                    "catlist":"https://basispanel.ir/user/6299E4DE-2437-402F-9DBE-2959EA7E8365/fa/notecatlist",
+                    "sharing" :"https://basispanel.ir/user/6299E4DE-2437-402F-9DBE-2959EA7E8365/sharing",
+                    "removesharing":"https://basispanel.ir/user/6299E4DE-2437-402F-9DBE-2959EA7E8365/removesharing"
                 },
                 labels: {
                     "list":"لیست یادداشت‌ها",

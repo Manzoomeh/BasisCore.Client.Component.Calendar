@@ -33,7 +33,7 @@ export class Modal {
       this.closeModal();
     });
     modalBody.setAttribute("data-modal-form", "");
-    modalBody.setAttribute("sys-popup","")
+    modalBody.setAttribute("data-sys-popup","")
     modalBody.addEventListener("click", (e) => {
       e.stopPropagation();
     });
