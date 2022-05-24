@@ -15,6 +15,8 @@ ul {
   cursor: pointer;
   background: #fff;
   position: relative;
+  border-top: 0;
+
 }
 p {
   padding: 0;
@@ -237,6 +239,7 @@ select {
   animation: modalBoxOpen 0.5s ease;
   margin-top: 80px;
   min-height: 300px;
+  position: fixed;
 }
 @keyframes modalBoxOpen {
   0% {
@@ -452,6 +455,7 @@ select {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  direction: ltr;
 
 }
 
@@ -548,7 +552,7 @@ align-items: center;
 }
 [bc-calendar-drop-down] {
   width: 125px;
-  margin-right: 15px;
+  /* margin-right: 15px; */
   z-index: 1;
   height: 40px;
 }
@@ -743,6 +747,7 @@ align-items: center;
 [new-form-submit-cancel-buttons] {
   float: right;
   margin-top: 30px;
+  direction: ltr;
 }
 [data-calendar-form-row-share]{
   margin-bottom: 20px;

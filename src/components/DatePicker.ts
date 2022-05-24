@@ -132,8 +132,10 @@ export class DatePicker {
     prevButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon__svg"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></path></svg>`;
     nextButton.setAttribute("data-datepicker-next", "");
     prevButton.setAttribute("data-datepicker-prev", "");
-    nextButton.setAttribute("data-sys-bg","")
-    prevButton.setAttribute("data-sys-bg","")
+    nextButton.setAttribute("data-sys-inherit","")
+    prevButton.setAttribute("data-sys-inherit","")
+    nextButton.setAttribute("data-sys-text","")
+    prevButton.setAttribute("data-sys-text","")
     } else {
       const monthsBtnWrapper = document.createElement("div");
       this.monthValues.map((x, index) => {

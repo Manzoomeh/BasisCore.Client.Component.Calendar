@@ -447,7 +447,8 @@ export class UiCalendar {
       const removeBtn: HTMLElement = moreButtonBox.querySelector(
         "[bc-calendar-delete-note]"
       );
-      const reminderBtn : HTMLElement = moreButtonBox.querySelector("[bc-calendar-reminder-note]")
+      // const reminderBtn : HTMLElement = moreButtonBox.querySelector("[bc-calendar-reminder-note]")
+      const reminderBtn : HTMLElement = document.createElement("div")
       shareBtn.addEventListener("click", async (e) => {
         modalBody.innerHTML = "";
         modalBody.appendChild(this.generateShareForm(x));
@@ -514,22 +515,14 @@ export class UiCalendar {
           if(data.errorid == 3){
             const inputs = modalBody.querySelectorAll("[data-calendar-share-form]")
             data.users.forEach((e,i) => {
+              const errors = inputs[i].querySelectorAll("[data-calendar-tooltip-flag]")
+              errors.forEach(e => {
+                e.remove()
+              })
               if(e.errorid == 7) {
                 const error = document.createElement("div")
                 error.setAttribute("data-calendar-tooltip","")
-                error.setAttribute("style","display: block")
-                error.innerHTML=` <svg width="20" height="20" viewBox="0 0 20 20" fill="#B40020" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 14C9 13.4477 9.44772 13 10 13C10.5523 13 11 13.4477 11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14ZM9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6V10C11 10.5523 10.5523 11 10 11C9.44772 11 9 10.5523 9 10V6ZM9.99 0C4.47 0 0 4.48 0 10C0 15.52 4.47 20 9.99 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 9.99 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#B40020"></path>
-              </svg>
-               <span>
-               یکی از یوزرها اشتباه است 
-               لطفا مجددا بررسی کنید
-               </span> `
-                inputs[i].appendChild(error)
-              } 
-              else if(e.errorid == 7) {
-                const error = document.createElement("div")
-                error.setAttribute("data-calendar-tooltip","")
+                error.setAttribute("data-calendar-tooltip-flag","")
                 error.setAttribute("style","display: block")
                 error.innerHTML=` <svg width="20" height="20" viewBox="0 0 20 20" fill="#B40020" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9 14C9 13.4477 9.44772 13 10 13C10.5523 13 11 13.4477 11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14ZM9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6V10C11 10.5523 10.5523 11 10 11C9.44772 11 9 10.5523 9 10V6ZM9.99 0C4.47 0 0 4.48 0 10C0 15.52 4.47 20 9.99 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 9.99 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#B40020"></path>
@@ -542,17 +535,22 @@ export class UiCalendar {
               } 
               else if(e.errorid == 11) {
                 const error = document.createElement("div")
-                error.setAttribute("data-calendar-tooltip-successfull","")
+                error.setAttribute("data-calendar-tooltip","")
+                error.setAttribute("data-calendar-tooltip-flag","")
                 error.setAttribute("style","display: block")
-                error.innerHTML=` <svg width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 10.2L2.5 6.70001C2.11 6.31001 1.49 6.31001 1.1 6.70001C0.710003 7.09001 0.710003 7.71001 1.1 8.10001L5.29 12.29C5.68 12.68 6.31 12.68 6.7 12.29L17.3 1.70001C17.69 1.31001 17.69 0.690007 17.3 0.300007C16.91 -0.0899927 16.29 -0.0899927 15.9 0.300007L6 10.2Z" fill="#55c90f"></path>
-                </svg>
-              `
+                error.innerHTML=` <svg width="20" height="20" viewBox="0 0 20 20" fill="#B40020" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 14C9 13.4477 9.44772 13 10 13C10.5523 13 11 13.4477 11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14ZM9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6V10C11 10.5523 10.5523 11 10 11C9.44772 11 9 10.5523 9 10V6ZM9.99 0C4.47 0 0 4.48 0 10C0 15.52 4.47 20 9.99 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 9.99 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#B40020"></path>
+              </svg>
+               <span>
+              فایل قبلا با کاربر به اشتراک گذاشته شده است
+               </span> `
                 inputs[i].appendChild(error)
-              }
+              } 
+       
               else if(e.errorid == 12) {
                 const error = document.createElement("div")
                 error.setAttribute("data-calendar-tooltip","")
+                error.setAttribute("data-calendar-tooltip-flag","")
                 error.setAttribute("style","display: block")
                 error.innerHTML=` <svg width="20" height="20" viewBox="0 0 20 20" fill="#B40020" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9 14C9 13.4477 9.44772 13 10 13C10.5523 13 11 13.4477 11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14ZM9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6V10C11 10.5523 10.5523 11 10 11C9.44772 11 9 10.5523 9 10V6ZM9.99 0C4.47 0 0 4.48 0 10C0 15.52 4.47 20 9.99 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 9.99 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#B40020"></path>
@@ -562,14 +560,33 @@ export class UiCalendar {
                </span> `
                 inputs[i].appendChild(error)
               } 
+              else if(e.errorid == 8) {
+                const error = document.createElement("div")
+                error.setAttribute("data-calendar-tooltip","")
+                error.setAttribute("data-calendar-tooltip-flag","")
+                error.setAttribute("style","display: block")
+                error.innerHTML=` <svg width="20" height="20" viewBox="0 0 20 20" fill="#B40020" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 14C9 13.4477 9.44772 13 10 13C10.5523 13 11 13.4477 11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14ZM9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6V10C11 10.5523 10.5523 11 10 11C9.44772 11 9 10.5523 9 10V6ZM9.99 0C4.47 0 0 4.48 0 10C0 15.52 4.47 20 9.99 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 9.99 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#B40020"></path>
+              </svg>
+               <span>
+              نام کاربری اشتباه است 
+               </span> `
+                inputs[i].appendChild(error)
+              } 
             })
           }
           else if(data.errorid == 5){
+
             const inputs = modalBody.querySelectorAll("[data-calendar-share-form]")
             data.users.forEach((e,i) => {
+              const errors = inputs[i].querySelectorAll("[data-calendar-tooltip-flag]")
+              errors.forEach(e => {
+                e.remove()
+              })
               if(e.errorid == 8) {
                 const error = document.createElement("div")
                 error.setAttribute("data-calendar-tooltip","")
+                error.setAttribute("data-calendar-tooltip-flag","")
                 error.setAttribute("style","display: block")
                 error.innerHTML=` <svg width="20" height="20" viewBox="0 0 20 20" fill="#B40020" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9 14C9 13.4477 9.44772 13 10 13C10.5523 13 11 13.4477 11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14ZM9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6V10C11 10.5523 10.5523 11 10 11C9.44772 11 9 10.5523 9 10V6ZM9.99 0C4.47 0 0 4.48 0 10C0 15.52 4.47 20 9.99 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 9.99 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#B40020"></path>
@@ -583,6 +600,7 @@ export class UiCalendar {
               if(e.errorid == 7) {
                 const error = document.createElement("div")
                 error.setAttribute("data-calendar-tooltip","")
+                error.setAttribute("data-calendar-tooltip-flag","")
                 error.setAttribute("style","display: block")
                 error.innerHTML=` <svg width="20" height="20" viewBox="0 0 20 20" fill="#B40020" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9 14C9 13.4477 9.44772 13 10 13C10.5523 13 11 13.4477 11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14ZM9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6V10C11 10.5523 10.5523 11 10 11C9.44772 11 9 10.5523 9 10V6ZM9.99 0C4.47 0 0 4.48 0 10C0 15.52 4.47 20 9.99 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 9.99 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#B40020"></path>
@@ -596,6 +614,7 @@ export class UiCalendar {
               else if(e.errorid == 11) {
                 const error = document.createElement("div")
                 error.setAttribute("data-calendar-tooltip-successfull","")
+                error.setAttribute("data-calendar-tooltip-flag","")
                 error.setAttribute("style","display: block")
                 error.innerHTML=` <svg width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6 10.2L2.5 6.70001C2.11 6.31001 1.49 6.31001 1.1 6.70001C0.710003 7.09001 0.710003 7.71001 1.1 8.10001L5.29 12.29C5.68 12.68 6.31 12.68 6.7 12.29L17.3 1.70001C17.69 1.31001 17.69 0.690007 17.3 0.300007C16.91 -0.0899927 16.29 -0.0899927 15.9 0.300007L6 10.2Z" fill="#55c90f"></path>
@@ -606,6 +625,7 @@ export class UiCalendar {
               else if(e.errorid == 12) {
                 const error = document.createElement("div")
                 error.setAttribute("data-calendar-tooltip","")
+                error.setAttribute("data-calendar-tooltip-flag","")
                 error.setAttribute("style","display: block")
                 error.innerHTML=` <svg width="20" height="20" viewBox="0 0 20 20" fill="#B40020" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9 14C9 13.4477 9.44772 13 10 13C10.5523 13 11 13.4477 11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14ZM9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6V10C11 10.5523 10.5523 11 10 11C9.44772 11 9 10.5523 9 10V6ZM9.99 0C4.47 0 0 4.48 0 10C0 15.52 4.47 20 9.99 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 9.99 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#B40020"></path>
@@ -696,6 +716,7 @@ export class UiCalendar {
       })
      
       removeBtn.addEventListener("click", async (e) => {
+        
         e.preventDefault();
         const obj ={
           noteid : x.id

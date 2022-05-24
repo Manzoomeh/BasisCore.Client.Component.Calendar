@@ -97,28 +97,28 @@ body{
  
  }
 
-[data-calendar-day]:nth-child(7n+1):nth-last-child(-n+7) {
+[data-calendar-day]:nth-child(7n+7) {
   border-bottom: 1px solid #e8e8e8 !important;
 }
-[data-calendar-day]:nth-child(4n+1):nth-last-child(-n+4) {
-    border-bottom: 1px solid #e8e8e8 !important;
-  }
-[data-calendar-day]:nth-child(6n+1):nth-last-child(-n+6) {
-    border-bottom: 1px solid #e8e8e8 !important;
-  }
-
-[data-calendar-day]:nth-child(3n+1):nth-last-child(-n+3) {
-border-bottom: 1px solid #e8e8e8 !important;
-}
-[data-calendar-day]:nth-child(2n+1):nth-last-child(-n+2) {
-    border-bottom: 1px solid #e8e8e8 !important;
-  }
-[data-calendar-day]:nth-child(1n+1):nth-last-child(-n+1) {
-border-bottom: 1px solid #e8e8e8 !important;
-}
-[data-calendar-day]:nth-child(0n+1):nth-last-child(-n+0) {
+[data-calendar-day]:nth-child(4n+4) {
     border-bottom: 1px solid #e8e8e8 !important;
     }
+[data-calendar-day]:nth-child(6n+6) {
+    border-bottom: 1px solid #e8e8e8 !important;
+  }
+  [data-calendar-day]:nth-child(5n+5) {
+    border-bottom: 1px solid #e8e8e8 !important;
+  }
+[data-calendar-day]:nth-child(3n+3) {
+border-bottom: 1px solid #e8e8e8 !important;
+}
+[data-calendar-day]:nth-child(2n+2) {
+    border-bottom: 1px solid #e8e8e8 !important;
+  }
+[data-calendar-day]:nth-child(1n+1){
+border-bottom: 1px solid #e8e8e8 !important;
+}
+
  [data-datepicker-days-en]{
      direction: ltr;
  }
