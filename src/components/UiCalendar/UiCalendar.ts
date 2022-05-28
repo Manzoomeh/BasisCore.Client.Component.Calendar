@@ -100,6 +100,7 @@ export class UiCalendar {
     return dayElement;
   }
   generateNoteForm(note?: INote, creator? : number): HTMLElement {
+    
     const editCodeWrapper: HTMLElement = document.createElement("div");
     editCodeWrapper.innerHTML = newForm;
 
@@ -204,37 +205,11 @@ export class UiCalendar {
   generateShareForm(note? : INote): Node{
     let formWrapper = document.createElement("form");
     formWrapper.innerHTML = layout;
-    const plusBtn = formWrapper.querySelector("[data-calendar-add-sharing]")
     const sharingParent= formWrapper.querySelector("[data-calendar-share-form-uniqe]")
     const submitShareForm = formWrapper.querySelector("[data-reminder-submit]")
     const sharingInputUniqe = formWrapper.querySelector("#data-calendar-share-input-uniqe") as HTMLInputElement
     sharingInputUniqe.addEventListener("keyup", (e) =>{
       submitShareForm.removeAttribute("disabled")
-    })
-    plusBtn.addEventListener("click" , (e) => {
-      if(sharingInputUniqe.value){
-        const newSharingEmail = document.createElement("div")
-        const newSharingEmailInput = document.createElement("input")
-        const newSharingMinus = document.createElement("div")
-        newSharingEmail.setAttribute("data-calendar-share-form","")
-        newSharingMinus.setAttribute("data-calendar-remove-sharing","")
-        newSharingMinus.setAttribute("data-sys-bg-secondary","")
-        newSharingEmailInput.setAttribute("data-calendar-share-input","")
-        newSharingEmailInput.setAttribute("type","text")
-        newSharingEmailInput.setAttribute("data-sys-input-text","")
-        newSharingMinus.innerHTML=`<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M2.04028 0.0603034L0.0603845 2.0402L4.02018 6L0.0603845 9.9598L2.04028 11.9397L6.00008 7.9799L9.95988 11.9397L11.9398 9.9598L7.97998 6L11.9398 2.0402L9.95988 0.0603037L6.00008 4.0201L2.04028 0.0603034Z" fill="#B40020"></path>
-        </svg>`
-        newSharingMinus.addEventListener("click" , function(e) {
-          this.parentNode.parentNode.removeChild(this.parentNode);
-        })
-        newSharingEmailInput.value= sharingInputUniqe.value
-        newSharingEmail.appendChild(newSharingEmailInput)
-        newSharingEmail.appendChild(newSharingMinus)
-        sharingParent.parentNode.insertBefore(newSharingEmail,sharingParent)
-        sharingInputUniqe.value=""
-        
-      }
     })
     return formWrapper
   }
@@ -301,7 +276,8 @@ export class UiCalendar {
     modalHeader.appendChild(currentDate);
     
 
-    newBtn.addEventListener("click", (e) => {
+    newBtn.addEventListener("click", async (e) => {
+      await this.range.getCategories()
       if (this.range?.Owner?.dc?.isRegistered("widget") ) {
         const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
         widgetName.title = this.range.options.labels["new"];
@@ -450,49 +426,16 @@ export class UiCalendar {
       // const reminderBtn : HTMLElement = moreButtonBox.querySelector("[bc-calendar-reminder-note]")
       const reminderBtn : HTMLElement = document.createElement("div")
       shareBtn.addEventListener("click", async (e) => {
+        this.modal.cover.querySelector("[data-calendar-new-btn]").remove()        
         modalBody.innerHTML = "";
         modalBody.appendChild(this.generateShareForm(x));
         const shareHeader = modalHeader.querySelector("[data-calendar-modal-header-date]")
         shareHeader.innerHTML=""
         shareHeader.textContent= `به اشتراک گذاری`
         const shareSubmit = modalBody.querySelector("[data-calendar-submit]")
-        const obj = { 
-          noteid : x.id,
-          creatoruser:  this.range.userId
-        }
-        const viewNote =await this.range.sendAsyncDataPostJson(obj , this.range.options.baseUrl["viewnote"])
-        const shareList = modalBody.querySelector("[data-calendar-share-note-wrapper]")
-        viewNote[0].sharing.forEach((e) => {
-          const shareItem = document.createElement("div")
-          const shareUserName = document.createElement("div")
-          const shareItemSpan = document.createElement("span")
-          const removeSharing = document.createElement("div")
-          removeSharing.setAttribute("data-calendar-remove-sharing","")
-          removeSharing.setAttribute("data-sys-bg-secondary","")
-          removeSharing.innerHTML=`<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M2.04028 0.0603034L0.0603845 2.0402L4.02018 6L0.0603845 9.9598L2.04028 11.9397L6.00008 7.9799L9.95988 11.9397L11.9398 9.9598L7.97998 6L11.9398 2.0402L9.95988 0.0603037L6.00008 4.0201L2.04028 0.0603034Z" fill="#B40020"/>
-          </svg>
-          `
-          removeSharing.addEventListener("click" , async (eve) => {
-            const obj = { 
-              usedforid : x.id,
-              userid : e.userid ,
-              mid: 63,
-              id:  e.id
-            }
-            const removeNote =await this.range.sendAsyncDataPostJson(obj ,  this.range.options.baseUrl["removesharing"])
-            shareItem.remove()
-          })
-          shareItem.setAttribute("data-calendar-sharing-item","")
-          shareUserName.setAttribute("data-calendar-sharing-username","")
-          shareUserName.setAttribute("data-sys-text","")
-          shareUserName.textContent = e.name
-          shareItemSpan.textContent =`( ${e.username} )` 
-          shareUserName.appendChild(shareItemSpan)
-          shareItem.appendChild(shareUserName)
-          shareItem.appendChild(removeSharing)
-          shareList.appendChild(shareItem)
-        })
+        const shareListWrapper = modalBody.querySelector("[data-calendar-share-note-wrapper]") as HTMLElement
+        shareListWrapper.innerHTML = ""
+        this.getSharingList(x, modalBody,shareListWrapper)
         shareSubmit.addEventListener("click" ,async (e) => {
           e.preventDefault()
           const users = []
@@ -521,55 +464,56 @@ export class UiCalendar {
               })
               if(e.errorid == 7) {
                 const error = document.createElement("div")
-                error.setAttribute("data-calendar-tooltip","")
                 error.setAttribute("data-calendar-tooltip-flag","")
+                error.setAttribute("data-sys-message-danger","")
+                error.setAttribute("data-sys-message-danger-fade-in","")
                 error.setAttribute("style","display: block")
-                error.innerHTML=` <svg width="20" height="20" viewBox="0 0 20 20" fill="#B40020" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 14C9 13.4477 9.44772 13 10 13C10.5523 13 11 13.4477 11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14ZM9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6V10C11 10.5523 10.5523 11 10 11C9.44772 11 9 10.5523 9 10V6ZM9.99 0C4.47 0 0 4.48 0 10C0 15.52 4.47 20 9.99 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 9.99 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#B40020"></path>
-              </svg>
+                error.innerHTML=`
                <span>
                یکی از یوزرها اشتباه است 
                لطفا مجددا بررسی کنید
+               <i class="lni lni-close"></i>
                </span> `
                 inputs[i].appendChild(error)
               } 
               else if(e.errorid == 11) {
                 const error = document.createElement("div")
-                error.setAttribute("data-calendar-tooltip","")
                 error.setAttribute("data-calendar-tooltip-flag","")
+                error.setAttribute("data-sys-message-danger","")
+                error.setAttribute("data-sys-message-danger-fade-in","")
                 error.setAttribute("style","display: block")
-                error.innerHTML=` <svg width="20" height="20" viewBox="0 0 20 20" fill="#B40020" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 14C9 13.4477 9.44772 13 10 13C10.5523 13 11 13.4477 11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14ZM9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6V10C11 10.5523 10.5523 11 10 11C9.44772 11 9 10.5523 9 10V6ZM9.99 0C4.47 0 0 4.48 0 10C0 15.52 4.47 20 9.99 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 9.99 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#B40020"></path>
-              </svg>
+                error.innerHTML=` 
                <span>
-              فایل قبلا با کاربر به اشتراک گذاشته شده است
+              یادداشت قبلا با کاربر به اشتراک گذاشته شده است
+              <i class="lni lni-close"></i>
                </span> `
                 inputs[i].appendChild(error)
               } 
        
               else if(e.errorid == 12) {
                 const error = document.createElement("div")
-                error.setAttribute("data-calendar-tooltip","")
                 error.setAttribute("data-calendar-tooltip-flag","")
+                error.setAttribute("data-sys-message-danger","")
+                error.setAttribute("data-sys-message-danger-fade-in","")
                 error.setAttribute("style","display: block")
-                error.innerHTML=` <svg width="20" height="20" viewBox="0 0 20 20" fill="#B40020" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 14C9 13.4477 9.44772 13 10 13C10.5523 13 11 13.4477 11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14ZM9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6V10C11 10.5523 10.5523 11 10 11C9.44772 11 9 10.5523 9 10V6ZM9.99 0C4.47 0 0 4.48 0 10C0 15.52 4.47 20 9.99 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 9.99 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#B40020"></path>
-              </svg>
+                error.innerHTML=` 
                <span>
               کاربر تکراری است 
+              <i class="lni lni-close"></i>
                </span> `
                 inputs[i].appendChild(error)
               } 
               else if(e.errorid == 8) {
                 const error = document.createElement("div")
-                error.setAttribute("data-calendar-tooltip","")
+                // error.setAttribute("data-calendar-tooltip","")
                 error.setAttribute("data-calendar-tooltip-flag","")
+                error.setAttribute("data-sys-message-danger","")
+                error.setAttribute("data-sys-message-danger-fade-in","")
                 error.setAttribute("style","display: block")
-                error.innerHTML=` <svg width="20" height="20" viewBox="0 0 20 20" fill="#B40020" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 14C9 13.4477 9.44772 13 10 13C10.5523 13 11 13.4477 11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14ZM9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6V10C11 10.5523 10.5523 11 10 11C9.44772 11 9 10.5523 9 10V6ZM9.99 0C4.47 0 0 4.48 0 10C0 15.52 4.47 20 9.99 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 9.99 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#B40020"></path>
-              </svg>
+                error.innerHTML=` 
                <span>
               نام کاربری اشتباه است 
+              <i class="lni lni-close"></i>
                </span> `
                 inputs[i].appendChild(error)
               } 
@@ -585,53 +529,56 @@ export class UiCalendar {
               })
               if(e.errorid == 8) {
                 const error = document.createElement("div")
-                error.setAttribute("data-calendar-tooltip","")
                 error.setAttribute("data-calendar-tooltip-flag","")
+                error.setAttribute("data-sys-message-danger","")
+                error.setAttribute("data-sys-message-danger-fade-in","")
                 error.setAttribute("style","display: block")
-                error.innerHTML=` <svg width="20" height="20" viewBox="0 0 20 20" fill="#B40020" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 14C9 13.4477 9.44772 13 10 13C10.5523 13 11 13.4477 11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14ZM9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6V10C11 10.5523 10.5523 11 10 11C9.44772 11 9 10.5523 9 10V6ZM9.99 0C4.47 0 0 4.48 0 10C0 15.52 4.47 20 9.99 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 9.99 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#B40020"></path>
-              </svg>
-               <span>
+                error.innerHTML=`                <span>
                یکی از یوزرها اشتباه است 
                لطفا مجددا بررسی کنید
+               <i class="lni lni-close"></i>
                </span> `
                 inputs[i].appendChild(error)
               } 
               if(e.errorid == 7) {
                 const error = document.createElement("div")
-                error.setAttribute("data-calendar-tooltip","")
                 error.setAttribute("data-calendar-tooltip-flag","")
+                error.setAttribute("data-sys-message-danger","")
+                error.setAttribute("data-sys-message-danger-fade-in","")
                 error.setAttribute("style","display: block")
-                error.innerHTML=` <svg width="20" height="20" viewBox="0 0 20 20" fill="#B40020" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 14C9 13.4477 9.44772 13 10 13C10.5523 13 11 13.4477 11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14ZM9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6V10C11 10.5523 10.5523 11 10 11C9.44772 11 9 10.5523 9 10V6ZM9.99 0C4.47 0 0 4.48 0 10C0 15.52 4.47 20 9.99 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 9.99 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#B40020"></path>
-              </svg>
+                error.innerHTML=`
                <span>
                یکی از یوزرها اشتباه است 
                لطفا مجددا بررسی کنید
+               <i class="lni lni-close"></i>
                </span> `
                 inputs[i].appendChild(error)
               } 
               else if(e.errorid == 11) {
                 const error = document.createElement("div")
-                error.setAttribute("data-calendar-tooltip-successfull","")
                 error.setAttribute("data-calendar-tooltip-flag","")
+                error.setAttribute("data-sys-message-success","")
+                error.setAttribute("data-sys-message-success-fade-in","")
                 error.setAttribute("style","display: block")
-                error.innerHTML=` <svg width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 10.2L2.5 6.70001C2.11 6.31001 1.49 6.31001 1.1 6.70001C0.710003 7.09001 0.710003 7.71001 1.1 8.10001L5.29 12.29C5.68 12.68 6.31 12.68 6.7 12.29L17.3 1.70001C17.69 1.31001 17.69 0.690007 17.3 0.300007C16.91 -0.0899927 16.29 -0.0899927 15.9 0.300007L6 10.2Z" fill="#55c90f"></path>
-                </svg>
+                error.innerHTML=`  <span>
+               اشتراک‌گذاری با موفقیت انجام شد
+                <i class="lni lni-checkmark"></i>
+                </span> 
               `
                 inputs[i].appendChild(error)
+                shareListWrapper.innerHTML = ""
+                this.getSharingList(x, modalBody,shareListWrapper)
               }
               else if(e.errorid == 12) {
                 const error = document.createElement("div")
-                error.setAttribute("data-calendar-tooltip","")
                 error.setAttribute("data-calendar-tooltip-flag","")
+                error.setAttribute("data-sys-message-danger","")
+                error.setAttribute("data-sys-message-danger-fade-in","")
                 error.setAttribute("style","display: block")
-                error.innerHTML=` <svg width="20" height="20" viewBox="0 0 20 20" fill="#B40020" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 14C9 13.4477 9.44772 13 10 13C10.5523 13 11 13.4477 11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14ZM9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6V10C11 10.5523 10.5523 11 10 11C9.44772 11 9 10.5523 9 10V6ZM9.99 0C4.47 0 0 4.48 0 10C0 15.52 4.47 20 9.99 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 9.99 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#B40020"></path>
-              </svg>
+                error.innerHTML=`
                <span>
               کاربر تکراری است 
+              <i class="lni lni-close"></i>
                </span> `
                 inputs[i].appendChild(error)
               } 
@@ -639,12 +586,18 @@ export class UiCalendar {
             setTimeout(e => {
               // this.modal.closeModal()
             }, 2000);
-            
-            // shareAlert.style.display="none"
-            // shareAlertSuccess.style.display="block"
-          }
-    
+
           
+         
+          }
+          
+          const errors = modalBody.querySelectorAll("[data-calendar-tooltip-flag]")
+          errors.forEach(e => {
+            setTimeout(function() {
+              e.setAttribute("data-sys-message-danger-fade-out","")
+          }, 3000);
+          })
+     
         })
       });
       reminderBtn.addEventListener("click", async (e) => {
@@ -738,7 +691,7 @@ export class UiCalendar {
       "[bc-calendar-edit-note]"
     );
     editBtn.addEventListener("click", (e) => {
-        
+      this.range.getCategories()
       if (this.range?.Owner?.dc?.isRegistered("widget") ) {
         const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
         widgetName.title = this.range.options.labels["edit"];
@@ -777,5 +730,46 @@ export class UiCalendar {
    
     })
     return listWrapper;
+  }
+  async getSharingList(note:INote , body:HTMLElement, wrapper : HTMLElement){
+    const obj = { 
+      noteid : note.id,
+      creatoruser:  this.range.userId
+    }
+    const viewNote =await this.range.sendAsyncDataPostJson(obj , this.range.options.baseUrl["viewnote"])
+   
+    viewNote[0].sharing.forEach((e) => {
+      const shareItem = document.createElement("div")
+      const shareUserName = document.createElement("div")
+      const shareItemSpan = document.createElement("span")
+      const removeSharing = document.createElement("div")
+      removeSharing.setAttribute("data-calendar-remove-sharing","")
+      removeSharing.setAttribute("data-sys-bg-secondary","")
+      removeSharing.innerHTML=`<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2.04028 0.0603034L0.0603845 2.0402L4.02018 6L0.0603845 9.9598L2.04028 11.9397L6.00008 7.9799L9.95988 11.9397L11.9398 9.9598L7.97998 6L11.9398 2.0402L9.95988 0.0603037L6.00008 4.0201L2.04028 0.0603034Z" fill="#B40020"/>
+      </svg>
+      `
+      removeSharing.addEventListener("click" , async (eve) => {
+        const obj = { 
+          usedforid : note.id,
+          userid : e.userid ,
+          mid: 63,
+          id:  e.id
+        }
+        const removeNote =await this.range.sendAsyncDataPostJson(obj ,  this.range.options.baseUrl["removesharing"])
+        shareItem.remove()
+      })
+      shareItem.setAttribute("data-calendar-sharing-item","")
+      shareUserName.setAttribute("data-calendar-sharing-username","")
+      shareUserName.setAttribute("data-sys-text","")
+      shareUserName.textContent = e.name
+      shareItemSpan.textContent =`( ${e.username} )` 
+      shareUserName.appendChild(shareItemSpan)
+      shareItem.appendChild(shareUserName)
+      shareItem.appendChild(removeSharing)
+
+      wrapper.appendChild(shareItem)
+     
+    })
   }
 }

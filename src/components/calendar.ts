@@ -76,6 +76,7 @@ export class DateRange {
     return null;
   }
   public async getCategories(){
+    // this.Owner.addTrigger("")
     let apiLink =this.options.baseUrl["catlist"]
    const data=await this.sendAsyncDataGetMethod(apiLink)
    this.categories = [];
@@ -108,7 +109,7 @@ export class DateRange {
   }
   protected async syncNotesAsync(from: DayValue, to: DayValue): Promise<void> {
     //fetch push new data to server and fetch all data from server
-    this.getCategories()
+    
     const fromDateId = this.dateUtil.getBasisDayId(from);
     const toDateId = this.dateUtil.getBasisDayId(to);
     const form = new FormData();

@@ -627,7 +627,7 @@ align-items: center;
   background-color: #000;
 }
 [data-calendar-form-row-share] input{
-  width: calc(100% - 50px) !important;
+  width: 100% !important;
   margin-bottom: 10px !important;
 }
 [new-note-new-form] input,
@@ -767,37 +767,24 @@ padding-left: 10px;
 [data-calendar-share-note-wrapper]{
   direction: rtl;
 }
-[data-calendar-tooltip] span:after{
-  content: "";
-position: absolute;
-top: 100%;
-left: 20px;
-margin-left: -5px;
-border-width: 5px;
-border-style: solid;
-border-color: rgba(0,0,0,0.7) transparent transparent transparent;
-  
- }
-[data-calendar-tooltip] span{
+ [data-calendar-tooltip]{
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
   -ms-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
   /* visibility: hidden; */
-  opacity: 0;
-width: 240px;
+  opacity: 1;
+width: 100%;
 background-color: rgba(0,0,0,0.7);
 color: #fff;
 text-align: center;
 border-radius: 5px;
-padding: 10px;
-position: absolute;
+padding: 10px 0;
 z-index: 1;
-bottom: 150%;
-left: 50px;
-margin-left: -60px;
+
 }
+
 [data-calendar-tooltip]:hover span{
   /* visibility: visible; */
   opacity: 1;
@@ -841,12 +828,7 @@ margin-left: -60px;
 [new-note-new-form]{
   position: relative;
 }
-[data-calendar-tooltip]{
-  position: absolute;
-  top: 10px;
-  left: 70px;
-  display: none;
-}
+
 [data-calendar-tooltip-successfull]{
   position: absolute;
   top: 10px;
@@ -899,7 +881,6 @@ margin-left: -60px;
   margin-bottom: 0 !important;
 }
 [data-calendar-share-form]{
-  display: flex;
   direction: rtl;
   justify-content: space-between;
   padding: 10px;
