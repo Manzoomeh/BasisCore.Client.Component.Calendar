@@ -197,7 +197,7 @@ border-bottom: 1px solid #e8e8e8 !important;
     align-items: center;
     flex-direction: row;
     width: 100%;
-    direction: rtl;
+    direction: ltr;
     justify-content: space-between;   
  }
  [data-datepicker-title] {
