@@ -248,10 +248,12 @@ export class UiCalendar {
     const currentDate = document.createElement("div");
     const closeBtn = document.createElement("div");
     const modalBtns = document.createElement("div");
+    
     modalHeader.setAttribute("data-calendar-modal-header", "");
     modalBody.setAttribute("data-calendar-modal-body", "");
     newBtn.setAttribute("data-calendar-new-btn", "");
     closeBtn.setAttribute("data-calendar-close-btn", "");
+   
     
     modalBtns.setAttribute("data-calendar-modal-btns", "");
     currentDate.setAttribute("data-calendar-modal-header-date", "");
@@ -383,6 +385,19 @@ export class UiCalendar {
         divElement.style.color = `#fff`;
         description.style.color= "#fff"
       }      
+      let deleteAlert = document.createElement("div")
+      deleteAlert.innerHTML=`
+      <p >آیا از حذف این یادداشت مطمئن هستید ؟ </p>
+      <div class="modalButtons">
+   <button type="button" class="modalButton remove" data-sys-button-delete="" data-sys-delete-calendar-note="" >
+   حذف
+   </button><button type="button" class="modalButton cancelBtn" data-sys-cancel-btn="" data-sys-cancel-delete-calendar-note="" >
+   انصراف
+   </button>
+   <div class="message"></div>
+   </div>
+      `
+      deleteAlert.setAttribute("data-calendar-delete-alert","")
       textSpan.textContent = x.note;
       description.textContent = x.description;
       moreButton.innerHTML = `<svg width="5" height="17" viewBox="0 0 5 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -667,25 +682,35 @@ export class UiCalendar {
         this.range.sendAsyncDataPostJson(obj, apiLink);
         })
       })
-     
-      removeBtn.addEventListener("click", async (e) => {
-        
+    
+      removeBtn.addEventListener("click", (e) => {        
         e.preventDefault();
+        modalBody.querySelector("[data-calendar-delete-alert]")?.remove()
+        divElement.parentNode.insertBefore(deleteAlert, divElement)
+        const submitRemoveButton = modalBody.querySelector("[data-sys-delete-calendar-note]")
+      const cancelRemoveButton = modalBody.querySelector("[data-sys-cancel-delete-calendar-note]")     
+      submitRemoveButton.addEventListener("click", async (removeEvent) => {    
         const obj ={
-          noteid : x.id
-        }
-        let apilink = this.range.options.baseUrl["removenote"]
-        this.range.sendAsyncDataPostJson(
-          obj,
-          apilink     
-        );
-        if (this.range.options.displayNote) {
-          await this.range.refreshNotesAsync();
-        }
-        this.range.renderAsync();
-        this.modal.closeModal()
+            noteid : x.id
+          }
+          let apilink = this.range.options.baseUrl["removenote"]
+          this.range.sendAsyncDataPostJson(
+            obj,
+            apilink     
+          );
+        
+          if (this.range.options.displayNote) {
+            await this.range.refreshNotesAsync();
+          }
+          this.range.renderAsync();
+          this.modal.closeModal()
+      })
+      cancelRemoveButton.addEventListener("click" , (cancelRemoveEvent) => {                
+        modalBody.querySelector("[data-calendar-delete-alert]").remove()
+      })
       });     
-      
+
+     
     }
     const editBtn: HTMLElement = moreButtonBox.querySelector(
       "[bc-calendar-edit-note]"
@@ -731,6 +756,7 @@ export class UiCalendar {
     })
     return listWrapper;
   }
+  
   async getSharingList(note:INote , body:HTMLElement, wrapper : HTMLElement){
     const obj = { 
       noteid : note.id,
