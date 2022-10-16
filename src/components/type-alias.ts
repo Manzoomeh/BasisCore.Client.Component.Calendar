@@ -63,3 +63,5 @@ export enum ReminderType {
 }
 
 export declare type Type = "load" | "click";
+export declare type Mode = "desktop" | "mobile";
+export declare type Status = "before" | "after";

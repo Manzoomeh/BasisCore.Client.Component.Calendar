@@ -127,4 +127,5 @@ export default class BcComponent implements IComponentManager {
     }
     return retVal;
   }
+ 
 }

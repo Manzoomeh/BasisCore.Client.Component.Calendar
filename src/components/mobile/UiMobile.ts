@@ -5,11 +5,11 @@ import { INote } from "../Interface/Interface";
 import layout from "../UiCalendar/asset/shareForm.html";
 import IWidget from "../../basiscore/BasisPanel/IWidget";
 import newForm from "../UiCalendar/asset/layout.html";
-import moreBox from "../UiCalendar/asset/more.html";
+import moreBox from "../mobile/asset/more.html";
 import moreShareBox from "../UiCalendar/asset/moreShare.html";
 import reminderForm from "../UiCalendar/asset/reminderForm.html"
 
-export class UiCalendar {
+export class UiMbobile {
   private readonly day: Day;
   readonly range: DateRange;
   modal: Modal;
@@ -72,12 +72,12 @@ export class UiCalendar {
         liElement.textContent = x.note;
         const color: object = this.hexToRgb(`${x.color}`);
         if(color){
-          liElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},0.3)`;
-          liElement.style.color = `rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
+          // liElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},0.3)`;
+          liElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
         }
         else{
+          // liElement.style.background = `#999999`;
           liElement.style.background = `#999999`;
-          liElement.style.color = `#fff`;
         }
        
         ulElement.appendChild(liElement);
@@ -257,9 +257,10 @@ export class UiCalendar {
     currentDate.setAttribute("data-calendar-modal-header-date", "");
     currentDate.setAttribute("data-calendar-modal-header-date", "");
     currentDate.setAttribute("data-sys-text","")
-    newBtn.innerHTML = `<svg  width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path data-sys-text="" d="M9.9 4.5H8.1V8.1H4.5V9.9H8.1V13.5H9.9V9.9H13.5V8.1H9.9V4.5ZM9 0C4.032 0 0 4.032 0 9C0 13.968 4.032 18 9 18C13.968 18 18 13.968 18 9C18 4.032 13.968 0 9 0ZM9 16.2C5.031 16.2 1.8 12.969 1.8 9C1.8 5.031 5.031 1.8 9 1.8C12.969 1.8 16.2 5.031 16.2 9C16.2 12.969 12.969 16.2 9 16.2Z" fill="#004B85"/>
+    newBtn.innerHTML = `<svg width="19" height="20" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13.0714 8.67857H8.42857V13.3214C8.42857 13.8321 8.01071 14.25 7.5 14.25C6.98929 14.25 6.57143 13.8321 6.57143 13.3214V8.67857H1.92857C1.41786 8.67857 1 8.26071 1 7.75C1 7.23929 1.41786 6.82143 1.92857 6.82143H6.57143V2.17857C6.57143 1.66786 6.98929 1.25 7.5 1.25C8.01071 1.25 8.42857 1.66786 8.42857 2.17857V6.82143H13.0714C13.5821 6.82143 14 7.23929 14 7.75C14 8.26071 13.5821 8.67857 13.0714 8.67857Z" fill="#ffffff"/>
     </svg>
+    
     `;
     closeBtn.innerHTML = `<svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path data-sys-text="" opacity="0.8" d="M8.05223 7.49989L13.3519 13.3409C13.6968 13.7208 13.6968 14.3351 13.3519 14.7151C13.0072 15.095 12.4498 15.095 12.1051 14.7151L6.80521 8.87405L1.50552 14.7151C1.16063 15.095 0.603404 15.095 0.258671 14.7151C-0.0862237 14.3351 -0.0862237 13.7208 0.258671 13.3409L5.55836 7.49989L0.258671 1.65889C-0.0862237 1.27896 -0.0862237 0.66466 0.258671 0.284728C0.430473 0.0952063 0.656366 0 0.882097 0C1.10783 0 1.33356 0.0952063 1.50552 0.284728L6.80521 6.12572L12.1051 0.284728C12.277 0.0952063 12.5028 0 12.7285 0C12.9542 0 13.18 0.0952063 13.3519 0.284728C13.6968 0.66466 13.6968 1.27896 13.3519 1.65889L8.05223 7.49989Z" fill="black"/>
@@ -357,17 +358,12 @@ export class UiCalendar {
       divElement.setAttribute("data-calendar-no-message", "");
       divElement.setAttribute("data-sys-inherit", "");
       const emptyListText = "هیچ یادآوری در این روز وجود ندارد.";
-      const emptyListIcon = `<svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M30.6 47.6C30.6 45.7222 32.1222 44.2 34 44.2C35.8778 44.2 37.4 45.7222 37.4 47.6C37.4 49.4778 35.8778 51 34 51C32.1222 51 30.6 49.4778 30.6 47.6ZM30.6 20.4C30.6 18.5222 32.1222 17 34 17C35.8778 17 37.4 18.5222 37.4 20.4V34C37.4 35.8778 35.8778 37.4 34 37.4C32.1222 37.4 30.6 35.8778 30.6 34V20.4ZM33.966 0C15.198 0 0 15.232 0 34C0 52.768 15.198 68 33.966 68C52.768 68 68 52.768 68 34C68 15.232 52.768 0 33.966 0ZM34 61.2C18.972 61.2 6.8 49.028 6.8 34C6.8 18.972 18.972 6.8 34 6.8C49.028 6.8 61.2 18.972 61.2 34C61.2 49.028 49.028 61.2 34 61.2Z" fill="#D0D0D0"/>
-      </svg>
-      `;
-      divElement.innerHTML = emptyListIcon + emptyListText;
+      divElement.innerHTML =  emptyListText;
       divElement.setAttribute("data-sys-text-disabled","")
       modalBody.appendChild(divElement);
     }
     todayNote.map((x) => {
       const delBtn = document.createElement("div");
-
       const divElement: HTMLElement = document.createElement("div");
       const divElementHeader: HTMLElement = document.createElement("div");
       const textSpan: HTMLElement = document.createElement("div");
@@ -376,7 +372,7 @@ export class UiCalendar {
       const color: object = this.hexToRgb(`${x.color}`);
       if(color){
         divElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},0.2)`;
-        divElement.style.color = `rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
+        divElement.style.borderRight = `20px solid rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
       }
       else{
         divElement.style.background = `#999999`;

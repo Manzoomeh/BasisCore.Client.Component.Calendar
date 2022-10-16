@@ -39,7 +39,8 @@
 </style>
 
     <body>
-        
+    from : [##db.filterDate.from|(0)##]  <br />
+    to : [##db.filterDate.to|(0)##]
 		<basis core="component.calendar.datepicker" name="from" run="atclient"   options="mySetting"></basis>
         <script>
             var mySetting = {
@@ -53,6 +54,9 @@
                 rangeDates: true,
                 switchType : false,
                 theme: "basic",
+                mode:"desktop" , 
+                style: "../css/datepicker-style.css",
+                sourceid:"db.filterDate" 
                 
             }
  

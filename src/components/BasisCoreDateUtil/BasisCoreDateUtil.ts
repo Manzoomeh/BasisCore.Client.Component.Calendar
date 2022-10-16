@@ -8,6 +8,7 @@ import {
   YearValue,
   Culture,
   MonthNumber,
+  Status
 } from "../type-alias";
 export class BasisCoreDateUtil implements IDateUtil {
   json;
@@ -127,6 +128,12 @@ export class BasisCoreDateUtil implements IDateUtil {
       });
       return filtered;
     } 
+  }
+  getObjWithId(id: number) {
+    var filtered = this.json.find((item) => {
+        return item.id == id;
+      });
+    return filtered
   }
   getMonthName(month: MonthValue, culture: Culture, lid: Lid): string {
    
@@ -332,5 +339,50 @@ export class BasisCoreDateUtil implements IDateUtil {
   getJalaliDaysNumber(day : DayValue ) : DayNumber{
     const basisDate = this.getObj(day.year, day.month, day.day);
     return basisDate.sdate
+  }
+  nextYear(month: Month, culture: Culture): MonthValue{
+    let retVal: MonthValue;
+    let nextMonth: MonthNumber = (month.value.month + 1) as MonthNumber;
+    let currentYear: number = month.value.year + 1 ;
+    if (nextMonth > 12) {
+      currentYear++;
+      nextMonth = 1;
+    }
+    retVal = { year: currentYear, month: nextMonth };
+    return retVal;
+  }
+  prevYear(month: Month, culture: Culture): MonthValue{
+    let retVal: MonthValue;
+    let nextMonth: MonthNumber = (month.value.month + 1) as MonthNumber;
+    let currentYear: number = month.value.year - 1 ;
+    if (nextMonth > 12) {
+      currentYear++;
+      nextMonth = 1;
+    }
+    retVal = { year: currentYear, month: nextMonth };
+    return retVal;
+  }
+  getRangeForDate(day : DayValue , status : Status , count: number ) : DayValue{
+    if(status == "after"){
+      const calculatedDateId = this.getObj(day.year, day.month , day.day)
+      const calculatedDate = this.getObjWithId(calculatedDateId.id + count)
+      return {
+        year : calculatedDate.syear,
+        month : calculatedDate.smonth,
+        day : calculatedDate.sdate
+      }
+    }
+    else if(status == "before"){
+      const calculatedDateId = this.getObj(day.year, day.month , day.day)
+      const calculatedDate = this.getObjWithId(calculatedDateId.id - count)
+      return {
+        year : calculatedDate.syear,
+        month : calculatedDate.smonth,
+        day : calculatedDate.sdate
+      }
+    }
+    else{
+      return null
+    }
   }
 }

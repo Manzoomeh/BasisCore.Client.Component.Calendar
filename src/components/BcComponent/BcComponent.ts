@@ -45,6 +45,7 @@ export default class BcComponent implements IComponentManager {
   }
   public async runAsync(source?: ISource): Promise<boolean> {
     if (source?.id === this.sourceId) {
+      
       const from = source.rows[0].from;
       const to = source.rows[0].to;
       const fromParts = from.split("/");

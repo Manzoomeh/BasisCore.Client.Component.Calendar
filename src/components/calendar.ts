@@ -1,5 +1,4 @@
-import "../asset/style.css";
-import "../asset/calendar-basic.css";
+
 import { Month } from "./Month/Month";
 import {
   DayValue,
@@ -11,6 +10,7 @@ import { IDateUtil } from "./IDateUtil/IDateUtil";
 import { BasisCoreDateUtil } from "./BasisCoreDateUtil/BasisCoreDateUtil";
 import { PersianDateUtil } from "./PersianDateUtil/PersianDateUtil";
 import { UiCalendar } from "./UiCalendar/UiCalendar";
+import { UiMbobile } from "./mobile/UiMobile";
 import IUserDefineComponent from "../basiscore/IUserDefineComponent";
 export class DateRange {
   public readonly dateUtil: IDateUtil;
@@ -30,7 +30,8 @@ export class DateRange {
     culture: "fa",
     secondCulture: "en",
     lid: 1,
-    theme : "basic"
+    theme : "basic",
+    mode:"desktop"
   };
 
   public  constructor(
@@ -50,6 +51,11 @@ export class DateRange {
         : new PersianDateUtil();
     
     this.note = new Array<INote>();
+    const style=  document.createElement("link")
+    style.setAttribute("href" , this.options.style)
+    style.setAttribute("rel" , "stylesheet")
+    style.setAttribute("type" , "text/css")
+    document.querySelector("head").appendChild(style)
     this.monthValues = this.dateUtil.getMonthValueList(from, to);
     this.monthValues.map((x) => this.months.push(new Month(this, x)));
     this.getCategories()
@@ -172,6 +178,32 @@ export class DateRange {
     }
     this.renderAsync();
   }
+  async prevYear(): Promise<void> {
+    let nextMonthValues: MonthValue;
+    nextMonthValues = this.dateUtil.prevYear(
+      this.months[this.activeIndex],
+      this.options.culture
+    );
+    this.months[this.activeIndex] = new Month(this, nextMonthValues);
+    if (this.options.displayNote) {
+      //load notes from server;
+      await this.refreshNotesAsync();
+    }
+    this.renderAsync();
+  }
+  async nextYear(): Promise<void> {
+    let nextMonthValues: MonthValue;
+    nextMonthValues = this.dateUtil.nextYear(
+      this.months[this.activeIndex],
+      this.options.culture
+    );
+    this.months[this.activeIndex] = new Month(this, nextMonthValues);
+    if (this.options.displayNote) {
+      //load notes from server;
+      await this.refreshNotesAsync();
+    }
+    this.renderAsync();
+  }
   async goToday(): Promise<void> {
     let todayMonthValues: MonthValue = {
       year: this.months[this.activeIndex].currentDate.year,
@@ -187,6 +219,7 @@ export class DateRange {
   protected createMountHeader(): Node {
     const headerElement = document.createElement("div");
     const monthNameElement = document.createElement("div");
+    const currentYear = document.createElement("div")
     const controlElement = document.createElement("div");
     const secondMonthName = document.createElement("div")
     const calendarHeader : HTMLElement = document.createElement("div")
@@ -195,10 +228,11 @@ export class DateRange {
     monthNameElement.setAttribute("data-sys-text","")
     controlElement.setAttribute("data-calendar-tools", "");
     secondMonthName.setAttribute("data-calendar-second-culture","")
+    currentYear.setAttribute("data-calendar-year","")
+    currentYear.textContent = " " + this.months[this.activeIndex].value.year;
     monthNameElement.textContent =
-      this.months[this.activeIndex].monthName + " " +
-      this.months[this.activeIndex].value.year;
-    secondMonthName.textContent= this.months[this.activeIndex].secondMonthName
+      this.months[this.activeIndex].monthName + " " + this.months[this.activeIndex].value.year
+    secondMonthName.textContent= this.months[this.activeIndex].secondMonthName 
     monthNameElement.appendChild(secondMonthName)
     const todayButton = document.createElement("button");
     const todayWrapper = document.createElement("div")
@@ -210,33 +244,71 @@ export class DateRange {
     </svg>
     `
     const todayText = document.createElement("span")
+    if(this.options.mode=="desktop"){
     todayText.innerText= this.options.lid == 1 ? "امروز" : "Today";
+    }
     todayButton.setAttribute("data-calendar-today-btn", "");
     todayButton.setAttribute("data-sys-button","")
     todayButton.innerHTML = todayText.innerText + todayIcon
+    if(this.options.mode == "mobile"){
+      todayButton.innerHTML = ""
+      todayButton.removeAttribute("data-calendar-today-btn")
+      todayButton.setAttribute("data-calendar-today-btn-mobile","")
+      todayButton.innerHTML = todayIcon
+    }
     todayWrapper.appendChild(todayButton);
     if (this.monthValues.length == 1) {
       const nextButton = document.createElement("button");
       const prevButton = document.createElement("button");
+      const nextYear = document.createElement("button")
+      const prevYear = document.createElement("button")
       nextButton.addEventListener("click", (e) => {
         this.nextMonth();
       });
       prevButton.addEventListener("click", (e) => {
         this.prevMonth();
       });
-
+      nextYear.addEventListener("click", (e) => {
+        this.nextYear();
+      });
+      prevYear.addEventListener("click", (e) => {
+        this.prevYear();
+      });
       nextButton.innerHTML = `<svg width="11"  height="20" viewBox="0 0 11 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path data-sys-text=""  d="M0.37999 19.01C0.86999 19.5 1.65999 19.5 2.14999 19.01L10.46 10.7C10.85 10.31 10.85 9.68005 10.46 9.29005L2.14999 0.980049C1.65999 0.490049 0.86999 0.490049 0.37999 0.980049C-0.11001 1.47005 -0.11001 2.26005 0.37999 2.75005L7.61999 10L0.36999 17.25C-0.11001 17.73 -0.11001 18.5301 0.37999 19.01Z" fill="#323232"/>
+      <path data-sys-text=""  d="M0.37999 19.01C0.86999 19.5 1.65999 19.5 2.14999 19.01L10.46 10.7C10.85 10.31 10.85 9.68005 10.46 9.29005L2.14999 0.980049C1.65999 0.490049 0.86999 0.490049 0.37999 0.980049C-0.11001 1.47005 -0.11001 2.26005 0.37999 2.75005L7.61999 10L0.36999 17.25C-0.11001 17.73 -0.11001 18.5301 0.37999 19.01Z" fill="#767676"/>
       </svg>
       `;
       prevButton.innerHTML = `<svg width="11" height="20" viewBox="0 0 11 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path data-sys-text=""  d="M10.6201 0.990059C10.1301 0.500059 9.34006 0.500059 8.85006 0.990059L0.540059 9.30006C0.150059 9.69006 0.150059 10.3201 0.540059 10.7101L8.85006 19.0201C9.34006 19.5101 10.1301 19.5101 10.6201 19.0201C11.1101 18.5301 11.1101 17.7401 10.6201 17.2501L3.38006 10.0001L10.6301 2.75006C11.1101 2.27006 11.1101 1.47006 10.6201 0.990059Z" fill="#323232"/>
+      <path data-sys-text=""  d="M10.6201 0.990059C10.1301 0.500059 9.34006 0.500059 8.85006 0.990059L0.540059 9.30006C0.150059 9.69006 0.150059 10.3201 0.540059 10.7101L8.85006 19.0201C9.34006 19.5101 10.1301 19.5101 10.6201 19.0201C11.1101 18.5301 11.1101 17.7401 10.6201 17.2501L3.38006 10.0001L10.6301 2.75006C11.1101 2.27006 11.1101 1.47006 10.6201 0.990059Z" fill="#767676"/>
       </svg>
       `;
+      nextYear.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
+
+      <defs>
+      </defs>
+      <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)" >
+        <path d="M 7.161 90 c -1.792 0 -3.583 -0.684 -4.95 -2.05 c -2.734 -2.734 -2.734 -7.166 0 -9.9 L 35.262 45 L 2.211 11.95 c -2.734 -2.733 -2.734 -7.166 0 -9.899 c 2.733 -2.733 7.166 -2.733 9.899 0 l 38 38 c 2.733 2.733 2.733 7.166 0 9.9 l -38 38 C 10.744 89.316 8.953 90 7.161 90 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill:#767676; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+        <path d="M 44.839 90 c -1.792 0 -3.583 -0.684 -4.95 -2.05 c -2.734 -2.734 -2.734 -7.166 0 -9.9 L 72.939 45 l -33.05 -33.05 c -2.734 -2.733 -2.734 -7.166 0 -9.899 c 2.733 -2.732 7.166 -2.733 9.9 0 l 38 38 c 2.733 2.733 2.733 7.166 0 9.9 l -38 38 C 48.422 89.316 46.63 90 44.839 90 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: #767676; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+      </g>
+      </svg>`
+      prevYear.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
+
+      <defs>
+      </defs>
+      <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)" >
+        <path d="M 7.161 90 c -1.792 0 -3.583 -0.684 -4.95 -2.05 c -2.734 -2.734 -2.734 -7.166 0 -9.9 L 35.262 45 L 2.211 11.95 c -2.734 -2.733 -2.734 -7.166 0 -9.899 c 2.733 -2.733 7.166 -2.733 9.899 0 l 38 38 c 2.733 2.733 2.733 7.166 0 9.9 l -38 38 C 10.744 89.316 8.953 90 7.161 90 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill:#767676; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+        <path d="M 44.839 90 c -1.792 0 -3.583 -0.684 -4.95 -2.05 c -2.734 -2.734 -2.734 -7.166 0 -9.9 L 72.939 45 l -33.05 -33.05 c -2.734 -2.733 -2.734 -7.166 0 -9.899 c 2.733 -2.732 7.166 -2.733 9.9 0 l 38 38 c 2.733 2.733 2.733 7.166 0 9.9 l -38 38 C 48.422 89.316 46.63 90 44.839 90 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: #767676; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+      </g>
+      </svg>`
       nextButton.setAttribute("data-calendar-next", "");
       prevButton.setAttribute("data-calendar-prev", "");
+      nextYear.setAttribute("data-calendar-next-year","")
+      prevYear.setAttribute("data-calendar-prev-year","")
+      controlElement.appendChild(nextYear)
       controlElement.appendChild(nextButton);
+      controlElement.appendChild(monthNameElement)
       controlElement.appendChild(prevButton);
+      controlElement.appendChild(prevYear);
      
     } else {
       const monthsBtnWrapper = document.createElement("select");
@@ -260,9 +332,11 @@ export class DateRange {
     }
     
     calendarHeader.setAttribute("bc-calendar-calendar-header","")
-    calendarHeader.appendChild(controlElement);
-    calendarHeader.appendChild(monthNameElement);
-    headerElement.appendChild(todayWrapper)
+    // calendarHeader.appendChild(controlElement);
+    // calendarHeader.appendChild(monthNameElement);
+    // controlElement.appendChild(currentYear)
+    calendarHeader.appendChild(controlElement)
+    headerElement.appendChild(todayButton)
     headerElement.appendChild(calendarHeader)
     
     return headerElement;
@@ -311,8 +385,15 @@ export class DateRange {
       mainElement.appendChild(dayElement);
     }
     this.months[this.activeIndex].days.map((x) => {
-      const dayElement = new UiCalendar(this, x).generateDaysUi();
-      mainElement.appendChild(dayElement);
+      if(this.options.mode=="desktop"){
+        const dayElement = new UiCalendar(this, x).generateDaysUi();
+        mainElement.appendChild(dayElement);
+      }
+      else if(this.options.mode=="mobile"){
+        const dayElement = new UiMbobile(this, x).generateDaysUi();
+        mainElement.appendChild(dayElement);
+      }
+      
     });
 
     for (var j = 0; j < 6 - lastDayInMonth; j++) {

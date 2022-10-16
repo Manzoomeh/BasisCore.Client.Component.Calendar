@@ -3,7 +3,8 @@ import {
   Culture,
   DateUtilProvider,
   ReminderType,
-  Type
+  Type,
+  Mode
 } from "../type-alias";
 export interface INote {
   id: number;
@@ -27,6 +28,7 @@ export interface ICatNote{
   title: string
 }
 
+
 export interface ICalenderOptions {
   displayNote?: boolean;
   dateProvider?: DateUtilProvider;
@@ -36,7 +38,9 @@ export interface ICalenderOptions {
   dmnid? :number;
   baseUrl? : object,
   labels? : object , 
-  theme? : string
+  theme? : string,
+  mode?: Mode,
+  style?: string
   
 }
 export interface IDatePickerOptions {
@@ -50,5 +54,7 @@ export interface IDatePickerOptions {
   switchType?: boolean;
   secondCulture?: Culture; theme?: string,
   type?: Type ,
-  sourceid? :string
+  sourceid? :string,
+  mode?: Mode,
+  style?: string
 }

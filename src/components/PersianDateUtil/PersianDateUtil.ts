@@ -7,6 +7,7 @@ import {
   DayNumber,
   YearValue,
   Culture,
+  Status
 } from "../type-alias";
 export class PersianDateUtil implements IDateUtil {
   readonly persianDate: any;
@@ -125,6 +126,15 @@ export class PersianDateUtil implements IDateUtil {
     return null
   }
   getJalaliDaysNumber(day : DayValue ) : DayNumber{
+    return null
+  }
+  nextYear(month: Month, culture: Culture): MonthValue{
+    return null
+  }
+  prevYear(month: Month, culture: Culture): MonthValue{
+    return null
+  }
+  getRangeForDate(day : DayValue , status : Status , count: number ) : DayValue{
     return null
   }
 }

@@ -32,6 +32,7 @@ export class UiDatePicker {
         this.day.currentDay.month +
         "/" +
         this.day.currentDay.day;
+      
       this.range.datePickerInput.value = selectDate;
       this.range.datePickerInput.setAttribute(
         "data-datepicker-dateid",
@@ -71,6 +72,7 @@ export class UiDatePicker {
         this.day.currentDay.month +
         "/" +
         this.day.currentDay.day;
+          
       this.range.datesArray.push(this.day.currentDay) 
       if(this.range.datesArray.length == 1){
         if(parentElement.querySelector("[data-datepicker-start-day]")){
@@ -92,6 +94,7 @@ export class UiDatePicker {
         
       }
       else if(this.range.datesArray.length > 1){
+       
         if(parentElement.querySelector("[data-datepicker-end-day]")){
           parentElement.querySelector("[data-datepicker-end-day]").removeAttribute("data-datepicker-end-day")
         }
@@ -116,6 +119,7 @@ export class UiDatePicker {
         if(this.range.options.type == "click"){
           this.range.wrapper.remove();
         }
+        
         if(this.range.options.sourceid){
           $bc.setSource(this.range.options.sourceid ,  [{"from": this.range.fromdate, "to" : selectDate }]);
         }

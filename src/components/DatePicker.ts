@@ -1,4 +1,4 @@
-import "../asset/datepicker-style.css";
+
 import { Month } from "./Month/Month";
 import { DayValue, MonthNumber, MonthValue } from "./type-alias";
 import { IDatePickerOptions } from "./Interface/Interface";
@@ -7,6 +7,7 @@ import { BasisCoreDateUtil } from "./BasisCoreDateUtil/BasisCoreDateUtil";
 import { PersianDateUtil } from "./PersianDateUtil/PersianDateUtil";
 import { UiDatePicker } from "./UiDatePicker/UiDatePicker";
 import {DatePickerThemes} from "./DatePickerThemes/DatePickerThemes"
+import {UiDatePickerMobile} from "./UiDatePickerMobile/UiDatePickerMobile"
 export class DatePicker {
   public readonly dateUtil: IDateUtil;
   public  months: Array<Month> = new Array<Month>();
@@ -48,7 +49,11 @@ export class DatePicker {
       this.options.dateProvider == "basisCalendar"
         ? new BasisCoreDateUtil()
         : new PersianDateUtil();
-
+    const style=  document.createElement("link")
+    style.setAttribute("href" , this.options.style)
+    style.setAttribute("rel" , "stylesheet")
+    style.setAttribute("type" , "text/css")
+    document.querySelector("head").appendChild(style)
     this.monthValues = this.dateUtil.getMonthValueList(from, to);
     this.monthValues.map((x) => this.months.push(new Month(this, x)));
     this.bodyElement =  document.createElement("div");
@@ -310,7 +315,7 @@ export class DatePicker {
     }
     let firstDayInMonth = this.months[this.activeIndex].firstDayInMonth;
     const lastDayInMonth = this.months[this.activeIndex].lastDayInMonth;
-    this.bodyElement.append(this.generateDaysName());
+    // this.bodyElement.append(this.generateDaysName());
     if(this.options.culture == "en"){
       firstDayInMonth = firstDayInMonth - 1 
       firstDayInMonth =  firstDayInMonth== -1 ? 6 : firstDayInMonth
@@ -322,15 +327,23 @@ export class DatePicker {
       dayElement.setAttribute("data-sys-text-white","")
       mainElement.appendChild(dayElement);
     }
-    this.months[this.activeIndex].days.map((x) => {
-      if(this.options.rangeDates == false){
-        new UiDatePicker(this, x ).generateDaysUi(mainElement);
-      }
-      else{
-        new UiDatePicker(this, x ).generateDaysUiWithDateRange(mainElement);
-      }
+    if(this.options.mode == "desktop"){
+      this.months[this.activeIndex].days.map((x) => {
       
-    });
+        if(this.options.rangeDates == false){
+          new UiDatePicker(this, x ).generateDaysUi(mainElement);
+        }
+        else {
+          new UiDatePicker(this, x ).generateDaysUiWithDateRange(mainElement);
+        }
+      
+        
+      });
+    }
+    else{
+      new UiDatePickerMobile(this).generateDaysUiAppModel(mainElement);
+    }
+
 
     for (var j = 0; j < 6 - lastDayInMonth; j++) {
       let dayElement = document.createElement("div");
@@ -352,7 +365,10 @@ export class DatePicker {
         this.goToday();
       });
       todayButton.setAttribute("data-datepicker-today-btn", "");
-      todayButton.innerHTML = this.options.lid == 1 ? "امروز" : "Today";
+      if(this.options.mode=="desktop"){
+        todayButton.innerHTML = this.options.lid == 1 ? "امروز" : "Today";
+      }
+      
       footerElement.appendChild(todayButton);
     }
 

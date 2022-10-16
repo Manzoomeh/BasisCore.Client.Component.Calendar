@@ -37,26 +37,25 @@
     font-family: IRANSans1;
 }
 </style>
+
     <body>
-        from [##db.form.from##] <br /> 
-        to : [##db.form.to##]
-        
+        from : [##db.filterDate.from|(0)##] <br />
+        to : [##db.filterDate.to|(0)##]
 		<basis core="component.calendar.datepicker" name="from" run="atclient"   options="mySetting"></basis>
         <script>
             var mySetting = {
                 dateProvider: "basisCalendar",
-                displayNote: true,
                 culture: "fa",
                 lid: 1,
                 yearsList : false,
                 monthList:false,
-                rangeDates: false,
+                rangeDates: true,
                 switchType : false,
+                mode:"mobile" , 
+                style: "../css/datepicker-mobile.css",
                 theme: "basic",
-                type : "click",
-                mode:"desktop" , 
-                style: "../css/datepicker-style.css",
-                sourceid:"db.form"
+                sourceid:"db.filterDate" 
+                
             }
  
            
