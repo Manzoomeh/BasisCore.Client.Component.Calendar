@@ -385,4 +385,9 @@ export class BasisCoreDateUtil implements IDateUtil {
       return null
     }
   }
+  getCurrentYear(day:DayValue ,culture : Culture) : number {
+    const currentYear = this.getObj(day.year, day.month , day.day)
+    return currentYear.nyear
+  
+  }
 }
