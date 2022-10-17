@@ -34,4 +34,5 @@ export interface IDateUtil {
   getJalaliDaysNumber(day : DayValue ) : DayNumber
   getJalaliMonthsName(month : MonthValue): string
   getRangeForDate(day : DayValue , status : Status , count: number ) : DayValue
+  getCurrentYear(day:DayValue ,  culture : Culture) : number
 }

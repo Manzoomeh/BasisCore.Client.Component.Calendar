@@ -28,6 +28,25 @@ export interface ICatNote{
   title: string
 }
 
+export interface ILabels{
+  todayTitle : string,
+  titrTitle:string,
+  categoryTitle : string,
+  noteTitle : string,
+  submitKeyTitle : string,
+  timeTitle : string,
+  emptyNoteList : string,
+  editMenuTitle :string,
+  deleteMenuTitle:string,
+  shareMenuTitle:string,
+  deleteTextTitle :string,
+  cancelKeyTitle : string,
+  shareTextTitle : string,
+  deleteKeyTitle:string,
+  shareBoxTitle : string
+
+}
+
 
 export interface ICalenderOptions {
   displayNote?: boolean;
@@ -37,7 +56,7 @@ export interface ICalenderOptions {
   lid?: Lid;
   dmnid? :number;
   baseUrl? : object,
-  labels? : object , 
+  labels? : ILabels , 
   theme? : string,
   mode?: Mode,
   style?: string

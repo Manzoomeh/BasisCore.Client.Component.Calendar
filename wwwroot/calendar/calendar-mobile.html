@@ -36,16 +36,17 @@
 
     <body>
      
-        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="1401/6/16" to="1401/6/17" options="mySetting" rkey="EF521509-7742-45A0-BE8F-11A68F213528"></Basis>
+        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="1401/2/1" to="1401/2/30" options="mySetting" rkey="EF521509-7742-45A0-BE8F-11A68F213528"></Basis>
 
         <script>   
                 var mySetting = {
                 dateProvider: "basisCalendar",
-                culture: "en",
-                lid:1,
+                culture: "fa",
+                lid: 1,
                 todayButton: false,
                 dmnid : 6,
-                style: "../css/calendar-style.css",
+                mode:"mobile",
+                style: "../css/calendar-mobile.css",
                 baseUrl: {                   
                     "userid" : "https://trust-login.com/api/userid",
                     "viewnote" :"https://basispanel.ir/user/fa/EF521509-7742-45A0-BE8F-11A68F213528/viewcalendarnote",
@@ -74,7 +75,6 @@
                     deleteKeyTitle: "حذف",
                     shareBoxTitle : "به اشتراک‌گذاری"
                 }
-
             }
         </script>
     </body>

@@ -20,6 +20,7 @@ export class Month {
   readonly firstDayInMonth: number;
   readonly lastDayInMonth: number;
   readonly currentDate: DayValue;
+  readonly currentYear : number
   public constructor(owner: DateRange | DatePicker, value: MonthValue) {
     this.range = owner;
     this.value = value;
@@ -38,6 +39,7 @@ export class Month {
     );
     if(this.range.options.secondCulture && this.range.options.secondCulture == "en"){
       this.secondMonthName = this.range.dateUtil.getGregorianMonthsName(value)
+      
     }
     else if(this.range.options.secondCulture && this.range.options.secondCulture == "fa"){
       this.secondMonthName = this.range.dateUtil.getJalaliMonthsName(value)
@@ -52,7 +54,10 @@ export class Month {
       this.range.options.culture
     )
 
-    
+  
+    this.currentYear = this.range.dateUtil.getCurrentYear( firstDay , this.range.options.culture)
+
+
     this.currentDate = this.range.dateUtil.getCurrentDate();
     if (this.firstDayInMonth == 7) {
       this.firstDayInMonth = 0;

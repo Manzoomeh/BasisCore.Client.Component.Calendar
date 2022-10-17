@@ -70,6 +70,9 @@
                 right: 0;
                 top: 20px;
             }
+            .clr{
+                clear: both;
+            }
         </style>
 
         <script>
@@ -105,20 +108,25 @@
                 <button class="filter-submit"  onclick="setDates(this,event)" >انتخاب</button>
             </div>
         </form>
-        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="" to="" options="mySetting1" rkey="6299E4DE-2437-402F-9DBE-2959EA7E8365"></Basis>
+        <div class="clr"></div>
+        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="" to="" options="mySetting1" rkey="F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8"></Basis>
 
         <script>
             var mySetting = {
-                dateProvider: "basisCalendar",
-                displayNote: true,
-                culture: "en",
-                lid: 2,
-                yearsList : false,
-                monthList:false,
-                rangeDates: true,
-                switchType : false,
-                theme: "basic",
-                type : "click"
+            dateProvider: "basisCalendar",
+            displayNote: true,
+            culture: "fa",
+            secondCulture: "en",
+            style: "../css/datepicker-style.css",
+            mode:"desktop" , 
+            lid: 1,
+            yearsList: false,
+            monthList: false,
+            rangeDates: true,
+            switchType: true,
+            theme: "basic",
+            sourceid: "db.form"
+        
             }
             function setDates(el , event){
 		event.preventDefault()
@@ -134,22 +142,35 @@
                 lid: 1,
                 todayButton: false,
                 dmnid : 6,
+                mode:"desktop" , 
+                style: "../css/calendar-style.css",
                 baseUrl: {
                     "userid" : "https://trust-login.com/api/userid",
-                    "viewnote" :"https://basispanel.ir/user/fa/6299E4DE-2437-402F-9DBE-2959EA7E8365/viewcalendarnote",
-                    "usernotes" :"https://basispanel.ir/user/6299E4DE-2437-402F-9DBE-2959EA7E8365/calendarnotes",
-                    "removenote":"http://basispanel.ir/user/6299E4DE-2437-402F-9DBE-2959EA7E8365/removenote",
-                    "addnote":"https://basispanel.ir/user/6299E4DE-2437-402F-9DBE-2959EA7E8365/addcalendarnote",
-                    "reminder" : "http://basispanel.ir/user/6299E4DE-2437-402F-9DBE-2959EA7E8365/editnotereminder",
-                    "catlist":"https://basispanel.ir/user/6299E4DE-2437-402F-9DBE-2959EA7E8365/fa/notecatlist",
-                    "sharing" :"https://basispanel.ir/user/6299E4DE-2437-402F-9DBE-2959EA7E8365/sharing",
-                    "removesharing":"https://basispanel.ir/user/6299E4DE-2437-402F-9DBE-2959EA7E8365/removesharing"
+                    "viewnote" :"https://basispanel.ir/user/fa/F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8/viewcalendarnote",
+                    "usernotes" :"https://basispanel.ir/user/F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8/calendarnotes",
+                    "removenote":"http://basispanel.ir/user/F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8/removenote",
+                    "addnote":"https://basispanel.ir/user/F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8/addcalendarnote",
+                    "reminder" : "http://basispanel.ir/user/F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8/editnotereminder",
+                    "catlist":"https://basispanel.ir/user/F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8/fa/notecatlist",
+                    "sharing" :"https://basispanel.ir/user/F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8/sharing",
+                    "removesharing":"https://basispanel.ir/user/F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8/removesharing"
                 },
                 labels: {
-                    "list":"لیست یادداشت‌ها",
-                    "new" : "یادداشت جدید",
-                    "edit":"ویرایش یادداشت",
-                    "mainTitle":"تقویم"
+                    todayTitle : "امروز",
+                    titrTitle:"عنوان",
+                    categoryTitle : "دسته بندی",
+                    noteTitle : "یادداشت",
+                    submitKeyTitle : "ثبت",
+                    timeTitle : "زمان با فرمت 18:45 وارد شود",
+                    emptyNoteList : "هیچ یادداشتی در این روز وجود ندارد.",
+                    editMenuTitle :"ویرایش",
+                    deleteMenuTitle:"حذف",
+                    shareMenuTitle:"اشتراک‌گذاری",
+                    deleteTextTitle : "آیا از حذف این یادداشت مطمئن هستید ؟ ",
+                    cancelKeyTitle : "انصراف",
+                    shareTextTitle : "برای به اشتراک‌گذاری ایمیل را وارد کنید",
+                    deleteKeyTitle: "حذف",
+                    shareBoxTitle : "به اشتراک‌گذاری"
                 }
             }
         </script>

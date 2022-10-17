@@ -98,10 +98,15 @@ export class UiCalendar {
     return dayElement;
   }
   generateNoteForm(note?: INote, creator? : number): HTMLElement {
-    
-    const editCodeWrapper: HTMLElement = document.createElement("div");
-    editCodeWrapper.innerHTML = newForm;
 
+    const editCodeWrapper: HTMLElement = document.createElement("div");
+    
+    editCodeWrapper.innerHTML = newForm;
+    editCodeWrapper.querySelector("[data-calendar-title-input]").setAttribute("placeholder",this.range.options.labels.titrTitle) 
+    editCodeWrapper.querySelector("[data-calendar-description-textarea]").setAttribute("placeholder",this.range.options.labels.noteTitle) 
+    editCodeWrapper.querySelector("[bc-calendar-time]").setAttribute("placeholder",this.range.options.labels.timeTitle) 
+    editCodeWrapper.querySelector("[bc-calendar-drop-down-btn]").innerHTML=this.range.options.labels.categoryTitle
+    editCodeWrapper.querySelector("[new-form-submit-button]").innerHTML=this.range.options.labels.submitKeyTitle
     let titleInput: HTMLInputElement = editCodeWrapper.querySelector(
       "[data-calendar-title-input]"
     );
@@ -203,6 +208,8 @@ export class UiCalendar {
   generateShareForm(note? : INote): Node{
     let formWrapper = document.createElement("form");
     formWrapper.innerHTML = layout;
+    formWrapper.querySelector("[data-calendar-share-input]").setAttribute("placeholder",this.range.options.labels.shareTextTitle)
+    formWrapper.querySelector("[data-reminder-submit]").setAttribute("placeholder",this.range.options.labels.submitKeyTitle)
     const sharingParent= formWrapper.querySelector("[data-calendar-share-form-uniqe]")
     const submitShareForm = formWrapper.querySelector("[data-reminder-submit]")
     const sharingInputUniqe = formWrapper.querySelector("#data-calendar-share-input-uniqe") as HTMLInputElement
@@ -269,7 +276,7 @@ export class UiCalendar {
     closeBtn.addEventListener("click", (e) => {
       this.modal.closeModal();
     });
-    currentDate.innerHTML = `<span>${this.day.currentDay.day}</span> <span>${this.day.month.monthName}</span> <span>${this.day.currentDay.year}</span>`;
+    currentDate.innerHTML = `<span>${this.day.currentDay.day}</span> <span>${this.day.month.monthName}</span> <span>${this.day.month.currentYear}</span>`;
     modalBtns.appendChild(closeBtn);
     modalBtns.appendChild(newBtn);
     modalHeader.appendChild(modalBtns);
@@ -285,6 +292,11 @@ export class UiCalendar {
       const newBox: Element = document.createElement("div");
       modalBody.innerHTML = "";
       newBox.innerHTML = newForm;
+      newBox.querySelector("[data-calendar-title-input]").setAttribute("placeholder",this.range.options.labels.titrTitle) 
+      newBox.querySelector("[data-calendar-description-textarea]").setAttribute("placeholder",this.range.options.labels.noteTitle) 
+      newBox.querySelector("[bc-calendar-time]").setAttribute("placeholder",this.range.options.labels.timeTitle) 
+      newBox.querySelector("[bc-calendar-drop-down-btn]").innerHTML=this.range.options.labels.categoryTitle
+      newBox.querySelector("[new-form-submit-button]").innerHTML=this.range.options.labels.submitKeyTitle
       const catsList= newBox.querySelector("#da-bc-calendar-cats-list")
       this.range.categories.forEach((e) => {
         const catLi = document.createElement("li")
@@ -356,7 +368,7 @@ export class UiCalendar {
       let divElement = document.createElement("div");
       divElement.setAttribute("data-calendar-no-message", "");
       divElement.setAttribute("data-sys-inherit", "");
-      const emptyListText = "هیچ یادآوری در این روز وجود ندارد.";
+      const emptyListText = this.range.options.labels.emptyNoteList
       const emptyListIcon = `<svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M30.6 47.6C30.6 45.7222 32.1222 44.2 34 44.2C35.8778 44.2 37.4 45.7222 37.4 47.6C37.4 49.4778 35.8778 51 34 51C32.1222 51 30.6 49.4778 30.6 47.6ZM30.6 20.4C30.6 18.5222 32.1222 17 34 17C35.8778 17 37.4 18.5222 37.4 20.4V34C37.4 35.8778 35.8778 37.4 34 37.4C32.1222 37.4 30.6 35.8778 30.6 34V20.4ZM33.966 0C15.198 0 0 15.232 0 34C0 52.768 15.198 68 33.966 68C52.768 68 68 52.768 68 34C68 15.232 52.768 0 33.966 0ZM34 61.2C18.972 61.2 6.8 49.028 6.8 34C6.8 18.972 18.972 6.8 34 6.8C49.028 6.8 61.2 18.972 61.2 34C61.2 49.028 49.028 61.2 34 61.2Z" fill="#D0D0D0"/>
       </svg>
@@ -385,12 +397,12 @@ export class UiCalendar {
       }      
       let deleteAlert = document.createElement("div")
       deleteAlert.innerHTML=`
-      <p >آیا از حذف این یادداشت مطمئن هستید ؟ </p>
+      <p >${this.range.options.labels.deleteTextTitle} </p>
       <div class="modalButtons">
    <button type="button" class="modalButton remove" data-sys-button-delete="" data-sys-delete-calendar-note="" >
-   حذف
+   ${this.range.options.labels.deleteKeyTitle}
    </button><button type="button" class="modalButton cancelBtn" data-sys-cancel-btn="" data-sys-cancel-delete-calendar-note="" >
-   انصراف
+   ${this.range.options.labels.cancelKeyTitle}
    </button>
    <div class="message"></div>
    </div>
@@ -420,7 +432,10 @@ export class UiCalendar {
       }
       else{
         moreButtonBox.innerHTML = moreBox;
-      
+        moreButtonBox.querySelector("[data-bc-edit-btn]").innerHTML = this.range.options.labels.editMenuTitle
+        moreButtonBox.querySelector("[data-bc-delete-btn]").innerHTML = this.range.options.labels.deleteMenuTitle
+        moreButtonBox.querySelector("[data-bc-share-btn]").innerHTML = this.range.options.labels.shareMenuTitle
+        
       
       moreButton.appendChild(moreButtonBox);
       moreButton.addEventListener("click", (e) => {
@@ -444,8 +459,9 @@ export class UiCalendar {
         modalBody.appendChild(this.generateShareForm(x));
         const shareHeader = modalHeader.querySelector("[data-calendar-modal-header-date]")
         shareHeader.innerHTML=""
-        shareHeader.textContent= `به اشتراک گذاری`
+        shareHeader.textContent= this.range.options.labels.shareBoxTitle
         const shareSubmit = modalBody.querySelector("[data-calendar-submit]")
+        shareSubmit.innerHTML = this.range.options.labels.submitKeyTitle
         const shareListWrapper = modalBody.querySelector("[data-calendar-share-note-wrapper]") as HTMLElement
         shareListWrapper.innerHTML = ""
         this.getSharingList(x, modalBody,shareListWrapper)

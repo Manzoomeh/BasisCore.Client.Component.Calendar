@@ -203,6 +203,7 @@ border-bottom: 1px solid #e8e8e8 !important;
      text-align: center;
      font-size: 22px;
      width: 100%;
+     direction: rtl;
  }
  [data-disable] {
      background: #ccc;

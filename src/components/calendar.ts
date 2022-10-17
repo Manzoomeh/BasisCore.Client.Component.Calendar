@@ -231,7 +231,7 @@ export class DateRange {
     currentYear.setAttribute("data-calendar-year","")
     currentYear.textContent = " " + this.months[this.activeIndex].value.year;
     monthNameElement.textContent =
-      this.months[this.activeIndex].monthName + " " + this.months[this.activeIndex].value.year
+      this.months[this.activeIndex].monthName + " " + this.months[this.activeIndex].currentYear
     secondMonthName.textContent= this.months[this.activeIndex].secondMonthName 
     monthNameElement.appendChild(secondMonthName)
     const todayButton = document.createElement("button");
@@ -244,9 +244,7 @@ export class DateRange {
     </svg>
     `
     const todayText = document.createElement("span")
-    if(this.options.mode=="desktop"){
-    todayText.innerText= this.options.lid == 1 ? "امروز" : "Today";
-    }
+    todayText.innerText = this.options.labels.todayTitle
     todayButton.setAttribute("data-calendar-today-btn", "");
     todayButton.setAttribute("data-sys-button","")
     todayButton.innerHTML = todayText.innerText + todayIcon
@@ -258,6 +256,7 @@ export class DateRange {
     }
     todayWrapper.appendChild(todayButton);
     if (this.monthValues.length == 1) {
+      
       const nextButton = document.createElement("button");
       const prevButton = document.createElement("button");
       const nextYear = document.createElement("button")
@@ -311,6 +310,7 @@ export class DateRange {
       controlElement.appendChild(prevYear);
      
     } else {
+      
       const monthsBtnWrapper = document.createElement("select");
       monthsBtnWrapper.setAttribute("data-calendar-month-wrapper" , "")
       this.monthValues.map((x, index) => {
@@ -328,7 +328,7 @@ export class DateRange {
         });
         monthsBtnWrapper.appendChild(monthBtn);
       });
-      todayWrapper.appendChild(monthsBtnWrapper)
+      controlElement.appendChild(monthsBtnWrapper)
     }
     
     calendarHeader.setAttribute("bc-calendar-calendar-header","")

@@ -137,4 +137,7 @@ export class PersianDateUtil implements IDateUtil {
   getRangeForDate(day : DayValue , status : Status , count: number ) : DayValue{
     return null
   }
+  getCurrentYear(day:DayValue ,  culture : Culture) : number {
+    return null
+  }
 }

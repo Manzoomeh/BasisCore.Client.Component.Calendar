@@ -101,7 +101,11 @@ export class UiMbobile {
     
     const editCodeWrapper: HTMLElement = document.createElement("div");
     editCodeWrapper.innerHTML = newForm;
-
+    editCodeWrapper.querySelector("[data-calendar-title-input]").setAttribute("placeholder",this.range.options.labels.titrTitle) 
+    editCodeWrapper.querySelector("[data-calendar-description-textarea]").setAttribute("placeholder",this.range.options.labels.noteTitle) 
+    editCodeWrapper.querySelector("[bc-calendar-time]").setAttribute("placeholder",this.range.options.labels.timeTitle) 
+    editCodeWrapper.querySelector("[bc-calendar-drop-down-btn]").innerHTML=this.range.options.labels.categoryTitle
+    editCodeWrapper.querySelector("[new-form-submit-button]").innerHTML=this.range.options.labels.submitKeyTitle
     let titleInput: HTMLInputElement = editCodeWrapper.querySelector(
       "[data-calendar-title-input]"
     );
@@ -203,6 +207,8 @@ export class UiMbobile {
   generateShareForm(note? : INote): Node{
     let formWrapper = document.createElement("form");
     formWrapper.innerHTML = layout;
+    formWrapper.querySelector("[data-calendar-share-input]").setAttribute("placeholder",this.range.options.labels.shareTextTitle)
+    formWrapper.querySelector("[data-reminder-submit]").setAttribute("placeholder",this.range.options.labels.submitKeyTitle)
     const sharingParent= formWrapper.querySelector("[data-calendar-share-form-uniqe]")
     const submitShareForm = formWrapper.querySelector("[data-reminder-submit]")
     const sharingInputUniqe = formWrapper.querySelector("#data-calendar-share-input-uniqe") as HTMLInputElement
@@ -270,7 +276,7 @@ export class UiMbobile {
     closeBtn.addEventListener("click", (e) => {
       this.modal.closeModal();
     });
-    currentDate.innerHTML = `<span>${this.day.currentDay.day}</span> <span>${this.day.month.monthName}</span> <span>${this.day.currentDay.year}</span>`;
+    currentDate.innerHTML = `<span>${this.day.currentDay.day}</span> <span>${this.day.month.monthName}</span> <span>${this.day.month.currentYear}</span>`;
     modalBtns.appendChild(closeBtn);
     modalBtns.appendChild(newBtn);
     modalHeader.appendChild(modalBtns);
@@ -286,6 +292,11 @@ export class UiMbobile {
       const newBox: Element = document.createElement("div");
       modalBody.innerHTML = "";
       newBox.innerHTML = newForm;
+      newBox.querySelector("[data-calendar-title-input]").setAttribute("placeholder",this.range.options.labels.titrTitle) 
+      newBox.querySelector("[data-calendar-description-textarea]").setAttribute("placeholder",this.range.options.labels.noteTitle) 
+      newBox.querySelector("[bc-calendar-time]").setAttribute("placeholder",this.range.options.labels.timeTitle) 
+      newBox.querySelector("[bc-calendar-drop-down-btn]").innerHTML=this.range.options.labels.categoryTitle
+      newBox.querySelector("[new-form-submit-button]").innerHTML=this.range.options.labels.submitKeyTitle
       const catsList= newBox.querySelector("#da-bc-calendar-cats-list")
       this.range.categories.forEach((e) => {
         const catLi = document.createElement("li")
@@ -357,7 +368,7 @@ export class UiMbobile {
       let divElement = document.createElement("div");
       divElement.setAttribute("data-calendar-no-message", "");
       divElement.setAttribute("data-sys-inherit", "");
-      const emptyListText = "هیچ یادآوری در این روز وجود ندارد.";
+      const emptyListText = this.range.options.labels.emptyNoteList
       divElement.innerHTML =  emptyListText;
       divElement.setAttribute("data-sys-text-disabled","")
       modalBody.appendChild(divElement);
@@ -380,16 +391,17 @@ export class UiMbobile {
         description.style.color= "#fff"
       }      
       let deleteAlert = document.createElement("div")
-      deleteAlert.innerHTML=`
-      <p >آیا از حذف این یادداشت مطمئن هستید ؟ </p>
+      deleteAlert.innerHTML= deleteAlert.innerHTML=`
+      <p >${this.range.options.labels.deleteTextTitle} </p>
       <div class="modalButtons">
    <button type="button" class="modalButton remove" data-sys-button-delete="" data-sys-delete-calendar-note="" >
-   حذف
+   ${this.range.options.labels.deleteKeyTitle}
    </button><button type="button" class="modalButton cancelBtn" data-sys-cancel-btn="" data-sys-cancel-delete-calendar-note="" >
-   انصراف
+   ${this.range.options.labels.cancelKeyTitle}
    </button>
    <div class="message"></div>
    </div>
+      
       `
       deleteAlert.setAttribute("data-calendar-delete-alert","")
       textSpan.textContent = x.note;
@@ -416,7 +428,9 @@ export class UiMbobile {
       }
       else{
         moreButtonBox.innerHTML = moreBox;
-      
+        moreButtonBox.querySelector("[data-bc-edit-btn]").innerHTML = this.range.options.labels.editMenuTitle
+        moreButtonBox.querySelector("[data-bc-delete-btn]").innerHTML = this.range.options.labels.deleteMenuTitle
+        moreButtonBox.querySelector("[data-bc-share-btn]").innerHTML = this.range.options.labels.shareMenuTitle
       
       moreButton.appendChild(moreButtonBox);
       moreButton.addEventListener("click", (e) => {
@@ -440,11 +454,12 @@ export class UiMbobile {
         modalBody.appendChild(this.generateShareForm(x));
         const shareHeader = modalHeader.querySelector("[data-calendar-modal-header-date]")
         shareHeader.innerHTML=""
-        shareHeader.textContent= `به اشتراک گذاری`
+        shareHeader.textContent= this.range.options.labels.shareBoxTitle
         const shareSubmit = modalBody.querySelector("[data-calendar-submit]")
         const shareListWrapper = modalBody.querySelector("[data-calendar-share-note-wrapper]") as HTMLElement
         shareListWrapper.innerHTML = ""
         this.getSharingList(x, modalBody,shareListWrapper)
+        shareSubmit.innerHTML = this.range.options.labels.submitKeyTitle
         shareSubmit.addEventListener("click" ,async (e) => {
           e.preventDefault()
           const users = []

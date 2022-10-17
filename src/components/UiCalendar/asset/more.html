@@ -15,16 +15,7 @@
     position: absolute;
     left:-40px
   }
-  [bc-calendar-note-operation] li {
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    padding: 5px;
-    align-items: center;
-    direction: ltr;
-    color: #000 !important;
-  }
+
   [bc-calendar-note-operation] li:last-child {
     margin-bottom: 0;
   }
@@ -35,10 +26,7 @@
   .open_drop_down {
     transform: scaleY(1) !important;
   }
-  [bc-calendar-note-operation] li svg{
-      margin-bottom: 0 !important;
-      margin-right: 15px;
-  }
+
 </style>
 <ul bc-calendar-note-operation="" data-sys-bg-secondary="">
   <li bc-calendar-edit-note="" >
@@ -54,7 +42,7 @@
         fill="#323232"
       />
     </svg>
-    <span data-sys-text="">ویرایش</span>
+    <span data-sys-text="" data-bc-edit-btn="">ویرایش</span>
   </li>
   <li bc-calendar-delete-note="">
     <svg
@@ -69,7 +57,7 @@
         fill="#323232"
       />
     </svg>
-    <span data-sys-text="">حذف</span>
+    <span data-sys-text="" data-bc-delete-btn="">حذف</span>
   </li>
   <li bc-calendar-share-note="" >
     <svg width="16" height="10" viewBox="0 0 16 10" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -78,7 +66,7 @@
       
         
         
-    <span  data-sys-text="">اشتراک‌گذاری</span>
+    <span  data-sys-text="" data-bc-share-btn="">اشتراک‌گذاری</span>
   </li>
   <!-- <li bc-calendar-reminder-note="" >
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
