@@ -4,7 +4,6 @@
 }
 [data-datepicker-day-name] span{font-size: 10px;}
 [data-datepicker-day]{ padding: 0; font-size: 14px;margin-bottom:7px}
-#basis-datepicker{width: 360px;}
 [data-datepicker-today] { background: #fff}
 [data-datepicker-today] span{color: #555;}
 [data-datepicker-hover]{background-color: rgba(228, 231, 244, 0.3);}

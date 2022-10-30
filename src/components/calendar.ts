@@ -246,13 +246,16 @@ export class DateRange {
     const todayText = document.createElement("span")
     todayText.innerText = this.options.labels.todayTitle
     todayButton.setAttribute("data-calendar-today-btn", "");
-    todayButton.setAttribute("data-sys-button","")
     todayButton.innerHTML = todayText.innerText + todayIcon
     if(this.options.mode == "mobile"){
       todayButton.innerHTML = ""
       todayButton.removeAttribute("data-calendar-today-btn")
       todayButton.setAttribute("data-calendar-today-btn-mobile","")
       todayButton.innerHTML = todayIcon
+      
+    }
+    else{
+      todayButton.setAttribute("data-sys-button","")
     }
     todayWrapper.appendChild(todayButton);
     if (this.monthValues.length == 1) {
@@ -359,6 +362,7 @@ export class DateRange {
       dayWrapper.setAttribute("data-sys-bg","")
       enSpan.setAttribute("data-calendar-second-day-name" , "")
       enSpan.setAttribute("data-sys-text","")
+      faSpan.setAttribute("data-calendar-first-day-name" , "")
       faSpan.textContent = daysName[index];
       enSpan.textContent= secondDayName[enIndex]
       dayWrapper.appendChild(faSpan);

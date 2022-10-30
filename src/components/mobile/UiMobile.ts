@@ -50,7 +50,13 @@ export class UiMbobile {
     dateWrapper.setAttribute("bc-calendar-date-wrppaer", "");
     secondCulture.textContent = this.day.secondValue + "";
     spanElement.textContent = this.day.currentDay.day + "";
-    dayElement.setAttribute("data-id1", this.day.dateId.toString());
+    if(this.range.options.mode == "desktop"){
+      dayElement.setAttribute("data-id1", this.day.dateId.toString());
+    }
+    else{
+      dayElement.setAttribute("data-id2", this.day.dateId.toString());
+    }
+    // dayElement.setAttribute("data-id1", this.day.dateId.toString());
     dateWrapper.appendChild(spanElement);
     dateWrapper.appendChild(secondCulture);
     dayElement.appendChild(dateWrapper);
