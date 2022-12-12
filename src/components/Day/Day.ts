@@ -10,6 +10,7 @@ export class Day {
   readonly isToday: boolean;
   readonly dateId: number;
   readonly currentDay: DayValue;
+  readonly mcurrentDay: DayValue;
   //dayName: string;
   public constructor(owner: Month, value: DayNumber) {
     this.month = owner;
@@ -23,6 +24,7 @@ export class Day {
       this.currentDay,
       this.month.range.options.culture
     );
+    this.mcurrentDay = this.month.range.dateUtil.convertToGregorianFullDate(this.currentDay)
     if(this.month.range.options.secondCulture && this.month.range.options.secondCulture == "en"){
       this.secondValue =this.month.range.dateUtil.getGregorianDaysNumber(this.currentDay)
     }

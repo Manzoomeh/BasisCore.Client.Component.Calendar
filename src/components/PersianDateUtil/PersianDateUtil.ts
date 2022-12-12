@@ -140,4 +140,7 @@ export class PersianDateUtil implements IDateUtil {
   getCurrentYear(day:DayValue ,  culture : Culture) : number {
     return null
   }
+  convertToGregorianFullDate(day : DayValue ) : DayValue{
+    return null
+  }
 }

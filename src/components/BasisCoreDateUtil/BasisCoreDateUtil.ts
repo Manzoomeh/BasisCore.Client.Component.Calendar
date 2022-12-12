@@ -322,6 +322,7 @@ export class BasisCoreDateUtil implements IDateUtil {
     };
     return jalaliDate;
   }
+
   getGregorianDaysNumber(day : DayValue ) : DayNumber{
     const basisDate = this.getObj(day.year, day.month, day.day);
     return basisDate.mdate
@@ -350,6 +351,15 @@ export class BasisCoreDateUtil implements IDateUtil {
     }
     retVal = { year: currentYear, month: nextMonth };
     return retVal;
+  }
+  convertToGregorianFullDate(day : DayValue ) : DayValue{
+    const basisDate = this.getObj(day.year, day.month, day.day);
+    var gregorianDate: DayValue = {
+      year: basisDate.nyear,
+      month: basisDate.mmonth,
+      day: basisDate.mdate,
+    };
+    return gregorianDate
   }
   prevYear(month: Month, culture: Culture): MonthValue{
     let retVal: MonthValue;

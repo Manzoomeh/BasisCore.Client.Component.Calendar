@@ -35,4 +35,5 @@ export interface IDateUtil {
   getJalaliMonthsName(month : MonthValue): string
   getRangeForDate(day : DayValue , status : Status , count: number ) : DayValue
   getCurrentYear(day:DayValue ,  culture : Culture) : number
+  convertToGregorianFullDate(day : DayValue ) : DayValue
 }

@@ -32,8 +32,16 @@ export class UiDatePicker {
         this.day.currentDay.month +
         "/" +
         this.day.currentDay.day;
+
+      const mselectDate =
+        this.day.mcurrentDay.year +
+        "/" +
+        this.day.mcurrentDay.month +
+        "/" +
+        this.day.mcurrentDay.day;
       
       this.range.datePickerInput.value = selectDate;
+      
       this.range.datePickerInput.setAttribute(
         "data-datepicker-dateid",
         this.day.dateId.toString()
@@ -42,6 +50,11 @@ export class UiDatePicker {
         "data-datepicker-sstring",
         selectDate
       );
+      this.range.datePickerInput.setAttribute(
+        "data-datepicker-mstring",
+        mselectDate
+      );
+      
       this.range.wrapper.remove();
     });
     parentElement.appendChild(dayElement);
