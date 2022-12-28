@@ -4,7 +4,8 @@ import {
   DateUtilProvider,
   ReminderType,
   Type,
-  Mode
+  Mode,
+  Level
 } from "../type-alias";
 export interface INote {
   id: number;
@@ -59,7 +60,8 @@ export interface ICalenderOptions {
   labels? : ILabels , 
   theme? : string,
   mode?: Mode,
-  style?: string
+  style?: string,
+  level? : Level
   
 }
 export interface IDatePickerOptions {

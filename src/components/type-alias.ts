@@ -55,6 +55,7 @@ export declare type DayNumber =
   | 30
   | 31;
 export declare type Culture = "fa" | "en";
+export declare type Level = "user" | "service";
 export declare type DateUtilProvider = "basisCalendar" | "persianCalendar";
 export enum ReminderType {
   none,

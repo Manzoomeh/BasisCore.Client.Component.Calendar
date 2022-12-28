@@ -576,6 +576,8 @@ align-items: center;
   -webkit-transition: transform 0.3s ease;
   transition: transform 0.3s ease;
   transform-origin: top;
+  height: 300px;
+  overflow: auto;
 }
 [bc-calendar-drop-down] p::after {
   content: "\2304";
@@ -591,6 +593,8 @@ align-items: center;
   list-style: none;
   padding: 0;
   margin: 0;
+  height: 300px;
+  overflow: auto;
 }
 [bc-calendar-drop-down] ul li {
   padding: 5px 5px;

@@ -3,11 +3,13 @@ import { Modal } from "../Modal/Modal";
 import { DateRange } from "../calendar";
 import { INote } from "../Interface/Interface";
 import layout from "../UiCalendar/asset/shareForm.html";
+import serviceShareLayout from "../UiCalendar/asset/shareFormForService.html";
 import IWidget from "../../basiscore/BasisPanel/IWidget";
 import newForm from "../UiCalendar/asset/layout.html";
 import moreBox from "../UiCalendar/asset/more.html";
 import moreShareBox from "../UiCalendar/asset/moreShare.html";
 import reminderForm from "../UiCalendar/asset/reminderForm.html"
+import { container, node } from "webpack";
 
 export class UiCalendar {
   private readonly day: Day;
@@ -216,6 +218,68 @@ export class UiCalendar {
     sharingInputUniqe.addEventListener("keyup", (e) =>{
       submitShareForm.removeAttribute("disabled")
     })
+    return formWrapper
+  }
+  async initReciverData(id:number, formWrapper : HTMLElement) {    
+    const reciverData=await this.range.sendAsyncDataGetMethod(this.range.options.baseUrl["reciver"].replace("${catid}" , id))
+    const reciverUl = formWrapper.querySelector("#reciver")
+    reciverUl.innerHTML = ""
+    reciverData.forEach(element => {
+      const reciverLi : HTMLElement = document.createElement("li")
+      reciverLi.addEventListener("click", (e) => {
+        const dropdownValue = formWrapper.querySelector("[bc-calendar-dropdown-reciver]") as HTMLInputElement
+        dropdownValue.value = element.id
+        formWrapper.querySelector("[data-calendar-submit]").removeAttribute("disabled")
+        formWrapper.querySelector("[bc-calendar-drop-down-reciver-title]").textContent=element.title
+      
+      })
+      reciverLi.textContent = element.title
+      reciverUl.appendChild(reciverLi)
+ 
+    });
+  }
+  async generateShareFormForService(note? : INote) : Promise<Node> {
+    const senderData=await this.range.sendAsyncDataGetMethod(this.range.options.baseUrl["sender"])
+    let formWrapper = document.createElement("form");
+    formWrapper.innerHTML = serviceShareLayout;
+    const senderUl = formWrapper.querySelector("#sender")   
+    senderUl.innerHTML = ""
+    senderData.forEach(element => {
+      const senderLi : HTMLElement = document.createElement("li")
+      senderLi.addEventListener("click", e => {
+
+        const dropdownValue = formWrapper.querySelector("[bc-calendar-dropdown-sender]") as HTMLInputElement
+        dropdownValue.value = element.id
+        this.initReciverData(element.id , formWrapper)
+        formWrapper.querySelector("[bc-calendar-drop-down-sender-title]").textContent=element.title
+      })
+      senderLi.textContent = element.title
+      senderUl.appendChild(senderLi)
+    });
+
+    const dropDownBtns = formWrapper.querySelectorAll("[bc-calendar-drop-down-btn]")
+    dropDownBtns.forEach(el => {
+      el.addEventListener("click" , e => {
+        const openDropDowns = document.querySelectorAll(".open_drop_down")
+        openDropDowns.forEach(item => {
+          item.classList.remove("open_drop_down")
+        
+        })
+        el.nextElementSibling.classList.add("open_drop_down");       
+       
+       
+      })
+    })
+    
+    
+    // formWrapper.querySelector("[data-calendar-share-input]").setAttribute("placeholder",this.range.options.labels.shareTextTitle)
+    // formWrapper.querySelector("[data-reminder-submit]").setAttribute("placeholder",this.range.options.labels.submitKeyTitle)
+    // const sharingParent= formWrapper.querySelector("[data-calendar-share-form-uniqe]")
+    // const submitShareForm = formWrapper.querySelector("[data-reminder-submit]")
+    // const sharingInputUniqe = formWrapper.querySelector("#data-calendar-share-input-uniqe") as HTMLInputElement
+    // sharingInputUniqe.addEventListener("keyup", (e) =>{
+    //   submitShareForm.removeAttribute("disabled")
+    // })
     return formWrapper
   }
   generateReminderForm(note? : INote): Node{
@@ -456,178 +520,223 @@ export class UiCalendar {
       shareBtn.addEventListener("click", async (e) => {
         this.modal.cover.querySelector("[data-calendar-new-btn]").remove()        
         modalBody.innerHTML = "";
-        modalBody.appendChild(this.generateShareForm(x));
+        if(this.range.options.level == "user"){
+          modalBody.appendChild(this.generateShareForm(x));
+          const shareSubmit = modalBody.querySelector("[data-calendar-submit]")
+          shareSubmit.innerHTML = this.range.options.labels.submitKeyTitle
+          shareSubmit.addEventListener("click" ,async (e) => {
+            e.preventDefault()
+            const users = []
+            const usernames = modalBody.querySelectorAll("[data-calendar-share-input]") 
+            usernames.forEach((e) => {
+              const currentEmail = e as HTMLInputElement
+              users.push(currentEmail.value)
+            })
+           
+            let formData = new FormData();
+            formData.append("usedforid", x.id.toString());
+            formData.append("mid", `63`);
+            formData.append("username", JSON.stringify(users));
+            let apiLink = this.range.options.baseUrl["sharing"]
+            const data = await this.range.sendAsyncData(
+              formData,
+              apiLink
+            );
+           
+            if(data.errorid == 3){
+              const inputs = modalBody.querySelectorAll("[data-calendar-share-form]")
+              data.users.forEach((e,i) => {
+                const errors = inputs[i].querySelectorAll("[data-calendar-tooltip-flag]")
+                errors.forEach(e => {
+                  e.remove()
+                })
+                if(e.errorid == 7) {
+                  const error = document.createElement("div")
+                  error.setAttribute("data-calendar-tooltip-flag","")
+                  error.setAttribute("data-sys-message-danger","")
+                  error.setAttribute("data-sys-message-danger-fade-in","")
+                  error.setAttribute("style","display: block")
+                  error.innerHTML=`
+                 <span>
+                 یکی از یوزرها اشتباه است 
+                 لطفا مجددا بررسی کنید
+                 <i class="lni lni-close"></i>
+                 </span> `
+                  inputs[i].appendChild(error)
+                } 
+                else if(e.errorid == 11) {
+                  const error = document.createElement("div")
+                  error.setAttribute("data-calendar-tooltip-flag","")
+                  error.setAttribute("data-sys-message-danger","")
+                  error.setAttribute("data-sys-message-danger-fade-in","")
+                  error.setAttribute("style","display: block")
+                  error.innerHTML=` 
+                 <span>
+                یادداشت قبلا با کاربر به اشتراک گذاشته شده است
+                <i class="lni lni-close"></i>
+                 </span> `
+                  inputs[i].appendChild(error)
+                } 
+         
+                else if(e.errorid == 12) {
+                  const error = document.createElement("div")
+                  error.setAttribute("data-calendar-tooltip-flag","")
+                  error.setAttribute("data-sys-message-danger","")
+                  error.setAttribute("data-sys-message-danger-fade-in","")
+                  error.setAttribute("style","display: block")
+                  error.innerHTML=` 
+                 <span>
+                کاربر تکراری است 
+                <i class="lni lni-close"></i>
+                 </span> `
+                  inputs[i].appendChild(error)
+                } 
+                else if(e.errorid == 8) {
+                  const error = document.createElement("div")
+                  // error.setAttribute("data-calendar-tooltip","")
+                  error.setAttribute("data-calendar-tooltip-flag","")
+                  error.setAttribute("data-sys-message-danger","")
+                  error.setAttribute("data-sys-message-danger-fade-in","")
+                  error.setAttribute("style","display: block")
+                  error.innerHTML=` 
+                 <span>
+                نام کاربری اشتباه است 
+                <i class="lni lni-close"></i>
+                 </span> `
+                  inputs[i].appendChild(error)
+                } 
+              })
+            }
+            else if(data.errorid == 5){
+  
+              const inputs = modalBody.querySelectorAll("[data-calendar-share-form]")
+              data.users.forEach((e,i) => {
+                const errors = inputs[i].querySelectorAll("[data-calendar-tooltip-flag]")
+                errors.forEach(e => {
+                  e.remove()
+                })
+                if(e.errorid == 8) {
+                  const error = document.createElement("div")
+                  error.setAttribute("data-calendar-tooltip-flag","")
+                  error.setAttribute("data-sys-message-danger","")
+                  error.setAttribute("data-sys-message-danger-fade-in","")
+                  error.setAttribute("style","display: block")
+                  error.innerHTML=`                <span>
+                 یکی از یوزرها اشتباه است 
+                 لطفا مجددا بررسی کنید
+                 <i class="lni lni-close"></i>
+                 </span> `
+                  inputs[i].appendChild(error)
+                } 
+                if(e.errorid == 7) {
+                  const error = document.createElement("div")
+                  error.setAttribute("data-calendar-tooltip-flag","")
+                  error.setAttribute("data-sys-message-danger","")
+                  error.setAttribute("data-sys-message-danger-fade-in","")
+                  error.setAttribute("style","display: block")
+                  error.innerHTML=`
+                 <span>
+                 یکی از یوزرها اشتباه است 
+                 لطفا مجددا بررسی کنید
+                 <i class="lni lni-close"></i>
+                 </span> `
+                  inputs[i].appendChild(error)
+                } 
+                else if(e.errorid == 11) {
+                  const error = document.createElement("div")
+                  error.setAttribute("data-calendar-tooltip-flag","")
+                  error.setAttribute("data-sys-message-success","")
+                  error.setAttribute("data-sys-message-success-fade-in","")
+                  error.setAttribute("style","display: block")
+                  error.innerHTML=`  <span>
+                 اشتراک‌گذاری با موفقیت انجام شد
+                  <i class="lni lni-checkmark"></i>
+                  </span> 
+                `
+                  inputs[i].appendChild(error)
+                  shareListWrapper.innerHTML = ""
+                  this.getSharingList(x, modalBody,shareListWrapper)
+                }
+                else if(e.errorid == 12) {
+                  const error = document.createElement("div")
+                  error.setAttribute("data-calendar-tooltip-flag","")
+                  error.setAttribute("data-sys-message-danger","")
+                  error.setAttribute("data-sys-message-danger-fade-in","")
+                  error.setAttribute("style","display: block")
+                  error.innerHTML=`
+                 <span>
+                کاربر تکراری است 
+                <i class="lni lni-close"></i>
+                 </span> `
+                  inputs[i].appendChild(error)
+                } 
+              })
+              setTimeout(e => {
+                // this.modal.closeModal()
+              }, 2000);
+  
+            
+           
+            }
+            
+            const errors = modalBody.querySelectorAll("[data-calendar-tooltip-flag]")
+
+
+            errors.forEach(e => {
+              setTimeout(function() {
+                e.setAttribute("data-sys-message-danger-fade-out","")
+            }, 3000);
+            })
+       
+          })
+        }
+        else{
+           modalBody.appendChild( await this.generateShareFormForService(x));
+           modalBody.querySelector("[data-calendar-submit]").addEventListener("click" ,async (e) => {
+            e.preventDefault()
+            const sender =  modalBody.querySelector("[bc-calendar-dropdown-sender]") as HTMLInputElement
+            const reciver = modalBody.querySelector("[bc-calendar-dropdown-reciver]") as HTMLInputElement
+            let formData = new FormData();
+            formData.append("usedforid", x.id.toString());
+            formData.append("ownercatid",  sender.value);
+            formData.append("catid", reciver.value);
+            let apiLink = this.range.options.baseUrl["sharingService"]
+            const data = await this.range.sendAsyncData(
+              formData,
+              apiLink
+            );
+            if(data.errorid == 6){
+              const error = document.createElement("div")
+              error.setAttribute("data-calendar-tooltip-flag","")
+              error.setAttribute("data-sys-message-success","")
+              error.setAttribute("data-sys-message-success-fade-in","")
+              error.setAttribute("style","display: block")
+              error.innerHTML=`  <span>
+             اشتراک‌گذاری با موفقیت انجام شد
+              <i class="lni lni-checkmark"></i>
+              </span> 
+            `
+            document.getElementById("errors").appendChild(error)
+             
+              setTimeout(function() {
+                error.setAttribute("data-sys-message-danger-fade-out","")
+            }, 3000);
+          
+              // modalBody.querySelector("[data-sys-message-success]").setAttribute("data-sys-message-success-fade-in","")
+              // setTimeout(() => {
+              //   modalBody.querySelector("[data-sys-message-success]").setAttribute("data-sys-message-danger-fade-out","")
+              // }, 3000);
+            }
+          })
+        }        
         const shareHeader = modalHeader.querySelector("[data-calendar-modal-header-date]")
         shareHeader.innerHTML=""
         shareHeader.textContent= this.range.options.labels.shareBoxTitle
-        const shareSubmit = modalBody.querySelector("[data-calendar-submit]")
-        shareSubmit.innerHTML = this.range.options.labels.submitKeyTitle
+       
         const shareListWrapper = modalBody.querySelector("[data-calendar-share-note-wrapper]") as HTMLElement
         shareListWrapper.innerHTML = ""
         this.getSharingList(x, modalBody,shareListWrapper)
-        shareSubmit.addEventListener("click" ,async (e) => {
-          e.preventDefault()
-          const users = []
-          const usernames = modalBody.querySelectorAll("[data-calendar-share-input]") 
-          usernames.forEach((e) => {
-            const currentEmail = e as HTMLInputElement
-            users.push(currentEmail.value)
-          })
-         
-          let formData = new FormData();
-          formData.append("usedforid", x.id.toString());
-          formData.append("mid", `63`);
-          formData.append("username", JSON.stringify(users));
-          let apiLink = this.range.options.baseUrl["sharing"]
-          const data = await this.range.sendAsyncData(
-            formData,
-            apiLink
-          );
-         
-          if(data.errorid == 3){
-            const inputs = modalBody.querySelectorAll("[data-calendar-share-form]")
-            data.users.forEach((e,i) => {
-              const errors = inputs[i].querySelectorAll("[data-calendar-tooltip-flag]")
-              errors.forEach(e => {
-                e.remove()
-              })
-              if(e.errorid == 7) {
-                const error = document.createElement("div")
-                error.setAttribute("data-calendar-tooltip-flag","")
-                error.setAttribute("data-sys-message-danger","")
-                error.setAttribute("data-sys-message-danger-fade-in","")
-                error.setAttribute("style","display: block")
-                error.innerHTML=`
-               <span>
-               یکی از یوزرها اشتباه است 
-               لطفا مجددا بررسی کنید
-               <i class="lni lni-close"></i>
-               </span> `
-                inputs[i].appendChild(error)
-              } 
-              else if(e.errorid == 11) {
-                const error = document.createElement("div")
-                error.setAttribute("data-calendar-tooltip-flag","")
-                error.setAttribute("data-sys-message-danger","")
-                error.setAttribute("data-sys-message-danger-fade-in","")
-                error.setAttribute("style","display: block")
-                error.innerHTML=` 
-               <span>
-              یادداشت قبلا با کاربر به اشتراک گذاشته شده است
-              <i class="lni lni-close"></i>
-               </span> `
-                inputs[i].appendChild(error)
-              } 
-       
-              else if(e.errorid == 12) {
-                const error = document.createElement("div")
-                error.setAttribute("data-calendar-tooltip-flag","")
-                error.setAttribute("data-sys-message-danger","")
-                error.setAttribute("data-sys-message-danger-fade-in","")
-                error.setAttribute("style","display: block")
-                error.innerHTML=` 
-               <span>
-              کاربر تکراری است 
-              <i class="lni lni-close"></i>
-               </span> `
-                inputs[i].appendChild(error)
-              } 
-              else if(e.errorid == 8) {
-                const error = document.createElement("div")
-                // error.setAttribute("data-calendar-tooltip","")
-                error.setAttribute("data-calendar-tooltip-flag","")
-                error.setAttribute("data-sys-message-danger","")
-                error.setAttribute("data-sys-message-danger-fade-in","")
-                error.setAttribute("style","display: block")
-                error.innerHTML=` 
-               <span>
-              نام کاربری اشتباه است 
-              <i class="lni lni-close"></i>
-               </span> `
-                inputs[i].appendChild(error)
-              } 
-            })
-          }
-          else if(data.errorid == 5){
-
-            const inputs = modalBody.querySelectorAll("[data-calendar-share-form]")
-            data.users.forEach((e,i) => {
-              const errors = inputs[i].querySelectorAll("[data-calendar-tooltip-flag]")
-              errors.forEach(e => {
-                e.remove()
-              })
-              if(e.errorid == 8) {
-                const error = document.createElement("div")
-                error.setAttribute("data-calendar-tooltip-flag","")
-                error.setAttribute("data-sys-message-danger","")
-                error.setAttribute("data-sys-message-danger-fade-in","")
-                error.setAttribute("style","display: block")
-                error.innerHTML=`                <span>
-               یکی از یوزرها اشتباه است 
-               لطفا مجددا بررسی کنید
-               <i class="lni lni-close"></i>
-               </span> `
-                inputs[i].appendChild(error)
-              } 
-              if(e.errorid == 7) {
-                const error = document.createElement("div")
-                error.setAttribute("data-calendar-tooltip-flag","")
-                error.setAttribute("data-sys-message-danger","")
-                error.setAttribute("data-sys-message-danger-fade-in","")
-                error.setAttribute("style","display: block")
-                error.innerHTML=`
-               <span>
-               یکی از یوزرها اشتباه است 
-               لطفا مجددا بررسی کنید
-               <i class="lni lni-close"></i>
-               </span> `
-                inputs[i].appendChild(error)
-              } 
-              else if(e.errorid == 11) {
-                const error = document.createElement("div")
-                error.setAttribute("data-calendar-tooltip-flag","")
-                error.setAttribute("data-sys-message-success","")
-                error.setAttribute("data-sys-message-success-fade-in","")
-                error.setAttribute("style","display: block")
-                error.innerHTML=`  <span>
-               اشتراک‌گذاری با موفقیت انجام شد
-                <i class="lni lni-checkmark"></i>
-                </span> 
-              `
-                inputs[i].appendChild(error)
-                shareListWrapper.innerHTML = ""
-                this.getSharingList(x, modalBody,shareListWrapper)
-              }
-              else if(e.errorid == 12) {
-                const error = document.createElement("div")
-                error.setAttribute("data-calendar-tooltip-flag","")
-                error.setAttribute("data-sys-message-danger","")
-                error.setAttribute("data-sys-message-danger-fade-in","")
-                error.setAttribute("style","display: block")
-                error.innerHTML=`
-               <span>
-              کاربر تکراری است 
-              <i class="lni lni-close"></i>
-               </span> `
-                inputs[i].appendChild(error)
-              } 
-            })
-            setTimeout(e => {
-              // this.modal.closeModal()
-            }, 2000);
-
-          
-         
-          }
-          
-          const errors = modalBody.querySelectorAll("[data-calendar-tooltip-flag]")
-          errors.forEach(e => {
-            setTimeout(function() {
-              e.setAttribute("data-sys-message-danger-fade-out","")
-          }, 3000);
-          })
-     
-        })
+      
       });
       reminderBtn.addEventListener("click", async (e) => {
         modalBody.innerHTML = "";
@@ -778,7 +887,7 @@ export class UiCalendar {
     }
     const viewNote =await this.range.sendAsyncDataPostJson(obj , this.range.options.baseUrl["viewnote"])
    
-    viewNote[0].sharing.forEach((e) => {
+    viewNote[0]?.sharing.forEach((e) => {
       const shareItem = document.createElement("div")
       const shareUserName = document.createElement("div")
       const shareItemSpan = document.createElement("span")
@@ -800,14 +909,36 @@ export class UiCalendar {
         shareItem.remove()
       })
       shareItem.setAttribute("data-calendar-sharing-item","")
-      shareUserName.setAttribute("data-calendar-sharing-username","")
+      shareUserName.setAttribute("data-calendar-sharing-username-service","")
       shareUserName.setAttribute("data-sys-text","")
       shareUserName.textContent = e.name
       shareItemSpan.textContent =`( ${e.username} )` 
       shareUserName.appendChild(shareItemSpan)
+      
+      if(this.range.options.level == "service"){
+        const sender = document.createElement("div")
+        const senderCatid = document.createElement("span")
+        const senderTitle = document.createElement("div")
+        senderCatid.innerHTML =`<svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.70021 13.3C8.09021 12.91 8.09021 12.28 7.70021 11.89L3.83021 7.99998H19.0002C19.5502 7.99998 20.0002 7.54998 20.0002 6.99998C20.0002 6.44998 19.5502 5.99998 19.0002 5.99998H3.83021L7.71021 2.11998C8.10021 1.72998 8.10021 1.09998 7.71021 0.70998C7.32021 0.31998 6.69021 0.31998 6.30021 0.70998L0.700215 6.29998C0.310215 6.68998 0.310215 7.31998 0.700215 7.70998L6.29021 13.3C6.68021 13.68 7.32021 13.68 7.70021 13.3Z" fill="#323232"/>
+        </svg>
+        `
+        senderTitle.textContent = e.ownername
+        sender.appendChild(senderTitle)
+        sender.appendChild(senderCatid)
+        const reciver = document.createElement("div")
+        const reciverCatid = document.createElement("span")
+        const reciverTitle = document.createElement("div")
+        reciverCatid.textContent =`( ${e.catid} )` 
+        reciverTitle.textContent = e.name
+        reciver.appendChild(reciverTitle)
+        
+        shareUserName.innerHTML = ""
+        shareUserName.appendChild(sender)
+        shareUserName.appendChild(reciver)
+      }
       shareItem.appendChild(shareUserName)
       shareItem.appendChild(removeSharing)
-
       wrapper.appendChild(shareItem)
      
     })

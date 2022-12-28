@@ -1,0 +1,58 @@
+<style>
+  [data-sys-message-success] {
+  background-color: #D9F2EF;
+  color: #00A693;
+  padding: 7px 15px;
+  border-radius: 5px;
+  transition: all 0.5s ease-in-out;
+  transform: translateY(50px);
+  opacity: 0;
+}
+</style>
+<form data-calendar-input-wrapper="" >
+  <div data-calendar-share-note-wrapper="">
+
+  </div>
+    <div data-calendar-form-row="" data-calendar-form-row-share="">
+	
+        <div style="margin-bottom: 15px;">
+     
+            <div bc-calendar-drop-down="" bc-calendar-drop-down-for-cats="">
+              <input type="hidden" id="note-category" name="catid" data-sys-input-text="" bc-calendar-dropdown-sender="">
+              <p bc-calendar-drop-down-btn="" bc-calendar-drop-down-sender-title="" data-sys-input-text="">گروه فرستنده</p>
+             
+              <ul da-bc-calendar-cats-list="" id="sender" >
+              </ul>
+              
+      
+            </div>
+          </div>
+          <div>
+     
+            <div bc-calendar-drop-down="" bc-calendar-drop-down-for-cats="">
+              <input type="hidden" id="note-category" name="catid" data-sys-input-text="" bc-calendar-dropdown-reciver="">
+              <p bc-calendar-drop-down-btn="" bc-calendar-drop-down-reciver-title="" data-sys-input-text="">گروه گیرنده</p>
+             
+              <ul da-bc-calendar-cats-list="" id="reciver" >
+              
+            
+            </ul>
+      
+            </div>
+          </div>
+    </div>
+    <div id="errors">
+
+    </div>
+    <!-- <div data-calendar-tooltip-flag="" data-sys-message-success="" >  
+      <span>
+      اشتراک‌گذاری با موفقیت انجام شد
+       <i class="lni lni-checkmark"></i>
+       </span> 
+     </div> -->
+    <div new-form-submit-cancel-buttons="" >
+  
+        <button data-calendar-submit data-reminder-submit="" disabled="true" data-sys-button="">ثبت</button>
+      
+    </div>
+</form>

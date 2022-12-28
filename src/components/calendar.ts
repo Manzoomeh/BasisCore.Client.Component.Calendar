@@ -31,7 +31,8 @@ export class DateRange {
     secondCulture: "en",
     lid: 1,
     theme : "basic",
-    mode:"desktop"
+    mode:"desktop",
+    level:"user"
   };
 
   public  constructor(
@@ -126,6 +127,7 @@ export class DateRange {
     form.append("to", `${toDateId}`);
     let apiLink = this.options.baseUrl["usernotes"]
     apiLink = apiLink.toString().replace("${rkey}" , this.rKey)
+
     const data = await this.sendAsyncData(
       form,
       apiLink

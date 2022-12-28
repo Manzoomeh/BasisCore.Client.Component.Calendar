@@ -565,6 +565,10 @@ align-items: center;
   -webkit-transition: transform 0.3s ease;
   transition: transform 0.3s ease;
   transform-origin: top;
+  position: relative;
+  z-index: 9;
+  overflow: auto;
+  min-height: 100px;
 }
 [bc-calendar-drop-down] p::after {
   content: "\2304";
@@ -588,6 +592,13 @@ align-items: center;
   display: flex;
   color: #000;
   cursor: pointer;
+  height: 40px;
+display: flex;
+align-items: center;
+border-bottom: 1px solid #d7d7fb;
+}
+[bc-calendar-drop-down] ul li:last-child{
+  border-bottom: 0;
 }
 [bc-calendar-drop-down-for-cats]{
   width: 100%;
@@ -850,6 +861,24 @@ margin-left: -60px;
   display: flex;
   flex-direction: column;
 }
+[data-calendar-sharing-username-service]{
+  display: flex;
+  
+}
+[data-calendar-sharing-username-service] div{
+  display: flex;
+  align-items: center;
+}
+[data-calendar-sharing-username-service] svg{
+  margin: 0 20px;
+}
+[data-calendar-sharing-username-service] path{
+  color: #767676;
+  font-size: 12px;
+}
+[data-calendar-sharing-username-service] span{
+  display: flex;
+}
 [data-calendar-sharing-username] span{
   color: #767676;
   font-size: 12px;
@@ -872,8 +901,6 @@ margin-left: -60px;
 [data-calendar-share-form]{
   direction: rtl;
   justify-content: space-between;
-  padding: 10px;
-  padding-top:0;
   margin-bottom: 0 !important;
   position: relative;
 }
