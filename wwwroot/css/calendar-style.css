@@ -212,7 +212,7 @@ select {
   height: 100%;
   display: flex;
   justify-content: flex-start;
-  z-index: 99999999;
+  z-index: 999;
   align-items: start;
   flex-direction: center;
   justify-content: center;
@@ -679,7 +679,7 @@ border-bottom: 1px solid #d7d7fb;
   display: block;
   clear: both;
   color: #767676;
-  font-size: 8px;
+  font-size: 10px;
 }
 [new-note-reminder-form] [new-note-btns] {
   width: 160px;
@@ -688,7 +688,7 @@ border-bottom: 1px solid #d7d7fb;
   background: #fff;
   border-radius: 5px;
   padding: 10px 5px;
-  width: 100px;
+  width: 60px;
   border: none;
   direction: rtl;
   text-align: right;
@@ -697,13 +697,15 @@ border-bottom: 1px solid #d7d7fb;
   box-sizing: border-box;
 }
 [new-note-reminder-form-body] {
-  display: flex;
+
   direction: rtl;
   justify-content: space-between;
   height: 100px;
 }
 [new-note-reminder-input] {
   display: flex;
+  float: right;
+  margin-left: 15px;
 }
 [bc-calendar-drop-down-white] p {
   background: #fff;
@@ -1105,4 +1107,89 @@ align-items: center;
 [bc-calendar-note-operation] li svg{
   margin-bottom: 0 !important;
   margin-right: 15px;
+}
+.timepicker-ui-header{
+  
+  padding-top: 0 !important;
+  padding-bottom: 1px !important;
+}
+.timepicker-ui-wrapper{
+  padding: 0 25px !important;
+}
+.timepicker-ui-footer {
+
+  flex-direction: row-reverse !important;
+}
+[new-note-reminder-form-body ] [new-note-reminder-form-element]{
+  float: right;
+  margin-left: 15px;
+}
+[bc-calendar-time-num]{
+  margin-left: 15px;
+}
+.clr{
+  clear: both;
+}
+.timepicker-ui-hour:hover, .timepicker-ui-hour.active, .timepicker-ui-minutes:hover, .timepicker-ui-minutes.active, .timepicker-ui-hour.mobile:hover, .timepicker-ui-hour.mobile.active, .timepicker-ui-minutes.mobile:hover, .timepicker-ui-minutes.mobile.active{
+  color: #004B85;
+background-color: rgba(0, 75, 133, 0.1);
+}
+.timepicker-ui-circle-hand,.timepicker-ui-clock-hand{
+  background-color: #004B85;
+}
+.timepicker-ui-clock-face{
+  background-color: rgba(0, 75, 133, 0.1);
+}
+.timepicker-ui-wrapper-btn{
+  direction: rtl
+}
+.timepicker-ui-ok-btn{
+  background-color: #004B85;
+  color: #fff;
+}
+.open_drop_down_wrapper{
+  position: relative;
+  z-index: 9999;
+}
+.timepicker-ui-cancel-btn{
+  color: #212121;
+  margin-left: 15px;
+}
+ .timepicker-ui-cancel-btn:hover{
+  background-color: #fff;
+}
+.timepicker-ui-ok-btn:hover{
+  background-color: #004B85;
+}
+[bc-calendar-drop-down-reciver-deactive]{
+  color: #D0D0D0;
+  pointer-events: none;
+  background-color: #f8f8ff !important;
+border: 1px solid #d7d7fb !important;
+
+}
+[data-sys-message-danger] {
+  background-color: rgba(180, 0, 32, 0.1);
+  color: #B40020;
+  padding: 7px 15px;
+  border-radius: 5px;
+  transition: all 0.5s ease-in-out;
+  transform: translateY(50px);
+  opacity: 0;
+  direction: ltr;
+text-align: right;
+}
+[data-sys-message-success] {
+  direction: ltr;
+  text-align: right;
+}
+
+[data-sys-message-danger-fade-in] {
+  transform: translateY(0px) !important;
+  opacity: 1 !important;
+}
+
+[data-sys-message-danger-fade-out] {
+  transform: translateY(50px) !important;
+  opacity: 0 !important;
 }

@@ -9,7 +9,11 @@ import newForm from "../UiCalendar/asset/layout.html";
 import moreBox from "../UiCalendar/asset/more.html";
 import moreShareBox from "../UiCalendar/asset/moreShare.html";
 import reminderForm from "../UiCalendar/asset/reminderForm.html"
-import { container, node } from "webpack";
+import reminderList from "../UiCalendar/asset/reminderList.html"
+import { TimepickerUI } from "timepicker-ui";
+import { OptionTypes } from "timepicker-ui";
+
+
 
 export class UiCalendar {
   private readonly day: Day;
@@ -212,7 +216,6 @@ export class UiCalendar {
     formWrapper.innerHTML = layout;
     formWrapper.querySelector("[data-calendar-share-input]").setAttribute("placeholder",this.range.options.labels.shareTextTitle)
     formWrapper.querySelector("[data-reminder-submit]").setAttribute("placeholder",this.range.options.labels.submitKeyTitle)
-    const sharingParent= formWrapper.querySelector("[data-calendar-share-form-uniqe]")
     const submitShareForm = formWrapper.querySelector("[data-reminder-submit]")
     const sharingInputUniqe = formWrapper.querySelector("#data-calendar-share-input-uniqe") as HTMLInputElement
     sharingInputUniqe.addEventListener("keyup", (e) =>{
@@ -220,8 +223,34 @@ export class UiCalendar {
     })
     return formWrapper
   }
-  async initReciverData(id:number, formWrapper : HTMLElement) {    
+  async initReciverData(id:number, formWrapper : HTMLElement) {  
+    
     const reciverData=await this.range.sendAsyncDataGetMethod(this.range.options.baseUrl["reciver"].replace("${catid}" , id))
+    if(reciverData.length == 0){      
+          const errors = formWrapper.querySelectorAll("[data-calendar-tooltip-flag]")
+          errors.forEach( ee => {
+            ee.remove()
+          })
+          const error = document.createElement("div")
+          error.setAttribute("data-calendar-tooltip-flag","")
+          error.setAttribute("data-sys-message-danger","")
+          error.setAttribute("data-sys-message-danger-fade-in","")
+          error.setAttribute("style","display: block")
+          error.innerHTML=`
+         <span>
+         هیچ گروه کاربری برای گروه فرستنده تعریف نشده است
+         <i class="lni lni-close"></i>
+         </span> `
+          
+        formWrapper.querySelector("#errors").appendChild(error)
+          setTimeout(function() {
+            error.setAttribute("data-sys-message-danger-fade-out","")
+        }, 3000);
+        formWrapper.querySelector("[bc-calendar-drop-down-reciver-title]").setAttribute("bc-calendar-drop-down-reciver-deactive","")         
+    }
+    else{
+      formWrapper.querySelector("[bc-calendar-drop-down-reciver-title]").removeAttribute("bc-calendar-drop-down-reciver-deactive")
+    }
     const reciverUl = formWrapper.querySelector("#reciver")
     reciverUl.innerHTML = ""
     reciverData.forEach(element => {
@@ -247,7 +276,6 @@ export class UiCalendar {
     senderData.forEach(element => {
       const senderLi : HTMLElement = document.createElement("li")
       senderLi.addEventListener("click", e => {
-
         const dropdownValue = formWrapper.querySelector("[bc-calendar-dropdown-sender]") as HTMLInputElement
         dropdownValue.value = element.id
         this.initReciverData(element.id , formWrapper)
@@ -285,24 +313,9 @@ export class UiCalendar {
   generateReminderForm(note? : INote): Node{
     let formWrapper = document.createElement("form");
     formWrapper.innerHTML = reminderForm;
-    const dropDowns = formWrapper.querySelectorAll("[bc-calendar-drop-down]");
-    dropDowns.forEach((el) => {
-      const dropDownBtn  = el.querySelector("[bc-calendar-drop-down-btn]")
-      const liItems = el.querySelectorAll("li")
-      
-      liItems.forEach((LIelement) => {
-        LIelement.addEventListener("click" , function(element){
-          const dropdownValue = el.querySelector("[bc-calendar-dropdown-id]") as HTMLInputElement
-          dropdownValue.value = this.getAttribute("data-id")
-          const liText = element.target as HTMLElement
-          dropDownBtn.textContent = liText.innerText
-        })
-      })
-      el.addEventListener("click", function (element) {
-        dropDownBtn.nextElementSibling.classList.toggle("open_drop_down");       
-       
-      });
-    });
+    let unitId = 1
+   
+    
     return formWrapper
   }
  
@@ -346,7 +359,6 @@ export class UiCalendar {
     modalHeader.appendChild(modalBtns);
     modalHeader.appendChild(currentDate);
     
-
     newBtn.addEventListener("click", async (e) => {
       await this.range.getCategories()
       if (this.range?.Owner?.dc?.isRegistered("widget") ) {
@@ -356,6 +368,27 @@ export class UiCalendar {
       const newBox: Element = document.createElement("div");
       modalBody.innerHTML = "";
       newBox.innerHTML = newForm;
+      const timeInputt : HTMLElement= newBox.querySelector("[bc-calendar-time-input]") 
+      const datePickerOptions : OptionTypes = {okLabel :"تایید" , cancelLabel:"کنسل",amLabel:"ق.ظ",pmLabel:"ب.ظ",clockType:"24h" ,timeLabel : "",delayHandler:10};
+      const newTimepicker = new TimepickerUI(timeInputt, datePickerOptions);
+      const modalParent : HTMLElement = modalBody.closest("[data-modal-form]") 
+      timeInputt.addEventListener("click",timeElement => {        
+      
+       modalParent.style.display="none"
+        newTimepicker.open();
+      })
+      timeInputt.addEventListener("accept", (event) => {
+        setTimeout(timeoute => {
+          modalParent.style.display="block"
+        },300)
+        
+      });
+      timeInputt.addEventListener("cancel", (event) => {
+        setTimeout(timeoute => {
+          modalParent.style.display="block"
+        },300)
+      });
+    
       newBox.querySelector("[data-calendar-title-input]").setAttribute("placeholder",this.range.options.labels.titrTitle) 
       newBox.querySelector("[data-calendar-description-textarea]").setAttribute("placeholder",this.range.options.labels.noteTitle) 
       newBox.querySelector("[bc-calendar-time]").setAttribute("placeholder",this.range.options.labels.timeTitle) 
@@ -484,8 +517,15 @@ export class UiCalendar {
       divElementHeader.setAttribute("data-calendar-note-header", "");
       moreButton.setAttribute("data-calendar-more-button", "");
       const moreButtonBox = document.createElement("div");
+    
+      
       if(x.creator == 0){
         moreButtonBox.innerHTML = moreShareBox;
+        if(this.range.options.level == "user"){
+
+          moreButtonBox.querySelector("[bc-calendar-reminder-note]").remove()
+          
+        }
         moreButton.appendChild(moreButtonBox);
       moreButton.addEventListener("click", (e) => {
         const moreButtonDropDown = moreButtonBox.querySelector(
@@ -495,10 +535,17 @@ export class UiCalendar {
       });
       }
       else{
+        
         moreButtonBox.innerHTML = moreBox;
+        if(this.range.options.level == "user"){
+
+          moreButtonBox.querySelector("[bc-calendar-reminder-note]").remove()
+          
+        }
         moreButtonBox.querySelector("[data-bc-edit-btn]").innerHTML = this.range.options.labels.editMenuTitle
         moreButtonBox.querySelector("[data-bc-delete-btn]").innerHTML = this.range.options.labels.deleteMenuTitle
         moreButtonBox.querySelector("[data-bc-share-btn]").innerHTML = this.range.options.labels.shareMenuTitle
+       
         
       
       moreButton.appendChild(moreButtonBox);
@@ -515,8 +562,8 @@ export class UiCalendar {
       const removeBtn: HTMLElement = moreButtonBox.querySelector(
         "[bc-calendar-delete-note]"
       );
-      // const reminderBtn : HTMLElement = moreButtonBox.querySelector("[bc-calendar-reminder-note]")
-      const reminderBtn : HTMLElement = document.createElement("div")
+     
+      // const reminderBtn : HTMLElement = document.createElement("div")
       shareBtn.addEventListener("click", async (e) => {
         this.modal.cover.querySelector("[data-calendar-new-btn]").remove()        
         modalBody.innerHTML = "";
@@ -674,14 +721,8 @@ export class UiCalendar {
               setTimeout(e => {
                 // this.modal.closeModal()
               }, 2000);
-  
-            
-           
             }
-            
             const errors = modalBody.querySelectorAll("[data-calendar-tooltip-flag]")
-
-
             errors.forEach(e => {
               setTimeout(function() {
                 e.setAttribute("data-sys-message-danger-fade-out","")
@@ -738,73 +779,7 @@ export class UiCalendar {
         this.getSharingList(x, modalBody,shareListWrapper)
       
       });
-      reminderBtn.addEventListener("click", async (e) => {
-        modalBody.innerHTML = "";
-        modalBody.appendChild(this.generateReminderForm(x));
-        const switchButtons = modalBody.querySelectorAll("[bc-calendar-change-button]")
-        const reminderSubmit = modalBody.querySelector("[data-calendar-submit]")
-        const actionId = modalBody.querySelector("[bc-calendar-action-id]") as HTMLInputElement
-        const timeType = modalBody.querySelector("[bc-calendar-dropdown-id]") as HTMLInputElement
-        const num = modalBody.querySelector("[bc-calendar-time-num]") as HTMLInputElement
-        const obj = { 
-          noteid : x.id,
-          creatoruser:  this.range.userId
-        }
-        const viewNote =await this.range.sendAsyncDataPostJson(obj , this.range.options.baseUrl["viewnote"])
-        switchButtons.forEach(x => {
-          x.addEventListener("click" , function(e)  {
-            const container = this.closest(".tabWrapper");
-            const tabButton = container.querySelectorAll(".tabButton");
-            let left = 0;
-            tabButton.forEach((btn, index) => {
-                btn.setAttribute("tab-button-status", "");
-                if (btn == this) {
-                    left = index;
-                }
-            });
-            this.setAttribute("tab-button-status", "active");
-            
-            const tab = container.querySelector(".tabActive") as HTMLElement
-            tab.style.transform = `translateX(-${left}00%)`;
-            const actionidInput = modalBody.querySelector("[bc-calendar-action-id]") as HTMLInputElement
-            actionidInput.value = this.getAttribute("data-id")
-          })
-          
-        })
-
-        if(viewNote[0].reminder.length > 0){
-          
-          const actionidVal = viewNote[0].reminder[0].actionID
-          const timetypeVal = viewNote[0].reminder[0].timetype
-          const numVal = viewNote[0].reminder[0].num
-          const timeTypes= modalBody.querySelectorAll("li")
-          const timeTypeInput = modalBody.querySelector("[bc-calendar-dropdown-id]") as HTMLInputElement
-          timeTypeInput.value = timetypeVal
-          timeTypes.forEach((e) => {
-            if(e.getAttribute("data-id") == timetypeVal){
-              modalBody.querySelector("[bc-calendar-drop-down-btn]").textContent= e.textContent
-            }
-          })
-          num.value = numVal
-
-        }
-        reminderSubmit.addEventListener("click" , (e) => {
-          e.preventDefault()
-          const obj = { 
-            noteid : x.id,
-            reminder: [
-              {
-                id : 0,
-                actionid : actionId.value,
-                timetype : timeType.value,
-                num : num.value
-              }
-            ]
-          }
-          let apiLink = this.range.options.baseUrl["reminder"]
-        this.range.sendAsyncDataPostJson(obj, apiLink);
-        })
-      })
+     
     
       removeBtn.addEventListener("click", (e) => {        
         e.preventDefault();
@@ -835,6 +810,163 @@ export class UiCalendar {
 
      
     }
+    const reminderBtn : HTMLElement = moreButtonBox.querySelector("[bc-calendar-reminder-note]")
+    reminderBtn?.addEventListener("click", async (e) => {
+      modalBody.innerHTML = "";
+      modalBody.appendChild(this.generateReminderForm(x));
+      let unitId = 1
+      const reminderSubmit = modalBody.querySelector("[data-calendar-submit]")
+     
+      const obj = { 
+        noteid : x.id,
+        creatoruser:  this.range.userId
+      }
+      const viewNote =await this.range.sendAsyncDataPostJson(obj , this.range.options.baseUrl["viewnote"])
+     
+
+      if(viewNote[0].reminder.length > 0){   
+        viewNote[0].reminder.forEach( reminderItem => {
+          const reminderItemDiv = document.createElement("div")
+          reminderItemDiv.innerHTML = reminderList
+          const actionidVal =reminderItem.actionID
+          const timetypeVal = reminderItem.timetype
+          const timeValueInput :HTMLInputElement = reminderItemDiv.querySelector("[data-calendar-time-value]") as HTMLInputElement
+          const itemdropDown = reminderItemDiv.querySelector("[bc-calendar-drop-down]")
+          timeValueInput.value = reminderItem.value  
+          itemdropDown.setAttribute("data-id" , timetypeVal)
+          itemdropDown.setAttribute("data-text" , reminderItem.timetitle)
+          if(actionidVal == 2){
+            reminderItemDiv.querySelector("[tab-button-status-mobile]").setAttribute("tab-button-status","active")
+            reminderItemDiv.querySelector("[tab-button-status-email]").removeAttribute("tab-button-status")
+            const tab = reminderItemDiv.querySelector(".tabActive") as HTMLElement
+            tab.style.transform = `translateX(-100%)`;
+          }
+          modalBody.querySelector("[ data-calendar-reminder-note-wrapper]") .appendChild(reminderItemDiv)
+        })
+      
+
+      }
+      const switchButtons = modalBody.querySelectorAll("[bc-calendar-change-button]")
+      switchButtons.forEach(x => {
+        x.addEventListener("click" , function(e)  {
+          const container = this.closest(".tabWrapper");
+          const tabButton = container.querySelectorAll(".tabButton");
+          let left = 0;
+          tabButton.forEach((btn, index) => {
+              btn.setAttribute("tab-button-status", "");
+              if (btn == this) {
+                  left = index;
+              }
+          });
+          this.setAttribute("tab-button-status", "active");            
+          const tab = container.querySelector(".tabActive") as HTMLElement
+          tab.style.transform = `translateX(-${left}00%)`;
+          const actionidInput = modalBody.querySelector("[bc-calendar-action-id]") as HTMLInputElement
+          actionidInput.value = this.getAttribute("data-id")
+        })
+        
+      })
+      const dropDowns = modalBody.querySelectorAll("[bc-calendar-drop-down]");
+      dropDowns.forEach((el) => {
+        
+        const dropDownBtn  = el.querySelector("[bc-calendar-drop-down-btn]")
+        dropDownBtn.textContent =  el.getAttribute("data-text") ? el.getAttribute("data-text") : "دقیقه"
+        const liItems = el.querySelectorAll("li")      
+        liItems.forEach((LIelement) => {
+          LIelement.addEventListener("click" , function(element){
+            
+            const dropdownValue = el.querySelector("[bc-calendar-dropdown-id]") as HTMLInputElement
+            dropdownValue.value = this.getAttribute("data-id")
+            const liText = element.target as HTMLElement
+            dropDownBtn.textContent = liText.innerText
+            unitId = parseInt( this.getAttribute("data-id"))
+          })
+        })
+        el.addEventListener("click", function (element) {
+          
+          dropDowns.forEach(cel => {
+            cel.querySelector("ul").classList.remove("open_drop_down"); 
+            cel.closest("div").classList.remove("open_drop_down_wrapper");             
+          })
+          dropDownBtn.closest("div").classList.toggle("open_drop_down_wrapper");       
+          dropDownBtn.nextElementSibling.classList.toggle("open_drop_down");       
+         
+        });
+      });
+      const newReminder = modalBody.querySelector("[data-calendar-new-reminder]")
+      
+      const timeType = newReminder.querySelector("[bc-calendar-dropdown-id]") as HTMLInputElement
+      const num = newReminder.querySelector("[bc-calendar-time-num]") as HTMLInputElement
+      reminderSubmit.addEventListener("click" ,async (e) => {
+        e.preventDefault()
+        const actionId = newReminder.querySelector('[tab-button-status="active"]') 
+        
+        let newNoteObj ={"id":0,
+        "noteid":x.id,
+        "unitid":timeType.value,
+        "value":num.value,
+        "actionid":actionId.getAttribute("data-id")
+        
+      }
+        let apiLink = this.range.options.baseUrl["reminder"]
+        const data =await this.range.sendAsyncDataPostJson(newNoteObj, apiLink);
+        if(data.errorid == 5){
+          const error = document.createElement("div")
+          error.setAttribute("data-calendar-tooltip-flag","")
+          error.setAttribute("data-sys-message-danger","")
+          error.setAttribute("data-sys-message-danger-fade-in","")
+          error.setAttribute("style","display: block")
+          error.innerHTML=`  <span>
+         ابتدا برای یادداشت خود، ساعت انتخاب کنید
+         <i class="lni lni-close"></i>
+          </span> 
+        `
+        modalBody.querySelector("#errors").appendChild(error)
+          setTimeout(function() {
+            error.setAttribute("data-sys-message-danger-fade-out","")
+        }, 3000);
+      
+         
+        }
+        else if(data.errorid == 2){
+          const error = document.createElement("div")
+          error.setAttribute("data-calendar-tooltip-flag","")
+          error.setAttribute("data-sys-message-danger","")
+          error.setAttribute("data-sys-message-danger-fade-in","")
+          error.setAttribute("style","display: block")
+          error.innerHTML=`  <span>
+          عملیات با خطا روبرو شد
+         <i class="lni lni-close"></i>
+          </span> 
+        `
+        modalBody.querySelector("#errors").appendChild(error)
+          setTimeout(function() {
+            error.setAttribute("data-sys-message-danger-fade-out","")
+        }, 3000);
+      
+         
+        }
+        else if(data.errorid == 6){
+          const error = document.createElement("div")
+          error.setAttribute("data-calendar-tooltip-flag","")
+          error.setAttribute("data-sys-message-success","")
+          error.setAttribute("data-sys-message-success-fade-in","")
+          error.setAttribute("style","display: block")
+          error.innerHTML=`  <span>
+          عملیات با موفقیت انجام شد
+          <i class="lni lni-checkmark"></i>
+          </span> 
+        `
+        modalBody.querySelector("#errors").appendChild(error)
+          setTimeout(function() {
+            error.setAttribute("data-sys-message-danger-fade-out","")
+        }, 3000);
+      
+         
+        }
+   
+      })
+    })
     const editBtn: HTMLElement = moreButtonBox.querySelector(
       "[bc-calendar-edit-note]"
     );
@@ -846,8 +978,25 @@ export class UiCalendar {
       }
       modalBody.innerHTML = "";
       modalBody.appendChild(this.generateNoteForm(x,x.creator));  
+      const timeInputt : HTMLElement= modalBody.querySelector("[bc-calendar-time-input]") 
+      const datePickerOptions : OptionTypes = {okLabel :"تایید" , cancelLabel:"کنسل",amLabel:"ق.ظ",pmLabel:"ب.ظ",clockType:"24h" ,timeLabel : ""};
+      const newTimepicker = new TimepickerUI(timeInputt, datePickerOptions);
+      const modalParent : HTMLElement = modalBody.closest("[data-modal-form]") 
+      timeInputt.addEventListener("click",timeElement => {        
 
-    
+       modalParent.style.display="none"
+        newTimepicker.open();
+      })
+      timeInputt.addEventListener("accept", (event) => {
+        setTimeout(timeoute => {
+          modalParent.style.display="block"
+        },300)
+      });
+      timeInputt.addEventListener("cancel", (event) => {
+        setTimeout(timeoute => {
+          modalParent.style.display="block"
+        },300)
+      });
     const timeInput = modalBody.querySelector("[bc-calendar-time]") as HTMLInputElement
     const titleInput = modalBody.querySelector("[data-calendar-title-input]") as HTMLInputElement
     const descInput = modalBody.querySelector("[data-calendar-description-textarea]") as HTMLInputElement

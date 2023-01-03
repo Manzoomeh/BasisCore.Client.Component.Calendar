@@ -239,7 +239,7 @@ ul {
     height: 100%;
     display: flex;
     justify-content: flex-start;
-    z-index: 99999999;
+    z-index: 99;
     align-items: start;
     flex-direction: center;
   }
@@ -590,7 +590,7 @@ ul {
     cursor: pointer;
   }
   [bc-calendar-drop-down] {
-    width: 125px;
+    width: 80px;
     /* margin-right: 15px; */
     z-index: 1;
     height: 40px;
@@ -615,6 +615,8 @@ ul {
     -webkit-transition: transform 0.3s ease;
     transition: transform 0.3s ease;
     transform-origin: top;
+    position: relative;
+    z-index: 9999;
   }
   [bc-calendar-drop-down] p::after {
     content: "\2304";
@@ -727,7 +729,7 @@ ul {
     background: #fff;
     border-radius: 5px;
     padding: 10px 5px;
-    width: 100px;
+    width: 60px;
     border: none;
     direction: rtl;
     text-align: right;
@@ -736,13 +738,15 @@ ul {
     box-sizing: border-box;
   }
   [new-note-reminder-form-body] {
-    display: flex;
+    /* display: flex; */
     direction: rtl;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     height: 100px;
   }
   [new-note-reminder-input] {
     display: flex;
+    float: right;
+    margin-left: 15px;
   }
   [bc-calendar-drop-down-white] p {
     background: #fff;
@@ -903,6 +907,24 @@ ul {
     color: #767676;
     font-size: 12px;
   }
+  [data-calendar-sharing-username-service]{
+    display: flex;
+    
+  }
+  [data-calendar-sharing-username-service] div{
+    display: flex;
+    align-items: center;
+  }
+  [data-calendar-sharing-username-service] svg{
+    margin: 0 20px;
+  }
+  [data-calendar-sharing-username-service] path{
+    color: #767676;
+    font-size: 12px;
+  }
+  [data-calendar-sharing-username-service] span{
+    display: flex;
+  }
   [data-calendar-sharing-item]:hover{
      background: rgba(0, 75, 133, 0.1);;
   }
@@ -942,12 +964,12 @@ ul {
   }
   
   .tabWrapper .tabContainer {
-    /* border: 1px solid #efefef; */
-    background-color: #f2fbfa;
-    border-radius: 5px;
-    padding: 5px;
-    width: max-content;
-    position: relative;
+  /* border: 1px solid #efefef; */
+  background-color: #f2fbfa;
+  border-radius: 5px;
+  padding: 5px;
+  width: max-content;
+  position: relative;
   }
   
   .tabWrapper .tabButton {
@@ -959,7 +981,7 @@ ul {
     z-index: 2;
     padding: 0;
     margin: 0;
-    width: 80px;
+    width: 60px;
     text-transform: uppercase;
     /* font-weight: bold; */
     text-align: center;
@@ -981,8 +1003,8 @@ ul {
     bottom: 5px;
     display: flex;
     height: 35px;
-    width:80px;
-    background-color: #B40020;
+    width:60px;
+    background-color: #00a693;
     z-index: 1;
     border-radius: 5px;
     transition: 0.25s ease-out;
@@ -1109,4 +1131,62 @@ ul {
 }
 .open_drop_down svg{
   transform: scale(1.5);
+}
+.clr{
+  clear: both;
+}
+.timepicker-ui-hour:hover, .timepicker-ui-hour.active, .timepicker-ui-minutes:hover, .timepicker-ui-minutes.active, .timepicker-ui-hour.mobile:hover, .timepicker-ui-hour.mobile.active, .timepicker-ui-minutes.mobile:hover, .timepicker-ui-minutes.mobile.active{
+  color: #004B85;
+background-color: rgba(0, 75, 133, 0.1);
+}
+.timepicker-ui-circle-hand,.timepicker-ui-clock-hand{
+  background-color: #004B85;
+}
+.timepicker-ui-clock-face{
+  background-color: rgba(0, 75, 133, 0.1);
+}
+.timepicker-ui-wrapper-btn{
+  direction: rtl
+}
+.timepicker-ui-ok-btn{
+  background-color: #004B85;
+  color: #fff;
+}
+.open_drop_down_wrapper{
+  position: relative;
+  z-index: 9999;
+}
+.timepicker-ui-cancel-btn{
+  color: #212121;
+  margin-left: 15px;
+}
+ .timepicker-ui-cancel-btn:hover{
+  background-color: #fff;
+}
+.timepicker-ui-ok-btn:hover{
+  background-color: #004B85;
+}
+[new-note-reminder-form-body ] [new-note-reminder-form-element]{
+  float: right;
+  margin-left: 15px;
+}
+[bc-calendar-time-num] {
+  margin-left: 15px;
+}
+.timepicker-ui-modal{
+  position: fixed;
+  z-index: 9999;
+  bottom: 0;
+  height: 100%;
+
+}
+.timepicker-ui-footer {
+  flex-direction: row-reverse !important;
+}
+.timepicker-ui-wrapper {
+  height: auto;
+}
+[bc-calendar-drop-down-reciver-deactive]{
+  color: #D0D0D0;
+  pointer-events: none;
 }

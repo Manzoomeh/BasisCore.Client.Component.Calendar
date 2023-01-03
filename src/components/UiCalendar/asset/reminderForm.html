@@ -1,12 +1,18 @@
 <form data-calendar-input-wrapper="">
+	
 	<div new-note-reminder-form="">
 		<p new-note-reminder-form-title="">
 		  به شما یادآوری کنیم ؟
 		  <span>قبل از تاریخ انتخاب شده به شما یادآوری می‌کنیم</span>
 		</p>
 		<div new-note-reminder-form-body="">
+			<div data-calendar-reminder-note-wrapper="">
+			
+			</div>
+			<div class="clr"></div>
 			<input type="hidden" bc-calendar-action-id="" value="1" />
-		  <div >
+			<div data-calendar-new-reminder="">
+		  <div new-note-reminder-form-element="" >
 			  <div  class="tabWrapper">
 			<div class="tabs">
 				<div class="tabContainer">
@@ -18,20 +24,28 @@
 			</div>
 		  </div>
 		  <div new-note-reminder-input="">
-			<input type="text" data-sys-input-text="" placeholder="تعداد" bc-calendar-time-num="">
+			<input type="text" data-sys-input-text="" data-calendar-time-value="" placeholder="تعداد" bc-calendar-time-num="">
 		
 			<div bc-calendar-drop-down="" bc-calendar-drop-down-white="" >
 				<input bc-calendar-dropdown-id="" type="hidden" value="1" />
 			  <p bc-calendar-drop-down-btn="" data-sys-input-text="">روز</p>
 			  <ul>
-				<li data-id="1">روز</li>
+				<li data-id="1">دقیقه</li>
 				<li data-id="2">ساعت</li>
-				<li data-id="3">دقیقه</li>
+				<li data-id="3">روز</li>
+				
+				
 			  </ul>
 			</div>
 		  </div>
 		</div>
+		</div>
 	  </div>
+	  <div class="clr" ></div>
+	  <div id="errors">
+
+    </div>
+	<div class="clr"></div>
 	  <div new-form-submit-cancel-buttons="">
 		
 		  <button data-calendar-submit="" data-reminder-submit="" data-sys-button="">ثبت</button>

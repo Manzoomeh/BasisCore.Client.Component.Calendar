@@ -8,6 +8,10 @@ import newForm from "../UiCalendar/asset/layout.html";
 import moreBox from "../mobile/asset/more.html";
 import moreShareBox from "../UiCalendar/asset/moreShare.html";
 import reminderForm from "../UiCalendar/asset/reminderForm.html"
+import reminderList from "../UiCalendar/asset/reminderList.html"
+import { TimepickerUI } from "timepicker-ui";
+import { OptionTypes } from "timepicker-ui";
+import serviceShareLayout from "../UiCalendar/asset/shareFormForService.html";
 
 export class UiMbobile {
   private readonly day: Day;
@@ -226,27 +230,98 @@ export class UiMbobile {
   generateReminderForm(note? : INote): Node{
     let formWrapper = document.createElement("form");
     formWrapper.innerHTML = reminderForm;
-    const dropDowns = formWrapper.querySelectorAll("[bc-calendar-drop-down]");
-    dropDowns.forEach((el) => {
-      const dropDownBtn  = el.querySelector("[bc-calendar-drop-down-btn]")
-      const liItems = el.querySelectorAll("li")
-      
-      liItems.forEach((LIelement) => {
-        LIelement.addEventListener("click" , function(element){
-          const dropdownValue = el.querySelector("[bc-calendar-dropdown-id]") as HTMLInputElement
-          dropdownValue.value = this.getAttribute("data-id")
-          const liText = element.target as HTMLElement
-          dropDownBtn.textContent = liText.innerText
-        })
-      })
-      el.addEventListener("click", function (element) {
-        dropDownBtn.nextElementSibling.classList.toggle("open_drop_down");       
-       
-      });
-    });
+    
+   
+    
     return formWrapper
   }
+  async initReciverData(id:number, formWrapper : HTMLElement) {    
+    const reciverData=await this.range.sendAsyncDataGetMethod(this.range.options.baseUrl["reciver"].replace("${catid}" , id))
+    if(reciverData.length == 0){      
+      const errors = formWrapper.querySelectorAll("[data-calendar-tooltip-flag]")
+      errors.forEach( ee => {
+        ee.remove()
+      })
+      const error = document.createElement("div")
+      error.setAttribute("data-calendar-tooltip-flag","")
+      error.setAttribute("data-sys-message-danger","")
+      error.setAttribute("data-sys-message-danger-fade-in","")
+      error.setAttribute("style","display: block")
+      error.innerHTML=`
+     <span>
+   هیچ گروه کاربری برای گروه فرستنده تعریف نشده است
+     <i class="lni lni-close"></i>
+     </span> `
+      
+    formWrapper.appendChild(error)
+      setTimeout(function() {
+        error.setAttribute("data-sys-message-danger-fade-out","")
+    }, 3000);
+    formWrapper.querySelector("[bc-calendar-drop-down-reciver-title]").setAttribute("bc-calendar-drop-down-reciver-deactive","")         
+}
+else{
+  formWrapper.querySelector("[bc-calendar-drop-down-reciver-title]").removeAttribute("bc-calendar-drop-down-reciver-deactive")
+}
+    const reciverUl = formWrapper.querySelector("#reciver")
+    reciverUl.innerHTML = ""
+    reciverData.forEach(element => {
+      const reciverLi : HTMLElement = document.createElement("li")
+      reciverLi.addEventListener("click", (e) => {
+        const dropdownValue = formWrapper.querySelector("[bc-calendar-dropdown-reciver]") as HTMLInputElement
+        dropdownValue.value = element.id
+        formWrapper.querySelector("[data-calendar-submit]").removeAttribute("disabled")
+        formWrapper.querySelector("[bc-calendar-drop-down-reciver-title]").textContent=element.title
+      
+      })
+      reciverLi.textContent = element.title
+      reciverUl.appendChild(reciverLi)
  
+    });
+  }
+  async generateShareFormForService(note? : INote) : Promise<Node> {
+    const senderData=await this.range.sendAsyncDataGetMethod(this.range.options.baseUrl["sender"])
+    let formWrapper = document.createElement("form");
+    formWrapper.innerHTML = serviceShareLayout;
+    const senderUl = formWrapper.querySelector("#sender")   
+    senderUl.innerHTML = ""
+    senderData.forEach(element => {
+      const senderLi : HTMLElement = document.createElement("li")
+      senderLi.addEventListener("click", e => {
+
+        const dropdownValue = formWrapper.querySelector("[bc-calendar-dropdown-sender]") as HTMLInputElement
+        dropdownValue.value = element.id
+        this.initReciverData(element.id , formWrapper)
+        formWrapper.querySelector("[bc-calendar-drop-down-sender-title]").textContent=element.title
+      })
+      senderLi.textContent = element.title
+      senderUl.appendChild(senderLi)
+    });
+
+    const dropDownBtns = formWrapper.querySelectorAll("[bc-calendar-drop-down-btn]")
+    dropDownBtns.forEach(el => {
+      el.addEventListener("click" , e => {
+        const openDropDowns = document.querySelectorAll(".open_drop_down")
+        openDropDowns.forEach(item => {
+          item.classList.remove("open_drop_down")
+        
+        })
+        el.nextElementSibling.classList.add("open_drop_down");       
+       
+       
+      })
+    })
+    
+    
+    // formWrapper.querySelector("[data-calendar-share-input]").setAttribute("placeholder",this.range.options.labels.shareTextTitle)
+    // formWrapper.querySelector("[data-reminder-submit]").setAttribute("placeholder",this.range.options.labels.submitKeyTitle)
+    // const sharingParent= formWrapper.querySelector("[data-calendar-share-form-uniqe]")
+    // const submitShareForm = formWrapper.querySelector("[data-reminder-submit]")
+    // const sharingInputUniqe = formWrapper.querySelector("#data-calendar-share-input-uniqe") as HTMLInputElement
+    // sharingInputUniqe.addEventListener("keyup", (e) =>{
+    //   submitShareForm.removeAttribute("disabled")
+    // })
+    return formWrapper
+  }
 
   generateNoteList(): HTMLElement {
     let listWrapper = document.createElement("div");
@@ -298,6 +373,26 @@ export class UiMbobile {
       const newBox: Element = document.createElement("div");
       modalBody.innerHTML = "";
       newBox.innerHTML = newForm;
+      const timeInputt : HTMLElement= newBox.querySelector("[bc-calendar-time-input]") 
+      const datePickerOptions : OptionTypes = {mobile: false , okLabel :"تایید" , cancelLabel:"کنسل",amLabel:"ق.ظ",pmLabel:"ب.ظ",clockType:"24h" ,timeLabel : "",delayHandler:10};
+      const newTimepicker = new TimepickerUI(timeInputt, datePickerOptions);
+      const modalParent : HTMLElement = modalBody.closest("[data-modal-form]") 
+      timeInputt.addEventListener("click",timeElement => {        
+      
+      //  modalParent.style.display="none"
+        newTimepicker.open();
+      })
+      timeInputt.addEventListener("accept", (event) => {
+        setTimeout(timeoute => {
+          // modalParent.style.display="block"
+        },300)
+        
+      });
+      timeInputt.addEventListener("cancel", (event) => {
+        setTimeout(timeoute => {
+          // modalParent.style.display="block"
+        },300)
+      });
       newBox.querySelector("[data-calendar-title-input]").setAttribute("placeholder",this.range.options.labels.titrTitle) 
       newBox.querySelector("[data-calendar-description-textarea]").setAttribute("placeholder",this.range.options.labels.noteTitle) 
       newBox.querySelector("[bc-calendar-time]").setAttribute("placeholder",this.range.options.labels.timeTitle) 
@@ -422,8 +517,14 @@ export class UiMbobile {
       divElementHeader.setAttribute("data-calendar-note-header", "");
       moreButton.setAttribute("data-calendar-more-button", "");
       const moreButtonBox = document.createElement("div");
+     
       if(x.creator == 0){
         moreButtonBox.innerHTML = moreShareBox;
+        if(this.range.options.level == "user"){
+
+          moreButtonBox.querySelector("[bc-calendar-reminder-note]").remove()
+          
+        }
         moreButton.appendChild(moreButtonBox);
       moreButton.addEventListener("click", (e) => {
         const moreButtonDropDown = moreButtonBox.querySelector(
@@ -434,6 +535,11 @@ export class UiMbobile {
       }
       else{
         moreButtonBox.innerHTML = moreBox;
+        if(this.range.options.level == "user"){
+
+          moreButtonBox.querySelector("[bc-calendar-reminder-note]").remove()
+          
+        }
         moreButtonBox.querySelector("[data-bc-edit-btn]").innerHTML = this.range.options.labels.editMenuTitle
         moreButtonBox.querySelector("[data-bc-delete-btn]").innerHTML = this.range.options.labels.deleteMenuTitle
         moreButtonBox.querySelector("[data-bc-share-btn]").innerHTML = this.range.options.labels.shareMenuTitle
@@ -453,10 +559,11 @@ export class UiMbobile {
         "[bc-calendar-delete-note]"
       );
       // const reminderBtn : HTMLElement = moreButtonBox.querySelector("[bc-calendar-reminder-note]")
-      const reminderBtn : HTMLElement = document.createElement("div")
+      
       shareBtn.addEventListener("click", async (e) => {
         this.modal.cover.querySelector("[data-calendar-new-btn]").remove()        
         modalBody.innerHTML = "";
+        if(this.range.options.level == "user"){
         modalBody.appendChild(this.generateShareForm(x));
         const shareHeader = modalHeader.querySelector("[data-calendar-modal-header-date]")
         shareHeader.innerHTML=""
@@ -629,74 +736,55 @@ export class UiMbobile {
           })
      
         })
+      }
+      else{
+        modalBody.appendChild( await this.generateShareFormForService(x));
+        modalBody.querySelector("[data-calendar-submit]").addEventListener("click" ,async (e) => {
+         e.preventDefault()
+         const sender =  modalBody.querySelector("[bc-calendar-dropdown-sender]") as HTMLInputElement
+         const reciver = modalBody.querySelector("[bc-calendar-dropdown-reciver]") as HTMLInputElement
+         let formData = new FormData();
+         formData.append("usedforid", x.id.toString());
+         formData.append("ownercatid",  sender.value);
+         formData.append("catid", reciver.value);
+         let apiLink = this.range.options.baseUrl["sharingService"]
+         const data = await this.range.sendAsyncData(
+           formData,
+           apiLink
+         );
+         if(data.errorid == 6){
+           const error = document.createElement("div")
+           error.setAttribute("data-calendar-tooltip-flag","")
+           error.setAttribute("data-sys-message-success","")
+           error.setAttribute("data-sys-message-success-fade-in","")
+           error.setAttribute("style","display: block")
+           error.innerHTML=`  <span>
+          اشتراک‌گذاری با موفقیت انجام شد
+           <i class="lni lni-checkmark"></i>
+           </span> 
+         `
+         document.getElementById("errors").appendChild(error)
+          
+           setTimeout(function() {
+             error.setAttribute("data-sys-message-danger-fade-out","")
+         }, 3000);
+       
+           // modalBody.querySelector("[data-sys-message-success]").setAttribute("data-sys-message-success-fade-in","")
+           // setTimeout(() => {
+           //   modalBody.querySelector("[data-sys-message-success]").setAttribute("data-sys-message-danger-fade-out","")
+           // }, 3000);
+         }
+       })
+     } 
+     const shareHeader = modalHeader.querySelector("[data-calendar-modal-header-date]")
+     shareHeader.innerHTML=""
+     shareHeader.textContent= this.range.options.labels.shareBoxTitle
+    
+     const shareListWrapper = modalBody.querySelector("[data-calendar-share-note-wrapper]") as HTMLElement
+     shareListWrapper.innerHTML = ""
+     this.getSharingList(x, modalBody,shareListWrapper)
       });
-      reminderBtn.addEventListener("click", async (e) => {
-        modalBody.innerHTML = "";
-        modalBody.appendChild(this.generateReminderForm(x));
-        const switchButtons = modalBody.querySelectorAll("[bc-calendar-change-button]")
-        const reminderSubmit = modalBody.querySelector("[data-calendar-submit]")
-        const actionId = modalBody.querySelector("[bc-calendar-action-id]") as HTMLInputElement
-        const timeType = modalBody.querySelector("[bc-calendar-dropdown-id]") as HTMLInputElement
-        const num = modalBody.querySelector("[bc-calendar-time-num]") as HTMLInputElement
-        const obj = { 
-          noteid : x.id,
-          creatoruser:  this.range.userId
-        }
-        const viewNote =await this.range.sendAsyncDataPostJson(obj , this.range.options.baseUrl["viewnote"])
-        switchButtons.forEach(x => {
-          x.addEventListener("click" , function(e)  {
-            const container = this.closest(".tabWrapper");
-            const tabButton = container.querySelectorAll(".tabButton");
-            let left = 0;
-            tabButton.forEach((btn, index) => {
-                btn.setAttribute("tab-button-status", "");
-                if (btn == this) {
-                    left = index;
-                }
-            });
-            this.setAttribute("tab-button-status", "active");
-            
-            const tab = container.querySelector(".tabActive") as HTMLElement
-            tab.style.transform = `translateX(-${left}00%)`;
-            const actionidInput = modalBody.querySelector("[bc-calendar-action-id]") as HTMLInputElement
-            actionidInput.value = this.getAttribute("data-id")
-          })
-          
-        })
-
-        if(viewNote[0].reminder.length > 0){
-          
-          const actionidVal = viewNote[0].reminder[0].actionID
-          const timetypeVal = viewNote[0].reminder[0].timetype
-          const numVal = viewNote[0].reminder[0].num
-          const timeTypes= modalBody.querySelectorAll("li")
-          const timeTypeInput = modalBody.querySelector("[bc-calendar-dropdown-id]") as HTMLInputElement
-          timeTypeInput.value = timetypeVal
-          timeTypes.forEach((e) => {
-            if(e.getAttribute("data-id") == timetypeVal){
-              modalBody.querySelector("[bc-calendar-drop-down-btn]").textContent= e.textContent
-            }
-          })
-          num.value = numVal
-
-        }
-        reminderSubmit.addEventListener("click" , (e) => {
-          e.preventDefault()
-          const obj = { 
-            noteid : x.id,
-            reminder: [
-              {
-                id : 0,
-                actionid : actionId.value,
-                timetype : timeType.value,
-                num : num.value
-              }
-            ]
-          }
-          let apiLink = this.range.options.baseUrl["reminder"]
-        this.range.sendAsyncDataPostJson(obj, apiLink);
-        })
-      })
+     
     
       removeBtn.addEventListener("click", (e) => {        
         e.preventDefault();
@@ -727,6 +815,79 @@ export class UiMbobile {
 
      
     }
+    
+    const reminderBtn : HTMLElement = moreButtonBox.querySelector("[bc-calendar-reminder-note]")
+    reminderBtn?.addEventListener("click", async (e) => {
+      modalBody.innerHTML = "";
+      modalBody.appendChild(this.generateReminderForm(x));
+      const switchButtons = modalBody.querySelectorAll("[bc-calendar-change-button]")
+      const reminderSubmit = modalBody.querySelector("[data-calendar-submit]")
+      const actionId = modalBody.querySelector("[bc-calendar-action-id]") as HTMLInputElement
+      const timeType = modalBody.querySelector("[bc-calendar-dropdown-id]") as HTMLInputElement
+      const num = modalBody.querySelector("[bc-calendar-time-num]") as HTMLInputElement
+      const obj = { 
+        noteid : x.id,
+        creatoruser:  this.range.userId
+      }
+      const viewNote =await this.range.sendAsyncDataPostJson(obj , this.range.options.baseUrl["viewnote"])
+      switchButtons.forEach(x => {
+        x.addEventListener("click" , function(e)  {
+          const container = this.closest(".tabWrapper");
+          const tabButton = container.querySelectorAll(".tabButton");
+          let left = 0;
+          tabButton.forEach((btn, index) => {
+              btn.setAttribute("tab-button-status", "");
+              if (btn == this) {
+                  left = index;
+              }
+          });
+          this.setAttribute("tab-button-status", "active");
+          
+          const tab = container.querySelector(".tabActive") as HTMLElement
+          tab.style.transform = `translateX(-${left}00%)`;
+          const actionidInput = modalBody.querySelector("[bc-calendar-action-id]") as HTMLInputElement
+          actionidInput.value = this.getAttribute("data-id")
+        })
+        
+      })
+
+      if(viewNote[0].reminder.length > 0){   
+        viewNote[0].reminder.forEach( reminderItem => {
+          const reminderItemDiv = document.createElement("div")
+          reminderItemDiv.innerHTML = reminderList
+          const actionidVal =reminderItem.actionID
+          const timetypeVal = reminderItem.timetype
+          const timeValueInput :HTMLInputElement = reminderItemDiv.querySelector("[data-calendar-time-value]") as HTMLInputElement
+          const itemdropDown = reminderItemDiv.querySelector("[bc-calendar-drop-down]")
+          timeValueInput.value = reminderItem.value  
+          itemdropDown.setAttribute("data-id" , timetypeVal)
+          itemdropDown.setAttribute("data-text" , reminderItem.timetitle)
+          if(actionidVal == 2){
+            reminderItemDiv.querySelector("[tab-button-status-mobile]").setAttribute("tab-button-status","active")
+            reminderItemDiv.querySelector("[tab-button-status-email]").removeAttribute("tab-button-status")
+            const tab = reminderItemDiv.querySelector(".tabActive") as HTMLElement
+            tab.style.transform = `translateX(-100%)`;
+          }
+          modalBody.querySelector("[data-calendar-reminder-note-wrapper]") .appendChild(reminderItemDiv)
+        })
+      
+
+      }
+      reminderSubmit.addEventListener("click" , (e) => {
+        e.preventDefault()
+        const obj = { 
+          noteid : x.id,
+       
+              id : 0,
+              actionid : actionId.value,
+              timetype : timeType.value,
+              num : num.value
+          
+        }
+        let apiLink = this.range.options.baseUrl["reminder"]
+      this.range.sendAsyncDataPostJson(obj, apiLink);
+      })
+    })
     const editBtn: HTMLElement = moreButtonBox.querySelector(
       "[bc-calendar-edit-note]"
     );
@@ -801,11 +962,33 @@ export class UiMbobile {
         shareItem.remove()
       })
       shareItem.setAttribute("data-calendar-sharing-item","")
-      shareUserName.setAttribute("data-calendar-sharing-username","")
+      shareUserName.setAttribute("data-calendar-sharing-username-service","")
       shareUserName.setAttribute("data-sys-text","")
       shareUserName.textContent = e.name
       shareItemSpan.textContent =`( ${e.username} )` 
       shareUserName.appendChild(shareItemSpan)
+      if(this.range.options.level == "service"){
+        const sender = document.createElement("div")
+        const senderCatid = document.createElement("span")
+        const senderTitle = document.createElement("div")
+        senderCatid.innerHTML =`<svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.70021 13.3C8.09021 12.91 8.09021 12.28 7.70021 11.89L3.83021 7.99998H19.0002C19.5502 7.99998 20.0002 7.54998 20.0002 6.99998C20.0002 6.44998 19.5502 5.99998 19.0002 5.99998H3.83021L7.71021 2.11998C8.10021 1.72998 8.10021 1.09998 7.71021 0.70998C7.32021 0.31998 6.69021 0.31998 6.30021 0.70998L0.700215 6.29998C0.310215 6.68998 0.310215 7.31998 0.700215 7.70998L6.29021 13.3C6.68021 13.68 7.32021 13.68 7.70021 13.3Z" fill="#323232"/>
+        </svg>
+        `
+        senderTitle.textContent = e.ownername
+        sender.appendChild(senderTitle)
+        sender.appendChild(senderCatid)
+        const reciver = document.createElement("div")
+        const reciverCatid = document.createElement("span")
+        const reciverTitle = document.createElement("div")
+        reciverCatid.textContent =`( ${e.catid} )` 
+        reciverTitle.textContent = e.name
+        reciver.appendChild(reciverTitle)
+        
+        shareUserName.innerHTML = ""
+        shareUserName.appendChild(sender)
+        shareUserName.appendChild(reciver)
+      }
       shareItem.appendChild(shareUserName)
       shareItem.appendChild(removeSharing)
 
