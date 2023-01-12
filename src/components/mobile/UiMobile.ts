@@ -7,11 +7,12 @@ import IWidget from "../../basiscore/BasisPanel/IWidget";
 import newForm from "../UiCalendar/asset/layout.html";
 import moreBox from "../mobile/asset/more.html";
 import moreShareBox from "../UiCalendar/asset/moreShare.html";
-import reminderForm from "../UiCalendar/asset/reminderForm.html"
 import reminderList from "../UiCalendar/asset/reminderList.html"
+import reminderForm from "../UiCalendar/asset/reminderForm.html"
 import { TimepickerUI } from "timepicker-ui";
 import { OptionTypes } from "timepicker-ui";
 import serviceShareLayout from "../UiCalendar/asset/shareFormForService.html";
+import reminderRow from "../UiCalendar/asset/reminderRow.html";
 
 export class UiMbobile {
   private readonly day: Day;
@@ -114,7 +115,7 @@ export class UiMbobile {
     editCodeWrapper.querySelector("[data-calendar-title-input]").setAttribute("placeholder",this.range.options.labels.titrTitle) 
     editCodeWrapper.querySelector("[data-calendar-description-textarea]").setAttribute("placeholder",this.range.options.labels.noteTitle) 
     editCodeWrapper.querySelector("[bc-calendar-time]").setAttribute("placeholder",this.range.options.labels.timeTitle) 
-    editCodeWrapper.querySelector("[bc-calendar-drop-down-btn]").innerHTML=this.range.options.labels.categoryTitle
+    // editCodeWrapper.querySelector("[bc-calendar-drop-down-btn]").innerHTML=this.range.options.labels.categoryTitle
     editCodeWrapper.querySelector("[new-form-submit-button]").innerHTML=this.range.options.labels.submitKeyTitle
     let titleInput: HTMLInputElement = editCodeWrapper.querySelector(
       "[data-calendar-title-input]"
@@ -132,19 +133,11 @@ export class UiMbobile {
     );
     
     let cancelBtn = document.createElement("button");
-    const catsList= editCodeWrapper.querySelector("#da-bc-calendar-cats-list")
+    const catsList= editCodeWrapper.querySelector("[data-bc-select-category]")
     this.range.categories.forEach((e) => {
-      const catLi = document.createElement("li")
-      catLi.setAttribute("data-sys-input-text","")
-      const catSpan=document.createElement("span")
-      const catTitle = document.createElement("span")
-      catSpan.setAttribute("style",`background-color:${e.color}`)
-      catSpan.setAttribute("bc-calendar-cat-color","")
-      catTitle.textContent= e.title
-      catTitle.setAttribute("data-sys-text","")
-      catLi.appendChild(catSpan)
-      catLi.appendChild(catTitle)
-      catLi.setAttribute("data-id" , e.id.toString())
+      const catLi = document.createElement("option")
+      catLi.textContent = e.title
+      catLi.setAttribute("value" , e.id.toString())
       catsList.appendChild(catLi)
     })
    
@@ -198,10 +191,10 @@ export class UiMbobile {
           dropDownBtn.textContent = liText.innerText
         })
       })
-      el.addEventListener("click", function (element) {
-        dropDownBtn.nextElementSibling.classList.toggle("open_drop_down");       
+      // el.addEventListener("click", function (element) {
+      //   dropDownBtn.nextElementSibling.classList.toggle("open_drop_down");       
        
-      });
+      // });
     });
   }
     if(creator == 0){
@@ -227,14 +220,72 @@ export class UiMbobile {
     })
     return formWrapper
   }
+  generateReminderRow(body : HTMLElement){
+    body.querySelector("[data-bc-new-row-reminder]").innerHTML = ""
+    body.querySelector("[data-bc-new-row-reminder]").innerHTML = reminderRow
+    
+    const switchButtons = body.querySelectorAll("[bc-calendar-change-button]")
+    switchButtons.forEach(x => {
+      x.addEventListener("click" , function(e)  {
+        const container = this.closest(".tabWrapper");
+        const tabButton = container.querySelectorAll(".tabButton");
+        let left = 0;
+        tabButton.forEach((btn, index) => {
+            btn.setAttribute("tab-button-status", "");
+            if (btn == this) {
+                left = index;
+            }
+        });
+        this.setAttribute("tab-button-status", "active");            
+        const tab = container.querySelector(".tabActive") as HTMLElement
+        tab.style.transform = `translateX(-${left}00%)`;
+        const actionidInput = body.querySelector("[bc-calendar-action-id]") as HTMLInputElement
+        actionidInput.value = this.getAttribute("data-id")
+      })
+      
+    })
+  }
   generateReminderForm(note? : INote): Node{
     let formWrapper = document.createElement("form");
     formWrapper.innerHTML = reminderForm;
-    
+    formWrapper.querySelector("[data-bc-new-row-reminder]").innerHTML = reminderRow
+    let unitId = 1
    
     
     return formWrapper
   }
+  async createReminderList(id:number , body: HTMLElement){
+    const obj = { 
+      noteid : id,
+      creatoruser:  this.range.userId
+    }
+    const viewNote =await this.range.sendAsyncDataPostJson(obj , this.range.options.baseUrl["viewnote"])
+    body.querySelector("[data-calendar-reminder-note-wrapper]").innerHTML= ""
+    if(viewNote[0]?.reminder.length > 0){   
+      viewNote[0]?.reminder.forEach( reminderItem => {
+        const reminderItemDiv = document.createElement("div")
+        reminderItemDiv.innerHTML = reminderList
+        const actionidVal =reminderItem.actionID
+        const timetypeVal = reminderItem.timetype
+        const timeType :HTMLInputElement = reminderItemDiv.querySelector("[data-bc-select-time]") as HTMLInputElement
+        const typeidValue :HTMLInputElement = reminderItemDiv.querySelector("[data-bc-select-user-share]") as HTMLInputElement          
+        const timeInput :HTMLInputElement = reminderItemDiv.querySelector("[data-calendar-time-value]") as HTMLInputElement
+        timeType.value = timetypeVal  
+        typeidValue.value = reminderItem.typeid ? reminderItem.typeid : 1 
+        timeInput.value = reminderItem.value
+        if(actionidVal == 2){
+          reminderItemDiv.querySelector("[tab-button-status-mobile]").setAttribute("tab-button-status","active")
+          reminderItemDiv.querySelector("[tab-button-status-email]").removeAttribute("tab-button-status")
+          const tab = reminderItemDiv.querySelector(".tabActive") as HTMLElement
+          tab.style.transform = `translateX(-100%)`;
+        }
+        body.querySelector("[ data-calendar-reminder-note-wrapper]") .appendChild(reminderItemDiv)
+      })
+    
+  
+    }
+   }
+
   async initReciverData(id:number, formWrapper : HTMLElement) {    
     const reciverData=await this.range.sendAsyncDataGetMethod(this.range.options.baseUrl["reciver"].replace("${catid}" , id))
     if(reciverData.length == 0){      
@@ -344,8 +395,8 @@ else{
     currentDate.setAttribute("data-calendar-modal-header-date", "");
     currentDate.setAttribute("data-calendar-modal-header-date", "");
     currentDate.setAttribute("data-sys-text","")
-    newBtn.innerHTML = `<svg width="19" height="20" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M13.0714 8.67857H8.42857V13.3214C8.42857 13.8321 8.01071 14.25 7.5 14.25C6.98929 14.25 6.57143 13.8321 6.57143 13.3214V8.67857H1.92857C1.41786 8.67857 1 8.26071 1 7.75C1 7.23929 1.41786 6.82143 1.92857 6.82143H6.57143V2.17857C6.57143 1.66786 6.98929 1.25 7.5 1.25C8.01071 1.25 8.42857 1.66786 8.42857 2.17857V6.82143H13.0714C13.5821 6.82143 14 7.23929 14 7.75C14 8.26071 13.5821 8.67857 13.0714 8.67857Z" fill="#ffffff"/>
+    newBtn.innerHTML = `<svg width="15" height="15" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path data-sys-text="" d="M9.9 4.5H8.1V8.1H4.5V9.9H8.1V13.5H9.9V9.9H13.5V8.1H9.9V4.5ZM9 0C4.032 0 0 4.032 0 9C0 13.968 4.032 18 9 18C13.968 18 18 13.968 18 9C18 4.032 13.968 0 9 0ZM9 16.2C5.031 16.2 1.8 12.969 1.8 9C1.8 5.031 5.031 1.8 9 1.8C12.969 1.8 16.2 5.031 16.2 9C16.2 12.969 12.969 16.2 9 16.2Z" fill="#004B85"></path>
     </svg>
     
     `;
@@ -357,9 +408,14 @@ else{
     closeBtn.addEventListener("click", (e) => {
       this.modal.closeModal();
     });
-    currentDate.innerHTML = `<span>${this.day.currentDay.day}</span> <span>${this.day.month.monthName}</span> <span>${this.day.month.currentYear}</span>`;
-    modalBtns.appendChild(closeBtn);
-    modalBtns.appendChild(newBtn);
+    const currentDateTxt = document.createElement("div")
+    currentDateTxt.setAttribute("data-bc-currentDateTxt","")
+    currentDateTxt.innerHTML = `<span>${this.day.currentDay.day}</span> <span>${this.day.month.monthName}</span> <span>${this.day.month.currentYear}</span>`;
+    currentDate.appendChild(newBtn)
+    currentDate.appendChild(currentDateTxt)
+    // currentDate.innerHTML = `<span>${this.day.currentDay.day}</span> <span>${this.day.month.monthName}</span> <span>${this.day.month.currentYear}</span>`;
+    // modalBtns.appendChild(closeBtn);
+    // modalBtns.appendChild(newBtn);
     modalHeader.appendChild(modalBtns);
     modalHeader.appendChild(currentDate);
     
@@ -396,21 +452,13 @@ else{
       newBox.querySelector("[data-calendar-title-input]").setAttribute("placeholder",this.range.options.labels.titrTitle) 
       newBox.querySelector("[data-calendar-description-textarea]").setAttribute("placeholder",this.range.options.labels.noteTitle) 
       newBox.querySelector("[bc-calendar-time]").setAttribute("placeholder",this.range.options.labels.timeTitle) 
-      newBox.querySelector("[bc-calendar-drop-down-btn]").innerHTML=this.range.options.labels.categoryTitle
+      // newBox.querySelector("[bc-calendar-drop-down-btn]").innerHTML=this.range.options.labels.categoryTitle
       newBox.querySelector("[new-form-submit-button]").innerHTML=this.range.options.labels.submitKeyTitle
-      const catsList= newBox.querySelector("#da-bc-calendar-cats-list")
+      const catsList= newBox.querySelector("[data-bc-select-category]")
       this.range.categories.forEach((e) => {
-        const catLi = document.createElement("li")
-        catLi.setAttribute("data-sys-input-text","")
-        const catSpan=document.createElement("span")
-        const catTitle = document.createElement("span")
-        catSpan.setAttribute("style",`background-color:${e.color}`)
-        catSpan.setAttribute("bc-calendar-cat-color","")
-        catTitle.textContent= e.title
-        catTitle.setAttribute("data-sys-text","")
-        catLi.appendChild(catSpan)
-        catLi.appendChild(catTitle)
-        catLi.setAttribute("data-id" , e.id.toString())
+        const catLi = document.createElement("option")
+        catLi.textContent = e.title
+        catLi.setAttribute("value" , e.id.toString())
         catsList.appendChild(catLi)
       })
       this.range.Owner.processNodesAsync(
@@ -428,10 +476,10 @@ else{
             dropDownBtn.textContent = liText.innerText
           })
         })
-        el.addEventListener("click", function (element) {
-          dropDownBtn.nextElementSibling.classList.toggle("open_drop_down");       
+        // el.addEventListener("click", function (element) {
+        //   dropDownBtn.nextElementSibling.classList.toggle("open_drop_down");       
          
-        });
+        // });
       });
 
       modalBody.appendChild(newBox);
@@ -769,10 +817,7 @@ else{
              error.setAttribute("data-sys-message-danger-fade-out","")
          }, 3000);
        
-           // modalBody.querySelector("[data-sys-message-success]").setAttribute("data-sys-message-success-fade-in","")
-           // setTimeout(() => {
-           //   modalBody.querySelector("[data-sys-message-success]").setAttribute("data-sys-message-danger-fade-out","")
-           // }, 3000);
+         this.getSharingList(x, modalBody,shareListWrapper)
          }
        })
      } 
@@ -820,16 +865,11 @@ else{
     reminderBtn?.addEventListener("click", async (e) => {
       modalBody.innerHTML = "";
       modalBody.appendChild(this.generateReminderForm(x));
+      this.createReminderList(x.id, modalBody)
+
+      
       const switchButtons = modalBody.querySelectorAll("[bc-calendar-change-button]")
       const reminderSubmit = modalBody.querySelector("[data-calendar-submit]")
-      const actionId = modalBody.querySelector("[bc-calendar-action-id]") as HTMLInputElement
-      const timeType = modalBody.querySelector("[bc-calendar-dropdown-id]") as HTMLInputElement
-      const num = modalBody.querySelector("[bc-calendar-time-num]") as HTMLInputElement
-      const obj = { 
-        noteid : x.id,
-        creatoruser:  this.range.userId
-      }
-      const viewNote =await this.range.sendAsyncDataPostJson(obj , this.range.options.baseUrl["viewnote"])
       switchButtons.forEach(x => {
         x.addEventListener("click" , function(e)  {
           const container = this.closest(".tabWrapper");
@@ -850,42 +890,80 @@ else{
         })
         
       })
-
-      if(viewNote[0].reminder.length > 0){   
-        viewNote[0].reminder.forEach( reminderItem => {
-          const reminderItemDiv = document.createElement("div")
-          reminderItemDiv.innerHTML = reminderList
-          const actionidVal =reminderItem.actionID
-          const timetypeVal = reminderItem.timetype
-          const timeValueInput :HTMLInputElement = reminderItemDiv.querySelector("[data-calendar-time-value]") as HTMLInputElement
-          const itemdropDown = reminderItemDiv.querySelector("[bc-calendar-drop-down]")
-          timeValueInput.value = reminderItem.value  
-          itemdropDown.setAttribute("data-id" , timetypeVal)
-          itemdropDown.setAttribute("data-text" , reminderItem.timetitle)
-          if(actionidVal == 2){
-            reminderItemDiv.querySelector("[tab-button-status-mobile]").setAttribute("tab-button-status","active")
-            reminderItemDiv.querySelector("[tab-button-status-email]").removeAttribute("tab-button-status")
-            const tab = reminderItemDiv.querySelector(".tabActive") as HTMLElement
-            tab.style.transform = `translateX(-100%)`;
-          }
-          modalBody.querySelector("[data-calendar-reminder-note-wrapper]") .appendChild(reminderItemDiv)
-        })
-      
-
-      }
-      reminderSubmit.addEventListener("click" , (e) => {
+      reminderSubmit.addEventListener("click" , async (e) => {
         e.preventDefault()
-        const obj = { 
-          noteid : x.id,
-       
-              id : 0,
-              actionid : actionId.value,
-              timetype : timeType.value,
-              num : num.value
+        const newReminder = modalBody.querySelector("[data-bc-new-row-reminder]")
+        const timeType = newReminder.querySelector("[data-bc-select-time]") as HTMLInputElement
+        const num = newReminder.querySelector("[bc-calendar-time-num]") as HTMLInputElement
+        const actionId = newReminder.querySelector('[tab-button-status="active"]') 
+        
+        
+        const newNoteObj = { 
+          "noteid":x.id,
+          "unitid":timeType.value,
+          "value":num.value,
+          "actionid":actionId.getAttribute("data-id")
           
         }
+        
         let apiLink = this.range.options.baseUrl["reminder"]
-      this.range.sendAsyncDataPostJson(obj, apiLink);
+        const data =await this.range.sendAsyncDataPostJson(newNoteObj, apiLink);
+        if(data.errorid == 5){
+          const error = document.createElement("div")
+          error.setAttribute("data-calendar-tooltip-flag","")
+          error.setAttribute("data-sys-message-danger","")
+          error.setAttribute("data-sys-message-danger-fade-in","")
+          error.setAttribute("style","display: block")
+          error.innerHTML=`  <span>
+         ابتدا برای یادداشت خود، ساعت انتخاب کنید
+         <i class="lni lni-close"></i>
+          </span> 
+        `
+        modalBody.querySelector("#errors").appendChild(error)
+          setTimeout(function() {
+            error.setAttribute("data-sys-message-danger-fade-out","")
+        }, 3000);
+      
+         
+        }
+        else if(data.errorid == 2){
+          const error = document.createElement("div")
+          error.setAttribute("data-calendar-tooltip-flag","")
+          error.setAttribute("data-sys-message-danger","")
+          error.setAttribute("data-sys-message-danger-fade-in","")
+          error.setAttribute("style","display: block")
+          error.innerHTML=`  <span>
+          عملیات با خطا روبرو شد
+         <i class="lni lni-close"></i>
+          </span> 
+        `
+        modalBody.querySelector("#errors").appendChild(error)
+          setTimeout(function() {
+            error.setAttribute("data-sys-message-danger-fade-out","")
+        }, 3000);
+      
+         
+        }
+        else if(data.errorid == 6){
+          const error = document.createElement("div")
+          error.setAttribute("data-calendar-tooltip-flag","")
+          error.setAttribute("data-sys-message-success","")
+          error.setAttribute("data-sys-message-success-fade-in","")
+          error.setAttribute("style","display: block")
+          error.innerHTML=`  <span>
+          عملیات با موفقیت انجام شد
+          <i class="lni lni-checkmark"></i>
+          </span> 
+        `
+        modalBody.querySelector("#errors").appendChild(error)
+          setTimeout(function() {
+            error.setAttribute("data-sys-message-danger-fade-out","")
+        }, 3000);
+        this.createReminderList(x.id, modalBody)
+        this.generateReminderRow(modalBody)
+        
+         
+        }
       })
     })
     const editBtn: HTMLElement = moreButtonBox.querySelector(
@@ -899,7 +977,25 @@ else{
       }
       modalBody.innerHTML = "";
       modalBody.appendChild(this.generateNoteForm(x,x.creator));  
+      const timeInputt : HTMLElement= modalBody.querySelector("[bc-calendar-time-input]") 
+      const datePickerOptions : OptionTypes = {okLabel :"تایید" , cancelLabel:"کنسل",amLabel:"ق.ظ",pmLabel:"ب.ظ",clockType:"24h" ,timeLabel : ""};
+      const newTimepicker = new TimepickerUI(timeInputt, datePickerOptions);
+      const modalParent : HTMLElement = modalBody.closest("[data-modal-form]") 
+      timeInputt.addEventListener("click",timeElement => {        
 
+       modalParent.style.display="none"
+        newTimepicker.open();
+      })
+      timeInputt.addEventListener("accept", (event) => {
+        setTimeout(timeoute => {
+          modalParent.style.display="block"
+        },300)
+      });
+      timeInputt.addEventListener("cancel", (event) => {
+        setTimeout(timeoute => {
+          modalParent.style.display="block"
+        },300)
+      });
     
     const timeInput = modalBody.querySelector("[bc-calendar-time]") as HTMLInputElement
     const titleInput = modalBody.querySelector("[data-calendar-title-input]") as HTMLInputElement

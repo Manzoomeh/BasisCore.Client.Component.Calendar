@@ -11,24 +11,20 @@
   
   <div new-note-new-form="">
     <div>
-      <input type="text" data-calendar-title-input="" data-sys-input-text=""  placeholder="تیتر" />
+      <input type="text" data-calendar-title-input="" data-sys-input-text=""  placeholder="عنوان" />
     </div>
     <div>
      
       <div bc-calendar-drop-down=""  bc-calendar-drop-down-for-cats="">
-        <input type="hidden" id="note-category" name="catid" data-sys-input-text="" bc-calendar-dropdown-id="" />
-        <p bc-calendar-drop-down-btn="" data-sys-input-text="">دسته بندی</p>
-       
-        <ul id="da-bc-calendar-cats-list" >
+        <select data-bc-select-category="" data-sys-select-option="" bc-calendar-dropdown-id="" >
         
-        </ul>
-
+        </select>
       </div>
     </div>
     <div>
       <textarea
         data-calendar-description-textarea=""
-        placeholder="موضوع" data-sys-input-text=""
+        placeholder="توضیحات" data-sys-input-text=""
       ></textarea>
     </div>
     <div new-note-select-time>
@@ -50,39 +46,10 @@
       <div bc-calendar-time-input="" >
         <input type="text" data-sys-input-text  bc-calendar-time=""  placeholder="زمان با فرمت 18:45 وارد شود" />
       </div>
-      <!-- <div bc-calendar-drop-down="" bc-calendar-drop-down-white="">
-        <input type="hidden" name="timeUnit" bc-calendar-dropdown-id="" />
-        <p bc-calendar-drop-down-btn>قبل از ظهر</p>
-        <ul>
-          <li data-id="1">قبل از ظهر</li>
-          <li data-id="2">بعد از ظهر</li>
-        </ul>
-      </div> -->
+   
     </div>
   </div>
-  <!-- <div new-note-reminder-form="">
-    <p new-note-reminder-form-title="">
-      به شما یادآوری کنیم ؟
-      <span>قبل از تاریخ انتخاب شده به شما یادآوری می‌کنیم</span>
-    </p>
-    <div new-note-reminder-form-body="">
-      <div new-note-btns="">
-        <div new-note-btn="" new-note-btn-active="">ایمیل</div>
-        <div new-note-btn="">موبایل</div>
-      </div>
-      <div new-note-reminder-input="">
-        <input type="text" placeholder="تعداد" />
-        <div bc-calendar-drop-down="" bc-calendar-drop-down-white="">
-          <p bc-calendar-drop-down-btn>روز</p>
-          <ul>
-            <li>روز</li>
-            <li>ساعت</li>
-            <li>دقیقه</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div> -->
+
   <div new-form-submit-cancel-buttons="">
     <button new-form-submit-button="" data-sys-button="">ثبت</button>
   </div>

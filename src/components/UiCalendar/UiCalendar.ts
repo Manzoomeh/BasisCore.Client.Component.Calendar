@@ -7,6 +7,7 @@ import serviceShareLayout from "../UiCalendar/asset/shareFormForService.html";
 import IWidget from "../../basiscore/BasisPanel/IWidget";
 import newForm from "../UiCalendar/asset/layout.html";
 import moreBox from "../UiCalendar/asset/more.html";
+import reminderRow from "../UiCalendar/asset/reminderRow.html";
 import moreShareBox from "../UiCalendar/asset/moreShare.html";
 import reminderForm from "../UiCalendar/asset/reminderForm.html"
 import reminderList from "../UiCalendar/asset/reminderList.html"
@@ -111,7 +112,7 @@ export class UiCalendar {
     editCodeWrapper.querySelector("[data-calendar-title-input]").setAttribute("placeholder",this.range.options.labels.titrTitle) 
     editCodeWrapper.querySelector("[data-calendar-description-textarea]").setAttribute("placeholder",this.range.options.labels.noteTitle) 
     editCodeWrapper.querySelector("[bc-calendar-time]").setAttribute("placeholder",this.range.options.labels.timeTitle) 
-    editCodeWrapper.querySelector("[bc-calendar-drop-down-btn]").innerHTML=this.range.options.labels.categoryTitle
+    // editCodeWrapper.querySelector("[bc-calendar-drop-down-btn]").innerHTML=this.range.options.labels.categoryTitle
     editCodeWrapper.querySelector("[new-form-submit-button]").innerHTML=this.range.options.labels.submitKeyTitle
     let titleInput: HTMLInputElement = editCodeWrapper.querySelector(
       "[data-calendar-title-input]"
@@ -129,19 +130,11 @@ export class UiCalendar {
     );
     
     let cancelBtn = document.createElement("button");
-    const catsList= editCodeWrapper.querySelector("#da-bc-calendar-cats-list")
+    const catsList= editCodeWrapper.querySelector("[data-bc-select-category]")
     this.range.categories.forEach((e) => {
-      const catLi = document.createElement("li")
-      catLi.setAttribute("data-sys-input-text","")
-      const catSpan=document.createElement("span")
-      const catTitle = document.createElement("span")
-      catSpan.setAttribute("style",`background-color:${e.color}`)
-      catSpan.setAttribute("bc-calendar-cat-color","")
-      catTitle.textContent= e.title
-      catTitle.setAttribute("data-sys-text","")
-      catLi.appendChild(catSpan)
-      catLi.appendChild(catTitle)
-      catLi.setAttribute("data-id" , e.id.toString())
+      const catLi = document.createElement("option")
+      catLi.textContent = e.title
+      catLi.setAttribute("value" , e.id.toString())
       catsList.appendChild(catLi)
     })
    
@@ -151,13 +144,13 @@ export class UiCalendar {
       descInput.value = note.description;
       timeInput.value = note.time;
       catidInput.value = note.catid.toString()
-      const catsLi = editCodeWrapper.querySelectorAll("li")
-      const catsText = editCodeWrapper.querySelector("[bc-calendar-drop-down-btn]")
-      catsLi.forEach((e) => {
-        if(parseInt(e.getAttribute("data-id")) == note.catid){
-          catsText.textContent = e.innerText
-        }
-      })
+      // const catsLi = editCodeWrapper.querySelectorAll("li")
+      // const catsText = editCodeWrapper.querySelector("[bc-calendar-drop-down-btn]")
+      // catsLi.forEach((e) => {
+      //   if(parseInt(e.getAttribute("data-id")) == note.catid){
+      //     catsText.textContent = e.innerText
+      //   }
+      // })
     }
     const catId = editCodeWrapper.querySelector("[bc-calendar-dropdown-id]") as HTMLInputElement
     submitBtn.addEventListener("click", async (e) => {
@@ -299,26 +292,74 @@ export class UiCalendar {
       })
     })
     
-    
-    // formWrapper.querySelector("[data-calendar-share-input]").setAttribute("placeholder",this.range.options.labels.shareTextTitle)
-    // formWrapper.querySelector("[data-reminder-submit]").setAttribute("placeholder",this.range.options.labels.submitKeyTitle)
-    // const sharingParent= formWrapper.querySelector("[data-calendar-share-form-uniqe]")
-    // const submitShareForm = formWrapper.querySelector("[data-reminder-submit]")
-    // const sharingInputUniqe = formWrapper.querySelector("#data-calendar-share-input-uniqe") as HTMLInputElement
-    // sharingInputUniqe.addEventListener("keyup", (e) =>{
-    //   submitShareForm.removeAttribute("disabled")
-    // })
+
     return formWrapper
   }
-  generateReminderForm(note? : INote): Node{
+  generateReminderRow(body : HTMLElement){
+    body.querySelector("[data-bc-new-row-reminder]").innerHTML = ""
+    body.querySelector("[data-bc-new-row-reminder]").innerHTML = reminderRow
+    
+    const switchButtons = body.querySelectorAll("[bc-calendar-change-button]")
+    switchButtons.forEach(x => {
+      x.addEventListener("click" , function(e)  {
+        const container = this.closest(".tabWrapper");
+        const tabButton = container.querySelectorAll(".tabButton");
+        let left = 0;
+        tabButton.forEach((btn, index) => {
+            btn.setAttribute("tab-button-status", "");
+            if (btn == this) {
+                left = index;
+            }
+        });
+        this.setAttribute("tab-button-status", "active");            
+        const tab = container.querySelector(".tabActive") as HTMLElement
+        tab.style.transform = `translateX(-${left}00%)`;
+        const actionidInput = body.querySelector("[bc-calendar-action-id]") as HTMLInputElement
+        actionidInput.value = this.getAttribute("data-id")
+      })
+      
+    })
+  }
+  generateReminderForm(): Node{
     let formWrapper = document.createElement("form");
     formWrapper.innerHTML = reminderForm;
+    formWrapper.querySelector("[data-bc-new-row-reminder]").innerHTML = reminderRow
     let unitId = 1
    
     
     return formWrapper
   }
- 
+ async createReminderList(id:number , body: HTMLElement){
+  const obj = { 
+    noteid : id,
+    creatoruser:  this.range.userId
+  }
+  const viewNote =await this.range.sendAsyncDataPostJson(obj , this.range.options.baseUrl["viewnote"])
+  body.querySelector("[data-calendar-reminder-note-wrapper]").innerHTML= ""
+  if(viewNote[0]?.reminder.length > 0){   
+    viewNote[0]?.reminder.forEach( reminderItem => {
+      const reminderItemDiv = document.createElement("div")
+      reminderItemDiv.innerHTML = reminderList
+      const actionidVal =reminderItem.actionID
+      const timetypeVal = reminderItem.timetype
+      const timeType :HTMLInputElement = reminderItemDiv.querySelector("[data-bc-select-time]") as HTMLInputElement
+      const typeidValue :HTMLInputElement = reminderItemDiv.querySelector("[data-bc-select-user-share]") as HTMLInputElement          
+      const timeInput :HTMLInputElement = reminderItemDiv.querySelector("[data-calendar-time-value]") as HTMLInputElement
+      timeType.value = timetypeVal  
+      typeidValue.value = reminderItem.typeid ? reminderItem.typeid : 1 
+      timeInput.value = reminderItem.value
+      if(actionidVal == 2){
+        reminderItemDiv.querySelector("[tab-button-status-mobile]").setAttribute("tab-button-status","active")
+        reminderItemDiv.querySelector("[tab-button-status-email]").removeAttribute("tab-button-status")
+        const tab = reminderItemDiv.querySelector(".tabActive") as HTMLElement
+        tab.style.transform = `translateX(-100%)`;
+      }
+      body.querySelector("[ data-calendar-reminder-note-wrapper]") .appendChild(reminderItemDiv)
+    })
+  
+
+  }
+ }
 
   generateNoteList(): HTMLElement {
     let listWrapper = document.createElement("div");
@@ -392,43 +433,18 @@ export class UiCalendar {
       newBox.querySelector("[data-calendar-title-input]").setAttribute("placeholder",this.range.options.labels.titrTitle) 
       newBox.querySelector("[data-calendar-description-textarea]").setAttribute("placeholder",this.range.options.labels.noteTitle) 
       newBox.querySelector("[bc-calendar-time]").setAttribute("placeholder",this.range.options.labels.timeTitle) 
-      newBox.querySelector("[bc-calendar-drop-down-btn]").innerHTML=this.range.options.labels.categoryTitle
       newBox.querySelector("[new-form-submit-button]").innerHTML=this.range.options.labels.submitKeyTitle
-      const catsList= newBox.querySelector("#da-bc-calendar-cats-list")
+      const catsList= newBox.querySelector("[data-bc-select-category]")
       this.range.categories.forEach((e) => {
-        const catLi = document.createElement("li")
-        catLi.setAttribute("data-sys-input-text","")
-        const catSpan=document.createElement("span")
-        const catTitle = document.createElement("span")
-        catSpan.setAttribute("style",`background-color:${e.color}`)
-        catSpan.setAttribute("bc-calendar-cat-color","")
-        catTitle.textContent= e.title
-        catTitle.setAttribute("data-sys-text","")
-        catLi.appendChild(catSpan)
-        catLi.appendChild(catTitle)
-        catLi.setAttribute("data-id" , e.id.toString())
+        const catLi = document.createElement("option")
+        catLi.textContent = e.title
+        catLi.setAttribute("value" , e.id.toString())
         catsList.appendChild(catLi)
       })
       this.range.Owner.processNodesAsync(
         Array.from(newBox.childNodes)
       );
-      const dropDowns = newBox.querySelectorAll("[bc-calendar-drop-down]");
-      dropDowns.forEach((el) => {
-        const dropDownBtn  = el.querySelector("[bc-calendar-drop-down-btn]")
-        const liItems = el.querySelectorAll("li")
-        liItems.forEach((LIelement) => {
-          LIelement.addEventListener("click" , function(element){
-            const dropdownValue = el.querySelector("[bc-calendar-dropdown-id]") as HTMLInputElement
-            dropdownValue.value = this.getAttribute("data-id")
-            const liText = element.target as HTMLElement
-            dropDownBtn.textContent = liText.innerText
-          })
-        })
-        el.addEventListener("click", function (element) {
-          dropDownBtn.nextElementSibling.classList.toggle("open_drop_down");       
-         
-        });
-      });
+ 
 
       modalBody.appendChild(newBox);
       const submitBtn:HTMLElement =modalBody.querySelector("[new-form-submit-button]")
@@ -522,8 +538,7 @@ export class UiCalendar {
       if(x.creator == 0){
         moreButtonBox.innerHTML = moreShareBox;
         if(this.range.options.level == "user"){
-
-          moreButtonBox.querySelector("[bc-calendar-reminder-note]").remove()
+          moreButtonBox.querySelector("[bc-calendar-reminder-note]")?.remove()
           
         }
         moreButton.appendChild(moreButtonBox);
@@ -538,8 +553,7 @@ export class UiCalendar {
         
         moreButtonBox.innerHTML = moreBox;
         if(this.range.options.level == "user"){
-
-          moreButtonBox.querySelector("[bc-calendar-reminder-note]").remove()
+          moreButtonBox.querySelector("[bc-calendar-reminder-note]")?.remove()
           
         }
         moreButtonBox.querySelector("[data-bc-edit-btn]").innerHTML = this.range.options.labels.editMenuTitle
@@ -763,10 +777,7 @@ export class UiCalendar {
                 error.setAttribute("data-sys-message-danger-fade-out","")
             }, 3000);
           
-              // modalBody.querySelector("[data-sys-message-success]").setAttribute("data-sys-message-success-fade-in","")
-              // setTimeout(() => {
-              //   modalBody.querySelector("[data-sys-message-success]").setAttribute("data-sys-message-danger-fade-out","")
-              // }, 3000);
+            this.getSharingList(x, modalBody,shareListWrapper)
             }
           })
         }        
@@ -813,39 +824,11 @@ export class UiCalendar {
     const reminderBtn : HTMLElement = moreButtonBox.querySelector("[bc-calendar-reminder-note]")
     reminderBtn?.addEventListener("click", async (e) => {
       modalBody.innerHTML = "";
-      modalBody.appendChild(this.generateReminderForm(x));
+      modalBody.appendChild(this.generateReminderForm());
       let unitId = 1
       const reminderSubmit = modalBody.querySelector("[data-calendar-submit]")
+      this.createReminderList(x.id, modalBody)
      
-      const obj = { 
-        noteid : x.id,
-        creatoruser:  this.range.userId
-      }
-      const viewNote =await this.range.sendAsyncDataPostJson(obj , this.range.options.baseUrl["viewnote"])
-     
-
-      if(viewNote[0].reminder.length > 0){   
-        viewNote[0].reminder.forEach( reminderItem => {
-          const reminderItemDiv = document.createElement("div")
-          reminderItemDiv.innerHTML = reminderList
-          const actionidVal =reminderItem.actionID
-          const timetypeVal = reminderItem.timetype
-          const timeValueInput :HTMLInputElement = reminderItemDiv.querySelector("[data-calendar-time-value]") as HTMLInputElement
-          const itemdropDown = reminderItemDiv.querySelector("[bc-calendar-drop-down]")
-          timeValueInput.value = reminderItem.value  
-          itemdropDown.setAttribute("data-id" , timetypeVal)
-          itemdropDown.setAttribute("data-text" , reminderItem.timetitle)
-          if(actionidVal == 2){
-            reminderItemDiv.querySelector("[tab-button-status-mobile]").setAttribute("tab-button-status","active")
-            reminderItemDiv.querySelector("[tab-button-status-email]").removeAttribute("tab-button-status")
-            const tab = reminderItemDiv.querySelector(".tabActive") as HTMLElement
-            tab.style.transform = `translateX(-100%)`;
-          }
-          modalBody.querySelector("[ data-calendar-reminder-note-wrapper]") .appendChild(reminderItemDiv)
-        })
-      
-
-      }
       const switchButtons = modalBody.querySelectorAll("[bc-calendar-change-button]")
       switchButtons.forEach(x => {
         x.addEventListener("click" , function(e)  {
@@ -893,20 +876,19 @@ export class UiCalendar {
          
         });
       });
-      const newReminder = modalBody.querySelector("[data-calendar-new-reminder]")
-      
-      const timeType = newReminder.querySelector("[bc-calendar-dropdown-id]") as HTMLInputElement
-      const num = newReminder.querySelector("[bc-calendar-time-num]") as HTMLInputElement
+     
       reminderSubmit.addEventListener("click" ,async (e) => {
         e.preventDefault()
-        const actionId = newReminder.querySelector('[tab-button-status="active"]') 
+        const newReminder = modalBody.querySelector("[data-bc-new-row-reminder]")
+        const timeType = newReminder.querySelector("[data-bc-select-time]") as HTMLInputElement
+        const num = newReminder.querySelector("[bc-calendar-time-num]") as HTMLInputElement
         
+        const actionId = newReminder.querySelector('[tab-button-status="active"]') 
         let newNoteObj ={"id":0,
         "noteid":x.id,
         "unitid":timeType.value,
         "value":num.value,
         "actionid":actionId.getAttribute("data-id")
-        
       }
         let apiLink = this.range.options.baseUrl["reminder"]
         const data =await this.range.sendAsyncDataPostJson(newNoteObj, apiLink);
@@ -961,7 +943,9 @@ export class UiCalendar {
           setTimeout(function() {
             error.setAttribute("data-sys-message-danger-fade-out","")
         }, 3000);
-      
+        this.createReminderList(x.id, modalBody)
+        this.generateReminderRow(modalBody)
+        
          
         }
    
@@ -1035,7 +1019,7 @@ export class UiCalendar {
       creatoruser:  this.range.userId
     }
     const viewNote =await this.range.sendAsyncDataPostJson(obj , this.range.options.baseUrl["viewnote"])
-   
+    wrapper.innerHTML = ""
     viewNote[0]?.sharing.forEach((e) => {
       const shareItem = document.createElement("div")
       const shareUserName = document.createElement("div")

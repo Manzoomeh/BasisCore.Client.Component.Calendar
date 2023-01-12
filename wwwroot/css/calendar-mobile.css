@@ -31,7 +31,7 @@ ul {
   
   [data-calendar-day]:not([data-id1]) {
     cursor: not-allowed;
-    background-color: #f6f6f6;
+    /* background-color: #f6f6f6; */
   }
   [data-id1]:hover {
     background-color: #f2fbfd;
@@ -485,21 +485,10 @@ ul {
     align-items: center;
   }
   [data-calendar-new-btn] {
-    margin-left: 20px;
+    /* margin-left: 20px; */
     height: 18px;
     cursor: pointer;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: #004B85;
-    position: absolute;
-    bottom: 16px;
-    right: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 2px 4px 10px rgba(0, 75, 133, 0.25);
-    z-index: 999;
+    margin-top: 5px;
 
   }
   [data-calendar-new-btn] svg{
@@ -746,7 +735,7 @@ ul {
   [new-note-reminder-input] {
     display: flex;
     float: right;
-    margin-left: 15px;
+    margin-left: 10px;
   }
   [bc-calendar-drop-down-white] p {
     background: #fff;
@@ -769,17 +758,17 @@ ul {
   } 
   [new-form-submit-button] ,[data-reminder-submit]{
     border-radius: 5px;
-    color: #004b85;
+    color: #fff;
     padding: 10px 0;
     text-align: center;
-    margin-right: 20px;
+    /* margin-right: 20px; */
     cursor: pointer;
     -webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
-    font-size: 16px;
+    /* font-size: 16px; */
     background: none;
     border: none;
-    font-weight: bold;
+    /* font-weight: bold; */
   }
   [data-reminder-submit]:disabled,[data-reminder-submit][disabled]{
     opacity: 0.3;
@@ -787,9 +776,22 @@ ul {
   }
 
   [new-form-submit-cancel-buttons] {
-    float: left;
+    float: right;
     margin-top: 30px;
     direction: ltr;
+    cursor: pointer;
+    background: #004B85;
+    width: 99px;
+    height: 35px;
+    color: #fff;
+    border-radius: 5px;
+    float: right;
+    border: none;
+    font-size: 12px;
+    min-width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   [data-calendar-form-row-share]{
     margin-bottom: 20px;
@@ -1065,9 +1067,7 @@ ul {
   [data-id1]:hover span{
     color: #B40020;
   }
-  [data-calendar-day]:not([data-id1]){
-    background: #fff;
-  }
+
   [data-id1]:hover:after {
     content: "";
     background: none;
@@ -1168,10 +1168,10 @@ background-color: rgba(0, 75, 133, 0.1);
 }
 [new-note-reminder-form-body ] [new-note-reminder-form-element]{
   float: right;
-  margin-left: 15px;
+  margin-left: 10px;
 }
 [bc-calendar-time-num] {
-  margin-left: 15px;
+  margin-left: 10px;
 }
 .timepicker-ui-modal{
   position: fixed;
@@ -1189,4 +1189,47 @@ background-color: rgba(0, 75, 133, 0.1);
 [bc-calendar-drop-down-reciver-deactive]{
   color: #D0D0D0;
   pointer-events: none;
+}
+/* [data-calendar-reminder-note-wrapper] > div{
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+} */
+[data-bc-calendar-select] {
+  border: none;
+  border: 1px solid #d7d7fb;
+  border-radius: 5px;
+  padding: 4px;
+  cursor: pointer;
+  height: 35px;
+  margin-top: 2px;
+  min-width: 100px;
+  background: #fff;
+  height: 42px;
+}
+[data-bc-select-category]{
+  border: none;
+  border: 1px solid #d7d7fb;
+  border-radius: 5px;
+  padding: 4px;
+  cursor: pointer;
+  height: 35px;
+  margin-top: 2px;
+  width: 100%;
+  background: #fff;
+  height: 42px;
+  direction: rtl;
+  text-align: right;
+}
+[data-calendar-modal-header-date]{
+  width: 100%;
+display: flex;
+justify-content: space-between;
+direction: ltr;
+}
+[data-bc-currentDateTxt]{
+  display: flex;
+direction: rtl;
+}
+[data-bc-currentDateTxt] span{
+  margin-left: 10px;
 }

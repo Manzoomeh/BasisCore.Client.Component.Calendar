@@ -78,8 +78,8 @@ export class DateRange {
     form.append("rkey", this.rKey);
     form.append("dmnid", "30");
     let apiLink = this.options.baseUrl
-    let userIdObj = await this.sendAsyncData(form, apiLink["userid"] );    
-    this.userId =parseInt(userIdObj[0].userid) 
+    let userIdObj = await this.sendAsyncDataGetMethod( apiLink["userid"] );    
+    this.userId =parseInt(userIdObj.userid) 
     return null;
   }
   public async getCategories(){
