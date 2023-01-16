@@ -35,8 +35,8 @@
     </head>
 
     <body>
-     
-        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="1401/10/01" to="1401/10/30" options="mySetting" rkey="7BCCE056-57EB-43DA-8D4D-89D261DA81D3"></Basis>
+        <button onclick="setKey()">Refresh</button>
+        <Basis core="component.calendar.calendar" run="atclient" dataMemberName="db.form" sourceid="db.form" ResetSourceId="calendar.refresh" triggers="calendar.refresh" from="1401/10/01" to="1401/10/30" options="mySetting" rkey="7BCCE056-57EB-43DA-8D4D-89D261DA81D3"></Basis>
 
         <script>   
                 var mySetting = {
@@ -47,19 +47,18 @@
                 dmnid : 6,
                 style: "../css/calendar-style.css",
                 baseUrl: {                   
-                    "userid" : "https://basispanel.ir/trustservice/checkrkey/B1A8CB8C-D95B-4970-8655-DF836A722978",
-                    "viewnote" :"https://basispanel.ir/service/fa/B1A8CB8C-D95B-4970-8655-DF836A722978/viewcalendarnote",
-                    "usernotes" :"https://basispanel.ir/service/B1A8CB8C-D95B-4970-8655-DF836A722978/calendarnotes",
-                    "removenote":"http://basispanel.ir/service/B1A8CB8C-D95B-4970-8655-DF836A722978/removenote",
-                    "addnote":"https://basispanel.ir/service/B1A8CB8C-D95B-4970-8655-DF836A722978/addcalendarnote",
-                    "reminder" : "https://basispanel.ir/service/B1A8CB8C-D95B-4970-8655-DF836A722978/notereminder",
-                    "catlist":"http://basispanel.ir/service/B1A8CB8C-D95B-4970-8655-DF836A722978/fa/notecatlist",
-                    "sharing" :"https://basispanel.ir/service/B1A8CB8C-D95B-4970-8655-DF836A722978/sharing",
-                    "removesharing":"https://basispanel.ir/service/B1A8CB8C-D95B-4970-8655-DF836A722978/calendarnote/removesharing",
-                    "sender":"https://basispanel.ir/service/B1A8CB8C-D95B-4970-8655-DF836A722978/fa/usercategories",
-                    "reciver":"https://basispanel.ir/service/B1A8CB8C-D95B-4970-8655-DF836A722978/fa/usercategoryrelations/${catid}",
-                    "sharingService" : "https://basispanel.ir/service/B1A8CB8C-D95B-4970-8655-DF836A722978/sharing"
-                    
+                    "userid" : "https://basispanel.ir/trustservice/checkrkey/B9E17E02-6634-486D-96F5-F87E16A5BE84",
+                    "viewnote" :"https://basispanel.ir/service/fa/B9E17E02-6634-486D-96F5-F87E16A5BE84/viewcalendarnote",
+                    "usernotes" :"https://basispanel.ir/service/B9E17E02-6634-486D-96F5-F87E16A5BE84/calendarnotes",
+                    "removenote":"http://basispanel.ir/service/B9E17E02-6634-486D-96F5-F87E16A5BE84/removenote",
+                    "addnote":"https://basispanel.ir/service/B9E17E02-6634-486D-96F5-F87E16A5BE84/addcalendarnote",
+                    "reminder" : "https://basispanel.ir/service/B9E17E02-6634-486D-96F5-F87E16A5BE84/notereminder",
+                    "catlist":"http://basispanel.ir/service/B9E17E02-6634-486D-96F5-F87E16A5BE84/fa/notecatlist",
+                    "sharing" :"https://basispanel.ir/service/B9E17E02-6634-486D-96F5-F87E16A5BE84/sharing",
+                    "removesharing":"https://basispanel.ir/service/B9E17E02-6634-486D-96F5-F87E16A5BE84/calendarnote/removesharing",
+                    "sender":"https://basispanel.ir/service/B9E17E02-6634-486D-96F5-F87E16A5BE84/fa/usercategories",
+                    "reciver":"https://basispanel.ir/service/B9E17E02-6634-486D-96F5-F87E16A5BE84/fa/usercategoryrelations/${catid}",
+                    "sharingService" : "https://basispanel.ir/service/B9E17E02-6634-486D-96F5-F87E16A5BE84/sharing"
 
 
                 },
@@ -82,6 +81,9 @@
                     shareBoxTitle : "به اشتراک‌گذاری"
                 }
 
+            }
+            function setKey(){
+                $bc.setSource("calendar.refresh" , true)
             }
         </script>
     </body>

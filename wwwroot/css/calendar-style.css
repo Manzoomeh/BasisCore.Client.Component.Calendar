@@ -1205,6 +1205,9 @@ text-align: right;
   min-width: 100px;
   background: #fff;
   height: 42px;
+  background-color: #f8f8ff !important;
+border: 1px solid #d7d7fb !important;
+color: var(--vdark_gray) !important;
 }
 [data-bc-select-category]{
   border: none;
@@ -1219,4 +1222,13 @@ text-align: right;
   height: 42px;
   direction: rtl;
   text-align: right;
+  background-color: #f8f8ff !important;
+border: 1px solid #d7d7fb !important;
+color: var(--vdark_gray) !important;
+}
+[data-calendar-tooltip-flag]{
+  direction: rtl;
+}
+[data-bc-calendar-disable-button]{
+  pointer-events: none;
 }

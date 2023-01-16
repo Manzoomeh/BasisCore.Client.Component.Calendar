@@ -14,6 +14,7 @@ export default class BcComponent implements IComponentManager {
   private sourceId: SourceId;
   private options: object;
   private rKey: string;
+  private resetSourceId: SourceId = null;
   constructor(owner: IUserDefineComponent) {
     this.owner = owner;
   }
@@ -40,12 +41,30 @@ export default class BcComponent implements IComponentManager {
       this.loadCalendar(initFrom, initTo, this.options, this.rKey);
     }
     
+    const resetSourceId = await this.owner.getAttributeValueAsync(
+      "ResetSourceId"
+    );
     
+    if (resetSourceId) {
+      this.resetSourceId = resetSourceId.toLowerCase();
+      this.owner.addTrigger([this.resetSourceId]);
+    }  
     
   }
+  private async displayDataIfExistsAsync(): Promise<void> {
+    if (this.sourceId) {
+      const source = this.owner.tryToGetSource(this.sourceId);
+      await this.initializeAsync()
+    }
+  }
+
   public async runAsync(source?: ISource): Promise<boolean> {
-    if (source?.id === this.sourceId) {
-      
+    if (source?.id == this.resetSourceId) {
+      // this.grid = null;
+      // this.container = null
+      await this.displayDataIfExistsAsync();
+    } else{
+  if (source?.id === this.sourceId) {  
       const from = source.rows[0].from;
       const to = source.rows[0].to;
       const fromParts = from.split("/");
@@ -62,6 +81,7 @@ export default class BcComponent implements IComponentManager {
       };
       this.loadCalendar(from, to, this.options, this.rKey);
     }
+  }
  
  
     return true;

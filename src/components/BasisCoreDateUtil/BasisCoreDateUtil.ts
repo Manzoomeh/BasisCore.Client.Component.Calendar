@@ -304,6 +304,23 @@ export class BasisCoreDateUtil implements IDateUtil {
     }
     return false;
   }
+  getBasisToDayId (day : DayValue): number{
+    const javaScriptTody = new Date()
+      .toLocaleDateString("fa-IR")
+      .replace(/([۰-۹])/g, (token) =>
+        String.fromCharCode(token.charCodeAt(0) - 1728)
+      );
+    const datePart = javaScriptTody.split("/");
+    const basisDate = this.getObj(day.year, day.month, day.day);
+    if (
+      parseInt(datePart[0]) == parseInt(basisDate.syear) &&
+      parseInt(datePart[1]) == parseInt(basisDate.smonth) &&
+      parseInt(datePart[2]) == parseInt(basisDate.sdate)
+    ) {
+      return basisDate.id;
+    }
+    return 0 
+  }
   convertToGregorian(day : MonthValue ) : DayValue{
     const basisDate = this.getObj(day.year, day.month, 1);
     var gregorianDate: DayValue = {

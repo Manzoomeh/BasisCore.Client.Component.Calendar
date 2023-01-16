@@ -143,4 +143,7 @@ export class PersianDateUtil implements IDateUtil {
   convertToGregorianFullDate(day : DayValue ) : DayValue{
     return null
   }
+  getBasisToDayId (day : DayValue): number{
+    return null
+  }
 }

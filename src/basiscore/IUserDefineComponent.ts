@@ -1,5 +1,4 @@
 import { Priority } from "./enum";
-import IComponentManager from "./IComponentManager";
 import IDependencyContainer from "./IDependencyContainer";
 import IDisposable from "./IDisposable";
 import ISource from "./ISource";
@@ -42,6 +41,6 @@ export default interface IUserDefineComponent {
     postfix?: string
   ): string;
   getRandomName(prefix?: string, postfix?: string): string;
-  manager: IComponentManager;
-  onInitialized: Promise<IUserDefineComponent>;
+  format(pattern: string, ...params: any[]): string;
+  getLibAsync(objectName: string, url: string): Promise<any>;
 }

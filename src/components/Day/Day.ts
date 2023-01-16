@@ -11,6 +11,7 @@ export class Day {
   readonly dateId: number;
   readonly currentDay: DayValue;
   readonly mcurrentDay: DayValue;
+  readonly isPast : boolean = false
   //dayName: string;
   public constructor(owner: Month, value: DayNumber) {
     this.month = owner;
@@ -38,6 +39,14 @@ export class Day {
     );
     this.dateId = this.month.range.dateUtil.getBasisDayId(this.currentDay);
     this.isToday = this.month.range.dateUtil.getIsToday(this.currentDay);
+    
+    if( this.isToday == true){
+      this.month.todayId = this.dateId
+    }
+    
+    if( this.month.todayId == 0 ){
+      this.isPast = true
+    }
   }
   getDayName() {
     return this.month.range.dateUtil.getDayName(

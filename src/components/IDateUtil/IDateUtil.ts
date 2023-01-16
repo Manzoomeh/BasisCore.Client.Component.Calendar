@@ -36,4 +36,5 @@ export interface IDateUtil {
   getRangeForDate(day : DayValue , status : Status , count: number ) : DayValue
   getCurrentYear(day:DayValue ,  culture : Culture) : number
   convertToGregorianFullDate(day : DayValue ) : DayValue
+  getBasisToDayId (day : DayValue): number
 }

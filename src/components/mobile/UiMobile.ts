@@ -13,6 +13,7 @@ import { TimepickerUI } from "timepicker-ui";
 import { OptionTypes } from "timepicker-ui";
 import serviceShareLayout from "../UiCalendar/asset/shareFormForService.html";
 import reminderRow from "../UiCalendar/asset/reminderRow.html";
+import reminderRowShare from "../UiCalendar/asset/reminderRowShare.html"
 
 export class UiMbobile {
   private readonly day: Day;
@@ -245,13 +246,18 @@ export class UiMbobile {
       
     })
   }
-  generateReminderForm(note? : INote): Node{
+  generateReminderForm(creator:number): Node{
     let formWrapper = document.createElement("form");
-    formWrapper.innerHTML = reminderForm;
-    formWrapper.querySelector("[data-bc-new-row-reminder]").innerHTML = reminderRow
+    if(creator == 0){
+      formWrapper.innerHTML = reminderForm;
+      formWrapper.querySelector("[data-bc-new-row-reminder]").innerHTML = reminderRowShare
+      
+    }
+    else{
+      formWrapper.innerHTML = reminderForm;
+      formWrapper.querySelector("[data-bc-new-row-reminder]").innerHTML = reminderRow
+    }
     let unitId = 1
-   
-    
     return formWrapper
   }
   async createReminderList(id:number , body: HTMLElement){
@@ -864,7 +870,7 @@ else{
     const reminderBtn : HTMLElement = moreButtonBox.querySelector("[bc-calendar-reminder-note]")
     reminderBtn?.addEventListener("click", async (e) => {
       modalBody.innerHTML = "";
-      modalBody.appendChild(this.generateReminderForm(x));
+      modalBody.appendChild(this.generateReminderForm(x.creator));
       this.createReminderList(x.id, modalBody)
 
       
@@ -896,12 +902,14 @@ else{
         const timeType = newReminder.querySelector("[data-bc-select-time]") as HTMLInputElement
         const num = newReminder.querySelector("[bc-calendar-time-num]") as HTMLInputElement
         const actionId = newReminder.querySelector('[tab-button-status="active"]') 
+        const typeid = newReminder.querySelector("[data-bc-select-service-reminder]") as HTMLInputElement
         
         
         const newNoteObj = { 
           "noteid":x.id,
           "unitid":timeType.value,
           "value":num.value,
+          "typeid":typeid.value , 
           "actionid":actionId.getAttribute("data-id")
           
         }

@@ -345,9 +345,10 @@ ul {
     margin-bottom: 10px;
     direction: rtl;
     text-align: right;
-    height: 40px;
+    height: auto;
     border-radius: 5px;
     flex-direction: column;
+    padding-bottom: 5px;
   }
   [data-calendar-event-btn] {
     margin-right: 10px;
@@ -526,6 +527,7 @@ ul {
     width: 95%;
     display: block;
     font-size: 10px;
+    margin-right: 10px;
   }
   [data-calendar-note-header] {
     width: 100%;
@@ -1205,6 +1207,9 @@ background-color: rgba(0, 75, 133, 0.1);
   min-width: 100px;
   background: #fff;
   height: 42px;
+  background-color: #f8f8ff !important;
+border: 1px solid #d7d7fb !important;
+color: var(--vdark_gray) !important;
 }
 [data-bc-select-category]{
   border: none;
@@ -1219,6 +1224,9 @@ background-color: rgba(0, 75, 133, 0.1);
   height: 42px;
   direction: rtl;
   text-align: right;
+  background-color: #f8f8ff !important;
+border: 1px solid #d7d7fb !important;
+color: var(--vdark_gray) !important;
 }
 [data-calendar-modal-header-date]{
   width: 100%;
