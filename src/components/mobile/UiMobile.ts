@@ -219,6 +219,7 @@ export class UiMbobile {
     sharingInputUniqe.addEventListener("keyup", (e) =>{
       submitShareForm.removeAttribute("disabled")
     })
+    
     return formWrapper
   }
   generateReminderRow(body : HTMLElement){
@@ -257,6 +258,10 @@ export class UiMbobile {
       formWrapper.innerHTML = reminderForm;
       formWrapper.querySelector("[data-bc-new-row-reminder]").innerHTML = reminderRow
     }
+    let inputNewWrapper = formWrapper.querySelector("[data-bc-new-row-reminder]")
+    inputNewWrapper.querySelector("[data-calendar-time-value]").addEventListener("keyup",e => {
+      formWrapper.querySelector("[data-reminder-submit]").removeAttribute("data-sys-button-disable")
+    })
     let unitId = 1
     return formWrapper
   }
@@ -869,13 +874,13 @@ else{
     
     const reminderBtn : HTMLElement = moreButtonBox.querySelector("[bc-calendar-reminder-note]")
     reminderBtn?.addEventListener("click", async (e) => {
+      
       modalBody.innerHTML = "";
       modalBody.appendChild(this.generateReminderForm(x.creator));
-      this.createReminderList(x.id, modalBody)
-
-      
-      const switchButtons = modalBody.querySelectorAll("[bc-calendar-change-button]")
+      let unitId = 1
       const reminderSubmit = modalBody.querySelector("[data-calendar-submit]")
+      this.createReminderList(x.id, modalBody)     
+      const switchButtons = modalBody.querySelectorAll("[bc-calendar-change-button]")
       switchButtons.forEach(x => {
         x.addEventListener("click" , function(e)  {
           const container = this.closest(".tabWrapper");
@@ -887,8 +892,7 @@ else{
                   left = index;
               }
           });
-          this.setAttribute("tab-button-status", "active");
-          
+          this.setAttribute("tab-button-status", "active");            
           const tab = container.querySelector(".tabActive") as HTMLElement
           tab.style.transform = `translateX(-${left}00%)`;
           const actionidInput = modalBody.querySelector("[bc-calendar-action-id]") as HTMLInputElement
@@ -896,24 +900,120 @@ else{
         })
         
       })
-      reminderSubmit.addEventListener("click" , async (e) => {
+      const dropDowns = modalBody.querySelectorAll("[bc-calendar-drop-down]");
+      dropDowns.forEach((el) => {
+        
+        const dropDownBtn  = el.querySelector("[bc-calendar-drop-down-btn]")
+        dropDownBtn.textContent =  el.getAttribute("data-text") ? el.getAttribute("data-text") : "دقیقه"
+        const liItems = el.querySelectorAll("li")      
+        liItems.forEach((LIelement) => {
+          LIelement.addEventListener("click" , function(element){            
+            const dropdownValue = el.querySelector("[bc-calendar-dropdown-id]") as HTMLInputElement
+            dropdownValue.value = this.getAttribute("data-id")
+            const liText = element.target as HTMLElement
+            dropDownBtn.textContent = liText.innerText
+            unitId = parseInt( this.getAttribute("data-id"))
+          })
+        })
+        el.addEventListener("click", function (element) {
+          
+          dropDowns.forEach(cel => {
+            cel.querySelector("ul").classList.remove("open_drop_down"); 
+            cel.closest("div").classList.remove("open_drop_down_wrapper");             
+          })
+          dropDownBtn.closest("div").classList.toggle("open_drop_down_wrapper");       
+          dropDownBtn.nextElementSibling.classList.toggle("open_drop_down");       
+         
+        });
+      });
+      
+      if(this.day.isPast == true ){
+      
+        reminderSubmit.setAttribute("data-sys-button-disable","")
+        reminderSubmit.removeAttribute("data-sys-button")
+        reminderSubmit.setAttribute("data-bc-calendar-disable-button","")
+        const error = document.createElement("div")
+        error.setAttribute("data-calendar-tooltip-flag","")
+        error.setAttribute("data-sys-message-danger","")
+        error.setAttribute("data-sys-message-danger-fade-in","")
+        error.setAttribute("style","display: block")
+
+        
+        error.innerHTML=`  <span>
+        <i class="lni lni-close"></i>
+        امکان ثبت Reminder برای روزهای گذشته وجود ندارد.
+     
+        </span> 
+      `
+      modalBody.querySelector("#errors").appendChild(error)
+
+      }
+       else if( x.time == ""){
+      
+        reminderSubmit.setAttribute("data-sys-button-disable","")
+        reminderSubmit.removeAttribute("data-sys-button")
+        reminderSubmit.setAttribute("data-bc-calendar-disable-button","")
+        const error = document.createElement("div")
+        error.setAttribute("data-calendar-tooltip-flag","")
+        error.setAttribute("data-sys-message-danger","")
+        error.setAttribute("data-sys-message-danger-fade-in","")
+        error.setAttribute("style","display: block")
+
+        error.innerHTML=`  <span>
+        <i class="lni lni-close"></i>
+        لطفا برای یادداشت خود یک زمان تعیین کنید.
+     
+        </span> 
+      `
+      modalBody.querySelector("#errors").appendChild(error)
+
+      }
+      else{
+        var currentTime = new Date()
+        const hours = currentTime.getHours()
+        const minute = currentTime.getMinutes()
+        const timeId = (hours *3600) + (minute * 60)
+        const NoteHours = x.time.split(":")[0]
+        const NoteMinute = x.time.split(":")[1]
+        const noteTimeId = (parseInt( NoteHours) *3600) + (parseInt( NoteMinute) * 60)
+        if( noteTimeId < timeId ){
+          reminderSubmit.setAttribute("data-sys-button-disable","")
+          reminderSubmit.setAttribute("data-bc-calendar-disable-button","")
+          reminderSubmit.removeAttribute("data-sys-button")
+          
+        const error = document.createElement("div")
+        error.setAttribute("data-calendar-tooltip-flag","")
+        error.setAttribute("data-sys-message-danger","")
+        error.setAttribute("data-sys-message-danger-fade-in","")
+        error.setAttribute("style","display: block")
+        error.innerHTML=`  <span>
+        <i class="lni lni-close"></i>
+        امکان ثبت Reminder برای ساعت گذشته در یک روز وجود ندارد.
+      
+        </span> 
+      `
+      modalBody.querySelector("#errors").appendChild(error)
+        }
+      }
+      
+    
+      reminderSubmit.addEventListener("click" ,async (e) => {
         e.preventDefault()
+       
         const newReminder = modalBody.querySelector("[data-bc-new-row-reminder]")
         const timeType = newReminder.querySelector("[data-bc-select-time]") as HTMLInputElement
         const num = newReminder.querySelector("[bc-calendar-time-num]") as HTMLInputElement
-        const actionId = newReminder.querySelector('[tab-button-status="active"]') 
         const typeid = newReminder.querySelector("[data-bc-select-service-reminder]") as HTMLInputElement
-        
-        
-        const newNoteObj = { 
-          "noteid":x.id,
-          "unitid":timeType.value,
-          "value":num.value,
-          "typeid":typeid.value , 
-          "actionid":actionId.getAttribute("data-id")
-          
-        }
-        
+        const actionId = newReminder.querySelector('[tab-button-status="active"]') 
+        let newNoteObj ={"id":0,
+        "noteid":x.id,
+        "unitid":timeType.value,
+        "value":num.value,
+        "typeid":typeid.value,
+        "actionid":actionId.getAttribute("data-id")
+      }
+     
+      
         let apiLink = this.range.options.baseUrl["reminder"]
         const data =await this.range.sendAsyncDataPostJson(newNoteObj, apiLink);
         if(data.errorid == 5){
@@ -923,8 +1023,9 @@ else{
           error.setAttribute("data-sys-message-danger-fade-in","")
           error.setAttribute("style","display: block")
           error.innerHTML=`  <span>
+          <i class="lni lni-close"></i>
          ابتدا برای یادداشت خود، ساعت انتخاب کنید
-         <i class="lni lni-close"></i>
+        
           </span> 
         `
         modalBody.querySelector("#errors").appendChild(error)
@@ -941,8 +1042,9 @@ else{
           error.setAttribute("data-sys-message-danger-fade-in","")
           error.setAttribute("style","display: block")
           error.innerHTML=`  <span>
+          <i class="lni lni-close"></i>
           عملیات با خطا روبرو شد
-         <i class="lni lni-close"></i>
+        
           </span> 
         `
         modalBody.querySelector("#errors").appendChild(error)
@@ -958,9 +1060,11 @@ else{
           error.setAttribute("data-sys-message-success","")
           error.setAttribute("data-sys-message-success-fade-in","")
           error.setAttribute("style","display: block")
+          modalBody.querySelector("[data-calendar-submit]").setAttribute("data-sys-button-disable","")
           error.innerHTML=`  <span>
-          عملیات با موفقیت انجام شد
           <i class="lni lni-checkmark"></i>
+          عملیات با موفقیت انجام شد
+          
           </span> 
         `
         modalBody.querySelector("#errors").appendChild(error)
@@ -969,9 +1073,10 @@ else{
         }, 3000);
         this.createReminderList(x.id, modalBody)
         this.generateReminderRow(modalBody)
-        
+        reminderSubmit.textContent = "ثبت شد"
          
         }
+   
       })
     })
     const editBtn: HTMLElement = moreButtonBox.querySelector(

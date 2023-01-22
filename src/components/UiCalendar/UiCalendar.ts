@@ -251,9 +251,10 @@ export class UiCalendar {
     reciverData.forEach(element => {
       const reciverLi : HTMLElement = document.createElement("li")
       reciverLi.addEventListener("click", (e) => {
+        formWrapper.querySelector("[data-calendar-submit]").removeAttribute("data-sys-button-disable")
         const dropdownValue = formWrapper.querySelector("[bc-calendar-dropdown-reciver]") as HTMLInputElement
         dropdownValue.value = element.id
-        formWrapper.querySelector("[data-calendar-submit]").removeAttribute("disabled")
+        // formWrapper.querySelector("[data-calendar-submit]").removeAttribute("disabled")
         formWrapper.querySelector("[bc-calendar-drop-down-reciver-title]").textContent=element.title
       
       })
@@ -333,7 +334,10 @@ export class UiCalendar {
       formWrapper.querySelector("[data-bc-new-row-reminder]").innerHTML = reminderRow
     }
     
-    
+    let inputNewWrapper = formWrapper.querySelector("[data-bc-new-row-reminder]")
+    inputNewWrapper.querySelector("[data-calendar-time-value]").addEventListener("keyup",e => {
+      formWrapper.querySelector("[data-reminder-submit]").removeAttribute("data-sys-button-disable")
+    })
     let unitId = 1  
     return formWrapper
   }
@@ -780,6 +784,7 @@ export class UiCalendar {
               
               </span> 
             `
+            modalBody.querySelector("[data-calendar-submit]").setAttribute("data-sys-button-disable","")
             document.getElementById("errors").appendChild(error)
              
               setTimeout(function() {
@@ -787,6 +792,21 @@ export class UiCalendar {
             }, 3000);
           
             this.getSharingList(x, modalBody,shareListWrapper)
+            }
+            else  if(data.errorid == 7){
+              const error = document.createElement("div")
+              error.setAttribute("data-calendar-tooltip-flag","")
+              error.setAttribute("data-sys-message-danger","")
+              error.setAttribute("data-sys-message-danger-fade-in","")
+              error.setAttribute("style","display: block")
+              error.innerHTML=`
+             <span>
+            اشتراک‌گذاری برای این گروه کاربری، قبلا انجام شده است.
+             <i class="lni lni-close"></i>
+             </span> `
+             setTimeout(function() {
+              error.setAttribute("data-sys-message-danger-fade-out","")
+          }, 3000);
             }
           })
         }        
@@ -885,7 +905,7 @@ export class UiCalendar {
         });
       });
       
-      if(this.day.isPast == true || x.time == ""){
+      if(this.day.isPast == true ){
       
         reminderSubmit.setAttribute("data-sys-button-disable","")
         reminderSubmit.removeAttribute("data-sys-button")
@@ -895,6 +915,8 @@ export class UiCalendar {
         error.setAttribute("data-sys-message-danger","")
         error.setAttribute("data-sys-message-danger-fade-in","")
         error.setAttribute("style","display: block")
+
+        
         error.innerHTML=`  <span>
         <i class="lni lni-close"></i>
         امکان ثبت Reminder برای روزهای گذشته وجود ندارد.
@@ -902,10 +924,27 @@ export class UiCalendar {
         </span> 
       `
       modalBody.querySelector("#errors").appendChild(error)
-      // modalBody.querySelector("#errors").appendChild(error)
-      //   setTimeout(function() {
-      //     error.setAttribute("data-sys-message-danger-fade-out","")
-      // }, 3000);
+
+      }
+       else if( x.time == ""){
+      
+        reminderSubmit.setAttribute("data-sys-button-disable","")
+        reminderSubmit.removeAttribute("data-sys-button")
+        reminderSubmit.setAttribute("data-bc-calendar-disable-button","")
+        const error = document.createElement("div")
+        error.setAttribute("data-calendar-tooltip-flag","")
+        error.setAttribute("data-sys-message-danger","")
+        error.setAttribute("data-sys-message-danger-fade-in","")
+        error.setAttribute("style","display: block")
+
+        error.innerHTML=`  <span>
+        <i class="lni lni-close"></i>
+        لطفا برای یادداشت خود یک زمان تعیین کنید.
+     
+        </span> 
+      `
+      modalBody.querySelector("#errors").appendChild(error)
+
       }
       else{
         var currentTime = new Date()
@@ -999,6 +1038,7 @@ export class UiCalendar {
           error.setAttribute("data-sys-message-success","")
           error.setAttribute("data-sys-message-success-fade-in","")
           error.setAttribute("style","display: block")
+          modalBody.querySelector("[data-calendar-submit]").setAttribute("data-sys-button-disable","")
           error.innerHTML=`  <span>
           <i class="lni lni-checkmark"></i>
           عملیات با موفقیت انجام شد

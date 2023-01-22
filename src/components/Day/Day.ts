@@ -41,10 +41,10 @@ export class Day {
     this.isToday = this.month.range.dateUtil.getIsToday(this.currentDay);
     
     if( this.isToday == true){
-      this.month.todayId = this.dateId
+      this.month.range.todayId = this.dateId
     }
-    
-    if( this.month.todayId == 0 ){
+
+    if( this.month.range.todayId  ==  0 ){
       this.isPast = true
     }
   }

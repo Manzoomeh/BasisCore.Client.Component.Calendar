@@ -18,6 +18,7 @@ export class DatePicker {
   public wrapper: Element;
   public datePickerInput: HTMLInputElement;
   public activeIndex: number;
+  public todayId : number=0
   public datesArray : DayValue[] = [];
   fromdate : string 
   private static readonly defaultCalenderOptions: Partial<IDatePickerOptions> =

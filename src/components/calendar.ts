@@ -22,6 +22,7 @@ export class DateRange {
   public wrapper: Element;
   public activeIndex: number;
   public userId : number =0;
+  public todayId : number=0
   public readonly Owner?:IUserDefineComponent;
   public categories : Array<ICatNote> = new Array<ICatNote>();
   private static readonly defaultCalenderOptions: Partial<ICalenderOptions> = {

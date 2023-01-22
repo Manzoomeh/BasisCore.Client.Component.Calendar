@@ -21,7 +21,7 @@ export class Month {
   readonly lastDayInMonth: number;
   readonly currentDate: DayValue;
   readonly currentYear : number;
-  public todayId : number=0
+  
   public constructor(owner: DateRange | DatePicker, value: MonthValue) {
     this.range = owner;
     this.value = value;
