@@ -20,6 +20,7 @@ import { OptionTypes } from "timepicker-ui";
 export class UiCalendar {
   private readonly day: Day;
   readonly range: DateRange;
+  
   modal: Modal;
   constructor(owner: DateRange, day: Day) {
     this.day = day;
@@ -210,10 +211,16 @@ export class UiCalendar {
     formWrapper.innerHTML = layout;
     formWrapper.querySelector("[data-calendar-share-input]").setAttribute("placeholder",this.range.options.labels.shareTextTitle)
     formWrapper.querySelector("[data-reminder-submit]").setAttribute("placeholder",this.range.options.labels.submitKeyTitle)
-    const submitShareForm = formWrapper.querySelector("[data-reminder-submit]")
-    const sharingInputUniqe = formWrapper.querySelector("#data-calendar-share-input-uniqe") as HTMLInputElement
+    const submitShareForm = formWrapper.querySelector("[data-reminder-submit]")    
+    const sharingInputUniqe = formWrapper.querySelector("#data-calendar-share-input-uniqe")   as HTMLInputElement
     sharingInputUniqe.addEventListener("keyup", (e) =>{
-      submitShareForm.removeAttribute("disabled")
+    
+      if(sharingInputUniqe.value != "" && sharingInputUniqe.value != undefined){
+        submitShareForm.removeAttribute("data-bc-calendar-disable-button")
+      }else{
+        submitShareForm.setAttribute("data-bc-calendar-disable-button","")
+      }
+      
     })
     return formWrapper
   }
@@ -251,7 +258,7 @@ export class UiCalendar {
     reciverData.forEach(element => {
       const reciverLi : HTMLElement = document.createElement("li")
       reciverLi.addEventListener("click", (e) => {
-        formWrapper.querySelector("[data-calendar-submit]").removeAttribute("data-sys-button-disable")
+        formWrapper.querySelector("[data-calendar-submit]").removeAttribute("data-bc-calendar-disable-button")
         const dropdownValue = formWrapper.querySelector("[bc-calendar-dropdown-reciver]") as HTMLInputElement
         dropdownValue.value = element.id
         // formWrapper.querySelector("[data-calendar-submit]").removeAttribute("disabled")
@@ -321,23 +328,39 @@ export class UiCalendar {
       })
       
     })
+    // let inputNewWrapper = body.querySelector("[data-bc-new-row-reminder]") as HTMLInputElement
+    // inputNewWrapper.querySelector("[data-calendar-time-value]").addEventListener("keyup",e => {
+    //   if(inputNewWrapper.value != "" && inputNewWrapper.value != undefined){
+    //   body.querySelector("[data-reminder-submit]").removeAttribute("data-bc-calendar-disable-button")
+    //   }
+    //   else{
+    //     body.querySelector("[data-reminder-submit]").setAttribute("data-bc-calendar-disable-button","")
+    //   }
+    // })
   }
   generateReminderForm(creator:number): Node{
     let formWrapper = document.createElement("form");
     if(creator == 0){
       formWrapper.innerHTML = reminderForm;
       formWrapper.querySelector("[data-bc-new-row-reminder]").innerHTML = reminderRowShare
-      
     }
     else{
       formWrapper.innerHTML = reminderForm;
       formWrapper.querySelector("[data-bc-new-row-reminder]").innerHTML = reminderRow
     }
+    // const reminderSelects = formWrapper.querySelectorAll("[data-bc-calendar-select]")
+    // let inputNewWrapper = formWrapper.querySelector("[data-bc-new-row-reminder]") as HTMLElement
+    // let inputNew = inputNewWrapper.querySelector("[data-calendar-time-value]") as HTMLInputElement
+    // inputNew.addEventListener("keyup",e => {
+    //    if(inputNew.value != "" && inputNew.value != undefined){
+    //   formWrapper.querySelector("[data-reminder-submit]").removeAttribute("data-bc-calendar-disable-button")
+    //    }
+    //    else{
+    //     formWrapper.querySelector("[data-reminder-submit]").setAttribute("data-bc-calendar-disable-button","")
+    //    }
+    // })
+ 
     
-    let inputNewWrapper = formWrapper.querySelector("[data-bc-new-row-reminder]")
-    inputNewWrapper.querySelector("[data-calendar-time-value]").addEventListener("keyup",e => {
-      formWrapper.querySelector("[data-reminder-submit]").removeAttribute("data-sys-button-disable")
-    })
     let unitId = 1  
     return formWrapper
   }
@@ -350,13 +373,20 @@ export class UiCalendar {
   body.querySelector("[data-calendar-reminder-note-wrapper]").innerHTML= ""
   if(viewNote[0]?.reminder.length > 0){   
     viewNote[0]?.reminder.forEach( reminderItem => {
+      
+      
       const reminderItemDiv = document.createElement("div")
       reminderItemDiv.innerHTML = reminderList
-      const actionidVal =reminderItem.actionID
-      const timetypeVal = reminderItem.timetype
+      let actionidVal =reminderItem.actionID
+      let timetypeVal = reminderItem.timetype
+      if(this.range.options.level == "user"){
+        timetypeVal = reminderItem.timeunitid
+        actionidVal = reminderItem.actionid
+      }
       const timeType :HTMLInputElement = reminderItemDiv.querySelector("[data-bc-select-time]") as HTMLInputElement
       const typeidValue :HTMLInputElement = reminderItemDiv.querySelector("[data-bc-select-user-share]") as HTMLInputElement          
       const timeInput :HTMLInputElement = reminderItemDiv.querySelector("[data-calendar-time-value]") as HTMLInputElement
+      const deleteRoW = reminderItemDiv.querySelector("[data-calendar-remove-sharing]") as HTMLElement
       timeType.value = timetypeVal  
       typeidValue.value = reminderItem.typeid ? reminderItem.typeid : 1 
       timeInput.value = reminderItem.value
@@ -368,7 +398,7 @@ export class UiCalendar {
       }
       body.querySelector("[ data-calendar-reminder-note-wrapper]") .appendChild(reminderItemDiv)
     })
-  
+    // deleteRom.addEventListener("click" , removeReminderRow())
 
   }
  }
@@ -382,14 +412,11 @@ export class UiCalendar {
     const newBtn = document.createElement("div");
     const currentDate = document.createElement("div");
     const closeBtn = document.createElement("div");
-    const modalBtns = document.createElement("div");
-    
+    const modalBtns = document.createElement("div");    
     modalHeader.setAttribute("data-calendar-modal-header", "");
     modalBody.setAttribute("data-calendar-modal-body", "");
     newBtn.setAttribute("data-calendar-new-btn", "");
-    closeBtn.setAttribute("data-calendar-close-btn", "");
-   
-    
+    closeBtn.setAttribute("data-calendar-close-btn", "");    
     modalBtns.setAttribute("data-calendar-modal-btns", "");
     currentDate.setAttribute("data-calendar-modal-header-date", "");
     currentDate.setAttribute("data-calendar-modal-header-date", "");
@@ -549,10 +576,10 @@ export class UiCalendar {
       
       if(x.creator == 0){
         moreButtonBox.innerHTML = moreShareBox;
-        if(this.range.options.level == "user"){
-          moreButtonBox.querySelector("[bc-calendar-reminder-note]")?.remove()
+        // if(this.range.options.level == "user"){
+        //   moreButtonBox.querySelector("[bc-calendar-reminder-note]")?.remove()
           
-        }
+        // }
         moreButton.appendChild(moreButtonBox);
       moreButton.addEventListener("click", (e) => {
         const moreButtonDropDown = moreButtonBox.querySelector(
@@ -564,10 +591,10 @@ export class UiCalendar {
       else{
         
         moreButtonBox.innerHTML = moreBox;
-        if(this.range.options.level == "user"){
-          moreButtonBox.querySelector("[bc-calendar-reminder-note]")?.remove()
+        // if(this.range.options.level == "user"){
+        //   moreButtonBox.querySelector("[bc-calendar-reminder-note]")?.remove()
           
-        }
+        // }
         moreButtonBox.querySelector("[data-bc-edit-btn]").innerHTML = this.range.options.labels.editMenuTitle
         moreButtonBox.querySelector("[data-bc-delete-btn]").innerHTML = this.range.options.labels.deleteMenuTitle
         moreButtonBox.querySelector("[data-bc-share-btn]").innerHTML = this.range.options.labels.shareMenuTitle
@@ -589,7 +616,7 @@ export class UiCalendar {
         "[bc-calendar-delete-note]"
       );
      
-      // const reminderBtn : HTMLElement = document.createElement("div")
+      
       shareBtn.addEventListener("click", async (e) => {
         this.modal.cover.querySelector("[data-calendar-new-btn]").remove()        
         modalBody.innerHTML = "";
@@ -617,6 +644,8 @@ export class UiCalendar {
             );
            
             if(data.errorid == 3){
+              modalBody.querySelector("[data-calendar-submit]").setAttribute("data-bc-calendar-disable-button","")
+
               const inputs = modalBody.querySelectorAll("[data-calendar-share-form]")
               data.users.forEach((e,i) => {
                 const errors = inputs[i].querySelectorAll("[data-calendar-tooltip-flag]")
@@ -681,7 +710,8 @@ export class UiCalendar {
               })
             }
             else if(data.errorid == 5){
-  
+              modalBody.querySelector("[data-calendar-submit]").setAttribute("data-bc-calendar-disable-button","")
+
               const inputs = modalBody.querySelectorAll("[data-calendar-share-form]")
               data.users.forEach((e,i) => {
                 const errors = inputs[i].querySelectorAll("[data-calendar-tooltip-flag]")
@@ -695,9 +725,10 @@ export class UiCalendar {
                   error.setAttribute("data-sys-message-danger-fade-in","")
                   error.setAttribute("style","display: block")
                   error.innerHTML=`                <span>
+                  <i class="lni lni-close"></i>
                  یکی از یوزرها اشتباه است 
                  لطفا مجددا بررسی کنید
-                 <i class="lni lni-close"></i>
+                
                  </span> `
                   inputs[i].appendChild(error)
                 } 
@@ -709,9 +740,10 @@ export class UiCalendar {
                   error.setAttribute("style","display: block")
                   error.innerHTML=`
                  <span>
+                 <i class="lni lni-close"></i>
                  یکی از یوزرها اشتباه است 
                  لطفا مجددا بررسی کنید
-                 <i class="lni lni-close"></i>
+                
                  </span> `
                   inputs[i].appendChild(error)
                 } 
@@ -722,8 +754,9 @@ export class UiCalendar {
                   error.setAttribute("data-sys-message-success-fade-in","")
                   error.setAttribute("style","display: block")
                   error.innerHTML=`  <span>
-                 اشتراک‌گذاری با موفقیت انجام شد
                   <i class="lni lni-checkmark"></i>
+                 اشتراک‌گذاری با موفقیت انجام شد
+                 
                   </span> 
                 `
                   inputs[i].appendChild(error)
@@ -738,8 +771,23 @@ export class UiCalendar {
                   error.setAttribute("style","display: block")
                   error.innerHTML=`
                  <span>
+                 <i class="lni lni-close"></i>
                 کاربر تکراری است 
-                <i class="lni lni-close"></i>
+               
+                 </span> `
+                  inputs[i].appendChild(error)
+                } 
+                else if(e.errorid == 13) {
+                  const error = document.createElement("div")
+                  error.setAttribute("data-calendar-tooltip-flag","")
+                  error.setAttribute("data-sys-message-danger","")
+                  error.setAttribute("data-sys-message-danger-fade-in","")
+                  error.setAttribute("style","display: block")
+                  error.innerHTML=`
+                 <span>
+                 <i class="lni lni-close"></i>
+               امکان به اشتراک‌گذاری با مالک یادداشت وجود ندارد.
+               
                  </span> `
                   inputs[i].appendChild(error)
                 } 
@@ -772,6 +820,7 @@ export class UiCalendar {
               formData,
               apiLink
             );
+            document.getElementById("errors").innerHTML = ""
             if(data.errorid == 6){
               const error = document.createElement("div")
               error.setAttribute("data-calendar-tooltip-flag","")
@@ -784,7 +833,8 @@ export class UiCalendar {
               
               </span> 
             `
-            modalBody.querySelector("[data-calendar-submit]").setAttribute("data-sys-button-disable","")
+            modalBody.querySelector("[data-calendar-submit]").setAttribute("data-bc-calendar-disable-button","")
+           
             document.getElementById("errors").appendChild(error)
              
               setTimeout(function() {
@@ -799,11 +849,14 @@ export class UiCalendar {
               error.setAttribute("data-sys-message-danger","")
               error.setAttribute("data-sys-message-danger-fade-in","")
               error.setAttribute("style","display: block")
+              
               error.innerHTML=`
              <span>
-            اشتراک‌گذاری برای این گروه کاربری، قبلا انجام شده است.
              <i class="lni lni-close"></i>
+            اشتراک‌گذاری برای این گروه کاربری، قبلا انجام شده است.            
              </span> `
+             document.getElementById("errors").appendChild(error)
+               modalBody.querySelector("[data-calendar-submit]").setAttribute("data-bc-calendar-disable-button","")
              setTimeout(function() {
               error.setAttribute("data-sys-message-danger-fade-out","")
           }, 3000);
@@ -851,8 +904,7 @@ export class UiCalendar {
      
     }
     const reminderBtn : HTMLElement = moreButtonBox.querySelector("[bc-calendar-reminder-note]")
-    reminderBtn?.addEventListener("click", async (e) => {
-      
+    reminderBtn?.addEventListener("click", async (e) => {      
       modalBody.innerHTML = "";
       modalBody.appendChild(this.generateReminderForm(x.creator));
       let unitId = 1
@@ -904,10 +956,10 @@ export class UiCalendar {
          
         });
       });
-      
+      var isPast : boolean = false
       if(this.day.isPast == true ){
-      
-        reminderSubmit.setAttribute("data-sys-button-disable","")
+        isPast = true
+        reminderSubmit.setAttribute("data-bc-calendar-disable-button","")
         reminderSubmit.removeAttribute("data-sys-button")
         reminderSubmit.setAttribute("data-bc-calendar-disable-button","")
         const error = document.createElement("div")
@@ -926,9 +978,9 @@ export class UiCalendar {
       modalBody.querySelector("#errors").appendChild(error)
 
       }
-       else if( x.time == ""){
-      
-        reminderSubmit.setAttribute("data-sys-button-disable","")
+       else if(x.time == ""){
+        isPast = true
+        reminderSubmit.setAttribute("data-bc-calendar-disable-button","")
         reminderSubmit.removeAttribute("data-sys-button")
         reminderSubmit.setAttribute("data-bc-calendar-disable-button","")
         const error = document.createElement("div")
@@ -944,7 +996,6 @@ export class UiCalendar {
         </span> 
       `
       modalBody.querySelector("#errors").appendChild(error)
-
       }
       else{
         var currentTime = new Date()
@@ -954,8 +1005,9 @@ export class UiCalendar {
         const NoteHours = x.time.split(":")[0]
         const NoteMinute = x.time.split(":")[1]
         const noteTimeId = (parseInt( NoteHours) *3600) + (parseInt( NoteMinute) * 60)
-        if( noteTimeId < timeId ){
-          reminderSubmit.setAttribute("data-sys-button-disable","")
+        if( noteTimeId < timeId && this.day.isToday == true ){
+          isPast = true
+          reminderSubmit.setAttribute("data-bc-calendar-disable-button","")
           reminderSubmit.setAttribute("data-bc-calendar-disable-button","")
           reminderSubmit.removeAttribute("data-sys-button")
           
@@ -974,7 +1026,19 @@ export class UiCalendar {
         }
       }
       
-    
+        
+      if(isPast == false){
+        let inputNewWrapper = modalBody.querySelector("[data-bc-new-row-reminder]") as HTMLElement
+        let inputNew = inputNewWrapper.querySelector("[data-calendar-time-value]") as HTMLInputElement
+        inputNew.addEventListener("keyup",e => {
+           if(inputNew.value != "" && inputNew.value != undefined){
+            modalBody.querySelector("[data-reminder-submit]").removeAttribute("data-bc-calendar-disable-button")
+           }
+           else{
+            modalBody.querySelector("[data-reminder-submit]").setAttribute("data-bc-calendar-disable-button","")
+           }
+        })
+      }
       reminderSubmit.addEventListener("click" ,async (e) => {
         e.preventDefault()
        
@@ -1038,7 +1102,7 @@ export class UiCalendar {
           error.setAttribute("data-sys-message-success","")
           error.setAttribute("data-sys-message-success-fade-in","")
           error.setAttribute("style","display: block")
-          modalBody.querySelector("[data-calendar-submit]").setAttribute("data-sys-button-disable","")
+          modalBody.querySelector("[data-calendar-submit]").setAttribute("data-bc-calendar-disable-button","")
           error.innerHTML=`  <span>
           <i class="lni lni-checkmark"></i>
           عملیات با موفقیت انجام شد
@@ -1051,7 +1115,7 @@ export class UiCalendar {
         }, 3000);
         this.createReminderList(x.id, modalBody)
         this.generateReminderRow(modalBody)
-        reminderSubmit.textContent = "ثبت شد"
+        // reminderSubmit.textContent = "ثبت شد"
          
         }
    
@@ -1069,7 +1133,7 @@ export class UiCalendar {
       modalBody.innerHTML = "";
       modalBody.appendChild(this.generateNoteForm(x,x.creator));  
       const timeInputt : HTMLElement= modalBody.querySelector("[bc-calendar-time-input]") 
-      const datePickerOptions : OptionTypes = {okLabel :"تایید" , cancelLabel:"کنسل",amLabel:"ق.ظ",pmLabel:"ب.ظ",clockType:"24h" ,timeLabel : ""};
+      const datePickerOptions : OptionTypes = {okLabel :"تایید" , cancelLabel:"انصراف",amLabel:"ق.ظ",pmLabel:"ب.ظ",clockType:"24h" ,timeLabel : ""};
       const newTimepicker = new TimepickerUI(timeInputt, datePickerOptions);
       const modalParent : HTMLElement = modalBody.closest("[data-modal-form]") 
       timeInputt.addEventListener("click",timeElement => {        
