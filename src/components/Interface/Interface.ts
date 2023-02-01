@@ -20,8 +20,12 @@ export interface INote {
   catid : number,
   creator : number,
   creatoruser : number
+  ownerinfo? : Iownerinfo
 }
 
+export interface Iownerinfo{
+  name : string
+}
 export interface ICatNote{
   id : number , 
   color : string,

@@ -218,7 +218,7 @@ select {
   justify-content: center;
 }
 [data-modal-form] {
-  width: 570px;
+  width: 580px;
   background: #fff;
   border-radius: 5px;
   padding:15px 30px;
@@ -229,6 +229,10 @@ select {
   margin-top: 80px;
   min-height: 300px;
   position: fixed;
+  height: 80%;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  direction: rtl;
 }
 @keyframes modalBoxOpen {
   0% {
@@ -481,9 +485,10 @@ select {
 }
 [bc-calendar-note-title] {
   font-size: 18px;
+  font-weight: bold;
 }
 [bc-calendar-note-description] {
-
+  color: #898989;
   clear: both;
   width: 95%;
   display: block;
@@ -1239,4 +1244,42 @@ border: 1px solid #c7d6db;
   border-color: #D0D0D0 !important;
   color: #fff !important;
   opacity: 1 !important;
+}
+[data-calendar-more-note]{
+  width: 25px;
+  height: 25px !important;
+  border-radius: 5px;
+  padding: 0;
+  min-height: 25px !important;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: -0.5rem;
+  position: relative;
+  z-index: 5;
+  border: 2px solid #fff;
+}
+[data-calendar-more-note-parent]{
+  float: left;
+  margin: 10px !important;
+  direction: ltr;
+  text-align: left;
+}
+[bc-calendar-note-time]{
+  color: #898989 !important;
+  font-size: 12px;
+}
+[bc-calendar-note-sharefrom]{
+  color: #898989 !important;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+[bc-calendar-note-sharefrom] svg{
+  margin-left: 5px;
+}
+[bc-calendar-note-sharefrom] span{
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin-right: 5px;
 }

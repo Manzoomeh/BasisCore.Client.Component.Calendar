@@ -103,16 +103,16 @@ ul {
     text-align: right;
     
     box-sizing: border-box;
-    white-space: nowrap;
+
     text-indent: -9999px;
-    width: 10px;
-    height: 10px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     position: relative;
     right: 0;
     z-index: 5;
     top: 0;             
-    margin-left: -5px;
+
     right: 0;
     float: right;
   }
@@ -127,9 +127,10 @@ ul {
     padding-top: 1px;
     position: absolute;
     width: 100%;
-    top: 0;
+    bottom: 0;
     right: 0;
-    padding-right: 10px;
+    display: flex;
+    justify-content: center;
   }
   #basis-calendar {
     direction: rtl;
@@ -260,6 +261,8 @@ ul {
     box-sizing: border-box;
     bottom: 0;
     height: 80%;
+    direction: rtl;
+    overflow-y: auto;
   }
   @keyframes modalBoxOpen {
     0% {
@@ -351,6 +354,7 @@ ul {
     border-radius: 5px;
     flex-direction: column;
     padding-bottom: 5px;
+    padding-right: 10px;
   }
   [data-calendar-event-btn] {
     margin-right: 10px;
@@ -520,7 +524,7 @@ ul {
   }
   [bc-calendar-note-title] {
     font-size: 14px;
-    margin-right: 10px;
+    /* margin-right: 10px; */
     line-height: 40px;
   }
   [bc-calendar-note-description] {
@@ -529,7 +533,7 @@ ul {
     width: 95%;
     display: block;
     font-size: 10px;
-    margin-right: 10px;
+    
   }
   [data-calendar-note-header] {
     width: 100%;
@@ -781,7 +785,7 @@ ul {
     border: none;
     /* font-weight: bold; */
     width: 99px;
-height: 35px;
+/* height: 35px; */
   }
   [data-reminder-submit]:disabled,[data-reminder-submit][disabled]{
     opacity: 0.3;
@@ -823,6 +827,8 @@ height: 35px;
   }
   [data-calendar-share-note-wrapper]{
     direction: rtl;
+    position: relative;
+    z-index: 9;
   }
    [data-calendar-tooltip]{
     -webkit-transition: all 0.3s ease-in-out;
@@ -1223,12 +1229,11 @@ background-color: rgba(0, 75, 133, 0.1);
   background: #fff;
   height: 42px;
   background-color: #f8f8ff !important;
-border: 1px solid #d7d7fb !important;
-color: var(--vdark_gray) !important;
+  border: 1px solid #d7d7fb !important;
+  color: var(--vdark_gray) !important;
 }
 [data-bc-select-category]{
   border: none;
-  
   border-radius: 5px;
   padding: 4px;
   cursor: pointer;
@@ -1263,14 +1268,14 @@ direction: rtl;
 [data-bc-bp-widget-container] [data-bc-widget-body]{
   padding: 10px !important;
 }
-[data-bc-calendar-disable-button]{
+[data-modal-form] [data-bc-calendar-disable-button]{
   pointer-events: none;
   background: #D0D0D0 !important;
   border-color: #D0D0D0 !important;
   color: #fff !important;
   opacity: 1 !important;
 }
-[data-sys-message-danger] {
+[data-modal-form] [data-sys-message-danger] {
   border: 1px solid #B40020;
   padding: 5px;
   border-radius: 5px;
@@ -1279,7 +1284,7 @@ direction: rtl;
   direction: ltr;
 text-align: right;
 }
-[data-sys-message-success]{
+[data-modal-form]  [data-sys-message-success]{
   border: 1px solid #00A693;
   padding: 5px;
   border-radius: 5px;
@@ -1294,11 +1299,54 @@ text-align: right;
   direction: rtl;
 }
 [data-bc-calendar-form]{
-  overflow-y: scroll;
+  /* overflow-y: auto; */
 -webkit-overflow-scrolling: touch;
 height: 400px;
 direction: rtl;
 }
 #errors{
   margin-bottom: 10px;
+}
+[data-sys-message-danger-fade-out]{
+  transform: translateY(100px) !important;
+  opacity: 0 !important;
+}
+[data-sys-message-success]{
+  transition: all 0.5s ease-in-out;
+}
+
+[data-calendar-more-note]{
+  width: 7px !important;
+  height: 7px !important;
+  border-radius:50%;
+  padding: 0;
+  min-height: 7px !important;
+  display: inline-block;
+  float: none;
+  position: relative;
+  margin: 0 !important;
+  border: 2px solid #fff;
+}
+[data-calendar-more-note-parent]{
+
+}
+[bc-calendar-note-time]{
+  color: #898989 !important;
+  font-size: 12px;
+  margin-top: 5px;
+}
+[bc-calendar-note-sharefrom]{
+  color: #898989 !important;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+[bc-calendar-note-sharefrom] svg{
+  margin-left: 5px;
+}
+[bc-calendar-note-sharefrom] span{
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin-right: 5px;
 }

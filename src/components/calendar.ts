@@ -147,7 +147,8 @@ export class DateRange {
         reminderType: ReminderType.none,
         catid : x.catid,
         creator : x.creator,
-        creatoruser : x.creatoruser
+        creatoruser : x.creatoruser,
+        ownerinfo : x.ownerinfo
       })
     );
   }
