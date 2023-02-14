@@ -483,7 +483,7 @@ export class UiCalendar {
       modalBody.innerHTML = "";
       newBox.innerHTML = newForm;
       const timeInputt : HTMLElement= newBox.querySelector("[bc-calendar-time-input]") 
-      const datePickerOptions : OptionTypes = {okLabel :"تایید" , cancelLabel:"کنسل",amLabel:"ق.ظ",pmLabel:"ب.ظ",clockType:"24h" ,timeLabel : "",delayHandler:10};
+      const datePickerOptions : OptionTypes = {okLabel :"تایید" , cancelLabel:"انصراف",amLabel:"ق.ظ",pmLabel:"ب.ظ",clockType:"24h" ,timeLabel : "",delayHandler:10};
       const newTimepicker = new TimepickerUI(timeInputt, datePickerOptions);
       const modalParent : HTMLElement = modalBody.closest("[data-modal-form]") 
       timeInputt.addEventListener("click",timeElement => {        

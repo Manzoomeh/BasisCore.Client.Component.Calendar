@@ -1196,7 +1196,7 @@ else{
       modalBody.innerHTML = "";
       modalBody.appendChild(this.generateNoteForm(x,x.creator));  
       const timeInputt : HTMLElement= modalBody.querySelector("[bc-calendar-time-input]") 
-      const datePickerOptions : OptionTypes = {okLabel :"تایید" , cancelLabel:"کنسل",amLabel:"ق.ظ",pmLabel:"ب.ظ",clockType:"24h" ,timeLabel : ""};
+      const datePickerOptions : OptionTypes = {okLabel :"تایید" , cancelLabel:"انصراف",amLabel:"ق.ظ",pmLabel:"ب.ظ",clockType:"24h" ,timeLabel : ""};
       const newTimepicker = new TimepickerUI(timeInputt, datePickerOptions);
       const modalParent : HTMLElement = modalBody.closest("[data-modal-form]") 
       timeInputt.addEventListener("click",timeElement => {        
