@@ -14,17 +14,19 @@ import reminderList from "../UiCalendar/asset/reminderList.html"
 import reminderRowShare from "../UiCalendar/asset/reminderRowShare.html"
 import { TimepickerUI } from "timepicker-ui";
 import { OptionTypes } from "timepicker-ui";
+import { ViewNote } from "./ViewNote";
 
 
 
-export class UiCalendar {
-  private readonly day: Day;
+export class UiCalendar {  
+  private viewNote : ViewNote  
+  public modal: Modal;
   readonly range: DateRange;
-  
-  modal: Modal;
+  public readonly day: Day;
   constructor(owner: DateRange, day: Day) {
     this.day = day;
     this.range = owner;
+    this.viewNote = new ViewNote(this);
     this.modal = new Modal(owner);
     if (this.range?.Owner?.dc?.isRegistered("widget") ) {
       const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
@@ -602,13 +604,13 @@ export class UiCalendar {
       </svg>
       `;
  
-      if(x.ownerinfo){
+      if(x.sharinginfo	){
         sharedfrom.innerHTML = `<svg width="20" height="15" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M10.2609 8.08235L11.2335 5.16439C12.0832 2.61531 12.5081 1.34076 11.8353 0.667978C11.1625 -0.0048075 9.88795 0.420039 7.33887 1.26973L4.42091 2.24239C2.36355 2.92817 1.33487 3.27107 1.04255 3.77389C0.764462 4.25224 0.764462 4.84303 1.04255 5.32138C1.33487 5.8242 2.36355 6.1671 4.42091 6.85288C4.67588 6.93787 4.96272 6.87719 5.15365 6.68803L8.27351 3.59708C8.44903 3.42318 8.73228 3.4245 8.90618 3.60002C9.08007 3.77554 9.07875 4.0588 8.90323 4.23269L5.83375 7.27373C5.62331 7.48222 5.5567 7.80132 5.65037 8.08235C6.33615 10.1397 6.67905 11.1684 7.18188 11.4607C7.66022 11.7388 8.25101 11.7388 8.72936 11.4607C9.23219 11.1684 9.57508 10.1397 10.2609 8.08235Z" fill="#767676"/>
         </svg>
         اشتراک‌گذاری توسط : 
         <span>
-        ${x.ownerinfo.name}</span>
+        ${x.sharinginfo["from"].name}</span>
         `
       }
    
@@ -1172,7 +1174,7 @@ export class UiCalendar {
     const editBtn: HTMLElement = moreButtonBox.querySelector(
       "[bc-calendar-edit-note]"
     );
-    editBtn.addEventListener("click", (e) => {
+    editBtn?.addEventListener("click", (e) => {
       this.range.getCategories()
       if (this.range?.Owner?.dc?.isRegistered("widget") ) {
         const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
@@ -1202,18 +1204,37 @@ export class UiCalendar {
     const timeInput = modalBody.querySelector("[bc-calendar-time]") as HTMLInputElement
     const titleInput = modalBody.querySelector("[data-calendar-title-input]") as HTMLInputElement
     const descInput = modalBody.querySelector("[data-calendar-description-textarea]") as HTMLInputElement
-    
+      
+     
+
 
 
 
     });
-    divElementHeader.appendChild(textSpan);
+      const noteType = document.createElement("div")
+      const noteTypeText = document.createElement("span")
+      divElementHeader.appendChild(textSpan);
       divElementHeader.appendChild(moreButton);
       divElement.appendChild(divElementHeader);
-      divElement.appendChild(sharedfrom)
+      
+      if(x.sharinginfo){
+        divElement.appendChild(sharedfrom)
+      }
       divElement.appendChild(description);
       divElement.appendChild(time);
       modalBody.appendChild(divElement);
+  
+      const viewBtn: HTMLElement = moreButtonBox.querySelector(
+        "[bc-calendar-view-note]"
+      );
+      viewBtn?.addEventListener("click", (e) => {
+        const viewBox  = document.createElement("div")
+        console.log("ssss" , modalHeader)
+        viewBox.classList.add("view_box")
+        this.viewNote.generateViewNote(x , modalBody , modalHeader, viewBox , x.creatoruser)
+      
+        
+      })
     });
     boxElement.appendChild(modalHeader);
     boxElement.appendChild(modalBody);
@@ -1232,6 +1253,8 @@ export class UiCalendar {
     })
     return listWrapper;
   }
+
+  
   
   async getSharingList(note:INote , body:HTMLElement, wrapper : HTMLElement){
     const obj = { 

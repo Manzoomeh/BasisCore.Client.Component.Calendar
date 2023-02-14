@@ -20,11 +20,12 @@ export interface INote {
   catid : number,
   creator : number,
   creatoruser : number
-  ownerinfo? : Iownerinfo
+  sharinginfo? : Iownerinfo
 }
 
 export interface Iownerinfo{
-  name : string
+  name : string,
+  id?: number
 }
 export interface ICatNote{
   id : number , 

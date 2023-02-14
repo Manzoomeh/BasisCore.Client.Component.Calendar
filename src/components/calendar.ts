@@ -148,7 +148,7 @@ export class DateRange {
         catid : x.catid,
         creator : x.creator,
         creatoruser : x.creatoruser,
-        ownerinfo : x.ownerinfo
+        sharinginfo : x.sharinginfo
       })
     );
   }

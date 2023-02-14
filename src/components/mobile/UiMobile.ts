@@ -14,15 +14,18 @@ import { OptionTypes } from "timepicker-ui";
 import serviceShareLayout from "../mobile/asset/shareFormForService.html";
 import reminderRow from "../mobile/asset/reminderRow.html";
 import reminderRowShare from "../mobile/asset/reminderRowShare.html"
+import { ViewNote } from "./ViewNote";
 
 export class UiMbobile {
-  private readonly day: Day;
+  public readonly day: Day;
   readonly range: DateRange;
   modal: Modal;
+  private viewNote : ViewNote  
   constructor(owner: DateRange, day: Day) {
     this.day = day;
     this.range = owner;
     this.modal = new Modal(owner);
+    this.viewNote = new ViewNote(this);
     if (this.range?.Owner?.dc?.isRegistered("widget") ) {
       const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
       widgetName.title = this.range.options.labels["mainTitle"];
@@ -464,7 +467,7 @@ else{
     const currentDateTxt = document.createElement("div")
     currentDateTxt.setAttribute("data-bc-currentDateTxt","")
     currentDateTxt.innerHTML = `<span>${this.day.currentDay.day}</span> <span>${this.day.month.monthName}</span> <span>${this.day.month.currentYear}</span>`;
-    currentDate.appendChild(newBtn)
+    modalBtns.appendChild(newBtn)
     currentDate.appendChild(currentDateTxt)
     // currentDate.innerHTML = `<span>${this.day.currentDay.day}</span> <span>${this.day.month.monthName}</span> <span>${this.day.month.currentYear}</span>`;
     // modalBtns.appendChild(closeBtn);
@@ -615,13 +618,13 @@ else{
       <path data-sys-text="" d="M2.35707 6.63415C1.28564 6.63415 0.428502 7.46341 0.428502 8.5C0.428502 9.53658 1.28564 10.3659 2.35707 10.3659C3.4285 10.3659 4.28564 9.53658 4.28564 8.5C4.28564 7.46341 3.4285 6.63415 2.35707 6.63415ZM4.28564 1.86585C4.28564 2.90244 3.4285 3.73171 2.35707 3.73171C1.28564 3.73171 0.428502 2.90244 0.428502 1.86585C0.428502 0.829268 1.28564 0 2.35707 0C3.4285 0 4.28564 0.829268 4.28564 1.86585ZM4.28564 15.1341C4.28564 16.1707 3.4285 17 2.35707 17C1.28564 17 0.428502 16.1707 0.428502 15.1341C0.428502 14.0976 1.28564 13.2683 2.35707 13.2683C3.4285 13.2683 4.28564 14.0976 4.28564 15.1341Z" fill="#525252"/>
       </svg>
       `;
-      if(x.ownerinfo){
+      if(x.sharinginfo){
         sharedfrom.innerHTML = `<svg width="20" height="15" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M10.2609 8.08235L11.2335 5.16439C12.0832 2.61531 12.5081 1.34076 11.8353 0.667978C11.1625 -0.0048075 9.88795 0.420039 7.33887 1.26973L4.42091 2.24239C2.36355 2.92817 1.33487 3.27107 1.04255 3.77389C0.764462 4.25224 0.764462 4.84303 1.04255 5.32138C1.33487 5.8242 2.36355 6.1671 4.42091 6.85288C4.67588 6.93787 4.96272 6.87719 5.15365 6.68803L8.27351 3.59708C8.44903 3.42318 8.73228 3.4245 8.90618 3.60002C9.08007 3.77554 9.07875 4.0588 8.90323 4.23269L5.83375 7.27373C5.62331 7.48222 5.5567 7.80132 5.65037 8.08235C6.33615 10.1397 6.67905 11.1684 7.18188 11.4607C7.66022 11.7388 8.25101 11.7388 8.72936 11.4607C9.23219 11.1684 9.57508 10.1397 10.2609 8.08235Z" fill="#767676"/>
         </svg>
         اشتراک‌گذاری توسط : 
         <span>
-        ${x.ownerinfo.name}</span>
+        ${x.sharinginfo["from"].name}</span>
         `
       }
       textSpan.setAttribute("bc-calendar-note-title", "");
@@ -1227,6 +1230,18 @@ else{
       divElement.appendChild(description);
       divElement.appendChild(time)
       modalBody.appendChild(divElement);
+
+      // for view note
+      const viewBtn: HTMLElement = moreButtonBox.querySelector(
+        "[bc-calendar-view-note]"
+      );
+      viewBtn?.addEventListener("click", (e) => {
+        const viewBox  = document.createElement("div")
+        viewBox.classList.add("view_box")
+        this.viewNote.generateViewNote(x , modalBody , modalHeader, viewBox , x.creatoruser)
+      
+        
+      })
     });
     boxElement.appendChild(modalHeader);
     boxElement.appendChild(modalBody);
