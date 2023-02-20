@@ -19,11 +19,12 @@ export class DateRange {
   private readonly monthValues: MonthValue[];
   public note: INote[];
   public rKey: string;
-  public wrapper: Element;
+  public wrapper: HTMLElement;
   public activeIndex: number;
   public userId : number =0;
   public todayId : number=0
   public readonly Owner?:IUserDefineComponent;
+  private runHeader : boolean = false
   public categories : Array<ICatNote> = new Array<ICatNote>();
   private static readonly defaultCalenderOptions: Partial<ICalenderOptions> = {
     dateProvider: "basisCalendar",
@@ -50,17 +51,12 @@ export class DateRange {
     this.dateUtil =
       this.options.dateProvider == "basisCalendar"
         ? new BasisCoreDateUtil()
-        : new PersianDateUtil();
-    
+        : new PersianDateUtil();    
     this.note = new Array<INote>();
-    const style=  document.createElement("link")
-    style.setAttribute("href" , this.options.style)
-    style.setAttribute("rel" , "stylesheet")
-    style.setAttribute("type" , "text/css")
-    document.querySelector("head").appendChild(style)
+   
     this.monthValues = this.dateUtil.getMonthValueList(from, to);
     this.monthValues.map((x) => this.months.push(new Month(this, x)));
-    this.getCategories()
+    this.getCategories()  
   }
   public  getRKey(): string {
     if (!this.rKey) {
@@ -167,7 +163,7 @@ export class DateRange {
       //load notes from server;
       await this.refreshNotesAsync();
     }
-    this.renderAsync();
+    this.runAsync();
   }
   async prevMonth(): Promise<void> {
     let nextMonthValues: MonthValue;
@@ -180,7 +176,7 @@ export class DateRange {
       //load notes from server;
       await this.refreshNotesAsync();
     }
-    this.renderAsync();
+    this.runAsync();
   }
   async prevYear(): Promise<void> {
     let nextMonthValues: MonthValue;
@@ -193,7 +189,7 @@ export class DateRange {
       //load notes from server;
       await this.refreshNotesAsync();
     }
-    this.renderAsync();
+    this.runAsync();
   }
   async nextYear(): Promise<void> {
     let nextMonthValues: MonthValue;
@@ -206,7 +202,7 @@ export class DateRange {
       //load notes from server;
       await this.refreshNotesAsync();
     }
-    this.renderAsync();
+    this.runAsync();
   }
   async goToday(): Promise<void> {
     let todayMonthValues: MonthValue = {
@@ -218,7 +214,7 @@ export class DateRange {
       //load notes from server;
       await this.refreshNotesAsync();
     }
-    this.renderAsync();
+    this.runAsync();
   }
   protected createMountHeader(): Node {
     const headerElement = document.createElement("div");
@@ -288,7 +284,7 @@ export class DateRange {
       <path data-sys-text=""  d="M10.6201 0.990059C10.1301 0.500059 9.34006 0.500059 8.85006 0.990059L0.540059 9.30006C0.150059 9.69006 0.150059 10.3201 0.540059 10.7101L8.85006 19.0201C9.34006 19.5101 10.1301 19.5101 10.6201 19.0201C11.1101 18.5301 11.1101 17.7401 10.6201 17.2501L3.38006 10.0001L10.6301 2.75006C11.1101 2.27006 11.1101 1.47006 10.6201 0.990059Z" fill="#767676"/>
       </svg>
       `;
-      nextYear.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
+      nextYear.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="20" height="20" viewBox="0 0 256 256" xml:space="preserve">
 
       <defs>
       </defs>
@@ -297,7 +293,7 @@ export class DateRange {
         <path d="M 44.839 90 c -1.792 0 -3.583 -0.684 -4.95 -2.05 c -2.734 -2.734 -2.734 -7.166 0 -9.9 L 72.939 45 l -33.05 -33.05 c -2.734 -2.733 -2.734 -7.166 0 -9.899 c 2.733 -2.732 7.166 -2.733 9.9 0 l 38 38 c 2.733 2.733 2.733 7.166 0 9.9 l -38 38 C 48.422 89.316 46.63 90 44.839 90 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: #767676; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
       </g>
       </svg>`
-      prevYear.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
+      prevYear.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="20" height="20" viewBox="0 0 256 256" xml:space="preserve">
 
       <defs>
       </defs>
@@ -331,7 +327,7 @@ export class DateRange {
         );
         monthBtn.addEventListener("click", (e) => {
           this.months[this.activeIndex] = this.months[index];
-          this.renderAsync();
+          this.runAsync();
         });
         monthsBtnWrapper.appendChild(monthBtn);
       });
@@ -345,7 +341,7 @@ export class DateRange {
     calendarHeader.appendChild(controlElement)
     headerElement.appendChild(todayButton)
     headerElement.appendChild(calendarHeader)
-    
+
     return headerElement;
   }
   protected generateDaysName(): Node {
@@ -376,7 +372,7 @@ export class DateRange {
     return weekNameWrapper;
   }
   protected createMountBody(): Node {
-    const monthsContainer = document.createElement("div");
+    const monthsContainer = document.createElement("div");    
     monthsContainer.setAttribute("data-calendar-month-container", "");
     const bodyElement = document.createElement("div");
     const mainElement = document.createElement("div");
@@ -418,27 +414,42 @@ export class DateRange {
   protected createMountFooter(): Node {
     //create related element
     var footerElement = document.createElement("div");
+    this.runHeader = true
     return footerElement;
   }
-  async renderAsync(): Promise<void> {
+  
+  async runAsync(): Promise<void> {
+    const style=  document.createElement("link")
+    style.setAttribute("href" , this.options.style)
+    style.setAttribute("rel" , "stylesheet")
+    style.setAttribute("type" , "text/css")
+    await document.querySelector("head").appendChild(style)
     this.wrapper.innerHTML = "";
     this.wrapper.setAttribute("id", "basis-calendar");
     const headerPart = this.createMountHeader();
     const bodyPart = this.createMountBody();
     const footerPart = this.createMountFooter();
     //Extra process..
+  
     this.wrapper.appendChild(headerPart);
     this.wrapper.appendChild(bodyPart);
-    this.wrapper.appendChild(footerPart);
-  }
-  public async createUIAsync(container: Element): Promise<void> {
+    this.wrapper.appendChild(footerPart);   
     
-    this.wrapper = container;
-    this.renderAsync();
+    
+
+  }
+  public async createUIAsync(container: HTMLElement): Promise<void> {
+   
+    this.wrapper = container;   
+    this.wrapper.style.display = "none"
     if (this.options.displayNote) {
       await this.refreshNotesAsync();
-      this.renderAsync();
+      this.runAsync();
     }
+    else{
+      this.runAsync();
+    }
+    this.wrapper.style.display = "block"  
   }
   async sendAsyncData(form: FormData, url: string ) {
     var data = new URLSearchParams();

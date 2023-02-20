@@ -195,7 +195,7 @@ export class UiCalendar {
       if (this.range.options.displayNote) {
         await this.range.refreshNotesAsync();
       }
-      this.range.renderAsync();
+      this.range.runAsync();
       this.modal.closeModal()
     });
 
@@ -542,7 +542,7 @@ export class UiCalendar {
           await this.range.refreshNotesAsync();
         }
         // this.modal.closeModal();
-        this.range.renderAsync();
+        this.range.runAsync();
         this.modal.closeModal()
       });
 
@@ -943,7 +943,7 @@ export class UiCalendar {
           if (this.range.options.displayNote) {
             await this.range.refreshNotesAsync();
           }
-          this.range.renderAsync();
+          this.range.runAsync();
           this.modal.closeModal()
       })
       cancelRemoveButton.addEventListener("click" , (cancelRemoveEvent) => {                

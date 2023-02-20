@@ -184,7 +184,7 @@ export class UiMbobile {
       if (this.range.options.displayNote) {
         await this.range.refreshNotesAsync();
       }
-      this.range.renderAsync();
+      this.range.runAsync();
       this.modal.closeModal()
     });
 
@@ -561,7 +561,7 @@ else{
           await this.range.refreshNotesAsync();
         }
         // this.modal.closeModal();
-        this.range.renderAsync();
+        this.range.runAsync();
         this.modal.closeModal()
       });
 
@@ -956,7 +956,7 @@ else{
           if (this.range.options.displayNote) {
             await this.range.refreshNotesAsync();
           }
-          this.range.renderAsync();
+          this.range.runAsync();
           this.modal.closeModal()
       })
       cancelRemoveButton.addEventListener("click" , (cancelRemoveEvent) => {                
