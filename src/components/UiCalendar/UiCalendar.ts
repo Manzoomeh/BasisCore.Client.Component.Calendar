@@ -1229,7 +1229,6 @@ export class UiCalendar {
       );
       viewBtn?.addEventListener("click", (e) => {
         const viewBox  = document.createElement("div")
-        console.log("ssss" , modalHeader)
         viewBox.classList.add("view_box")
         this.viewNote.generateViewNote(x , modalBody , modalHeader, viewBox , x.creatoruser)
       

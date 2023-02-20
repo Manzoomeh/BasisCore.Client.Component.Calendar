@@ -1187,7 +1187,7 @@ else{
     const editBtn: HTMLElement = moreButtonBox.querySelector(
       "[bc-calendar-edit-note]"
     );
-    editBtn.addEventListener("click", (e) => {
+    editBtn?.addEventListener("click", (e) => {
       this.range.getCategories()
       if (this.range?.Owner?.dc?.isRegistered("widget") ) {
         const widgetName = this.range.Owner.dc.resolve<IWidget>("widget");
