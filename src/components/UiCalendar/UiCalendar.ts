@@ -15,9 +15,7 @@ import reminderRowShare from "../UiCalendar/asset/reminderRowShare.html"
 import { TimepickerUI } from "timepicker-ui";
 import { OptionTypes } from "timepicker-ui";
 import { ViewNote } from "./ViewNote";
-
-
-
+declare const $bc: any;
 export class UiCalendar {  
   private viewNote : ViewNote  
   public modal: Modal;
@@ -542,6 +540,7 @@ export class UiCalendar {
           await this.range.refreshNotesAsync();
         }
         // this.modal.closeModal();
+        $bc.setSource("calendar.addNote", true)
         this.range.runAsync();
         this.modal.closeModal()
       });

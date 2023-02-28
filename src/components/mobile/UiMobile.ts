@@ -15,7 +15,7 @@ import serviceShareLayout from "../mobile/asset/shareFormForService.html";
 import reminderRow from "../mobile/asset/reminderRow.html";
 import reminderRowShare from "../mobile/asset/reminderRowShare.html"
 import { ViewNote } from "./ViewNote";
-
+declare const $bc: any;
 export class UiMbobile {
   public readonly day: Day;
   readonly range: DateRange;
@@ -184,6 +184,7 @@ export class UiMbobile {
       if (this.range.options.displayNote) {
         await this.range.refreshNotesAsync();
       }
+      $bc.setSource("calendar.addNote", true)
       this.range.runAsync();
       this.modal.closeModal()
     });

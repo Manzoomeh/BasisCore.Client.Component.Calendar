@@ -419,11 +419,7 @@ export class DateRange {
   }
   
   async runAsync(): Promise<void> {
-    const style=  document.createElement("link")
-    style.setAttribute("href" , this.options.style)
-    style.setAttribute("rel" , "stylesheet")
-    style.setAttribute("type" , "text/css")
-    await document.querySelector("head").appendChild(style)
+    
     this.wrapper.innerHTML = "";
     this.wrapper.setAttribute("id", "basis-calendar");
     const headerPart = this.createMountHeader();
@@ -433,15 +429,19 @@ export class DateRange {
   
     this.wrapper.appendChild(headerPart);
     this.wrapper.appendChild(bodyPart);
-    this.wrapper.appendChild(footerPart);   
+    this.wrapper.appendChild(footerPart);
     
-    
+    // this.wrapper.style.display = "block"  
 
   }
   public async createUIAsync(container: HTMLElement): Promise<void> {
-   
+    const style=  document.createElement("link")
+    style.setAttribute("href" , this.options.style)
+    style.setAttribute("rel" , "stylesheet")
+    style.setAttribute("type" , "text/css")
+    await document.querySelector("head").appendChild(style)
     this.wrapper = container;   
-    this.wrapper.style.display = "none"
+    // this.wrapper.style.display = "none"
     if (this.options.displayNote) {
       await this.refreshNotesAsync();
       this.runAsync();
@@ -449,7 +449,7 @@ export class DateRange {
     else{
       this.runAsync();
     }
-    this.wrapper.style.display = "block"  
+   
   }
   async sendAsyncData(form: FormData, url: string ) {
     var data = new URLSearchParams();
