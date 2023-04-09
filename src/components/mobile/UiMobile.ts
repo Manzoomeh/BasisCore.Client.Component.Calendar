@@ -79,9 +79,10 @@ export class UiMbobile {
     let ulElement = document.createElement("ul");
     let noteElement = document.createElement("div");
     var todayNote = this.range.getDayNotes(this.day.dateId);
+    var displayNotes = this.range.options.displayNote;
     noteElement.setAttribute("data-calendar-note-lists", "");
     noteElement.appendChild(ulElement);
-    if (todayNote != undefined) {
+    if (displayNotes == true && todayNote != undefined) {
       
         todayNote.map((x ,i) => {
           if(i <= 2){

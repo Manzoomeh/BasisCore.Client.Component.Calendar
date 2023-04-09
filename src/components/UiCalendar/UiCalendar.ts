@@ -74,8 +74,9 @@ export class UiCalendar {
     let noteElement = document.createElement("div");
     var todayNote = this.range.getDayNotes(this.day.dateId);
     noteElement.setAttribute("data-calendar-note-lists", "");
+    var displayNotes = this.range.options.displayNote;
     noteElement.appendChild(ulElement);
-    if (todayNote != undefined) {
+    if (displayNotes == true && todayNote != undefined) {
       if(todayNote.length > 3){
         todayNote.map((x) => {
           let liElement = document.createElement("li");

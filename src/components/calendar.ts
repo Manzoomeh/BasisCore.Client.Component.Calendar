@@ -81,17 +81,20 @@ export class DateRange {
   }
   public async getCategories(){
     // this.Owner.addTrigger("")
-    let apiLink =this.options.baseUrl["catlist"]
-   const data=await this.sendAsyncDataGetMethod(apiLink)
-   this.categories = [];
-   data.map((x: ICatNote) =>
-     this.categories.push({
-       id: x.id ,
-       color: x.color,
-       count : x.count,
-       title: x.title
-     })
-   );
+    if(this.options.displayNote == true){
+      let apiLink =this.options.baseUrl["catlist"]
+      const data=await this.sendAsyncDataGetMethod(apiLink)
+      this.categories = [];
+      data.map((x: ICatNote) =>
+        this.categories.push({
+          id: x.id ,
+          color: x.color,
+          count : x.count,
+          title: x.title
+        })
+      );
+    }
+   
   }
   public async refreshNotesAsync(): Promise<void> {
     if (this.months.length > 0) {
