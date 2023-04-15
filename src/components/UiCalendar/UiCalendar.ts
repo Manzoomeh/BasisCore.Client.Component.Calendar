@@ -102,8 +102,8 @@ export class UiCalendar {
           liElement.textContent = x.note;
           const color: object = this.hexToRgb(`${x.color}`);
           if(color){
-            liElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},0.3)`;
-            liElement.style.color = `rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
+            liElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
+            liElement.style.color = `#000`;
           }
           else{
             liElement.style.background = `#999999`;
@@ -351,15 +351,17 @@ export class UiCalendar {
       })
       
     })
-    // let inputNewWrapper = body.querySelector("[data-bc-new-row-reminder]") as HTMLInputElement
-    // inputNewWrapper.querySelector("[data-calendar-time-value]").addEventListener("keyup",e => {
-    //   if(inputNewWrapper.value != "" && inputNewWrapper.value != undefined){
-    //   body.querySelector("[data-reminder-submit]").removeAttribute("data-bc-calendar-disable-button")
-    //   }
-    //   else{
-    //     body.querySelector("[data-reminder-submit]").setAttribute("data-bc-calendar-disable-button","")
-    //   }
-    // })
+
+    let inputNewWrapper = body.querySelector("[data-bc-new-row-reminder]") as HTMLElement
+    let inputNew = inputNewWrapper.querySelector("[data-calendar-time-value]") as HTMLInputElement
+    inputNew.addEventListener("keyup",e => {
+       if(inputNew.value != "" && inputNew.value != undefined){
+        body.querySelector("[data-reminder-submit]").removeAttribute("data-bc-calendar-disable-button")
+       }
+       else{
+        body.querySelector("[data-reminder-submit]").setAttribute("data-bc-calendar-disable-button","")
+       }
+    })
   }
   generateReminderForm(creator:number): Node{
     let formWrapper = document.createElement("form");
@@ -394,8 +396,9 @@ export class UiCalendar {
   }
   const viewNote =await this.range.sendAsyncDataPostJson(obj , this.range.options.baseUrl["viewnote"])
   body.querySelector("[data-calendar-reminder-note-wrapper]").innerHTML= ""
-  if(viewNote[0]?.reminder.length > 0){   
-    viewNote[0]?.reminder.forEach( reminderItem => {      
+  const reminderArray = viewNote[0]?.reminder ? viewNote[0]?.reminder : viewNote[0]?.reminders
+  if(reminderArray.length > 0){   
+    reminderArray.forEach( reminderItem => {      
       const reminderItemDiv = document.createElement("div")
       reminderItemDiv.setAttribute("data-bc-reminder-row","")
       reminderItemDiv.innerHTML = reminderList
@@ -575,8 +578,8 @@ export class UiCalendar {
       const sharedfrom : HTMLElement = document.createElement("div");
       const color: object = this.hexToRgb(`${x.color}`);
       if(color){
-        divElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},0.2)`;
-        divElement.style.color = `rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
+        divElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
+        divElement.style.color = `#000`;
       }
       else{
         divElement.style.background = `#999999`;
@@ -1057,7 +1060,7 @@ export class UiCalendar {
         const noteTimeId = (parseInt( NoteHours) *3600) + (parseInt( NoteMinute) * 60)
         if( noteTimeId < timeId && this.day.isToday == true ){
           isPast = true
-          reminderSubmit.setAttribute("data-bc-calendar-disable-button","")
+         
           reminderSubmit.setAttribute("data-bc-calendar-disable-button","")
           reminderSubmit.removeAttribute("data-sys-button")
           
