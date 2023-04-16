@@ -54,7 +54,12 @@ export class UiDatePicker {
         "data-datepicker-mstring",
         mselectDate
       );
-      
+      if(this.range.options.action){
+        // dayElement.addEventListener("click", e => {
+              e.preventDefault();
+              this.range.options.action(dayElement);
+          // });
+      }
       this.range.wrapper.remove();
     });
     parentElement.appendChild(dayElement);
@@ -136,10 +141,14 @@ export class UiDatePicker {
         if(this.range.options.sourceid){
           $bc.setSource(this.range.options.sourceid ,  [{"from": this.range.fromdate, "to" : selectDate }]);
         }
-        
+        if(this.range.options.action){
+          // dayElement.addEventListener("change", e => {
+                e.preventDefault();
+                this.range.options.action(dayElement);
+            // });
+        }
        
       }
-     
     });
     parentElement.appendChild(dayElement);
    

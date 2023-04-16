@@ -24,7 +24,7 @@ export class UiDatePickerMobile {
     })
     const wheelDatePicker = document.createElement("div")
     wheelDatePicker.innerHTML = layout
-    const submitDate = wheelDatePicker.querySelector("[data-bc-datepicker-mobile-submit]")
+    const submitDate : HTMLElement = wheelDatePicker.querySelector("[data-bc-datepicker-mobile-submit]")
     const days = wheelDatePicker.querySelector("[data-bc-datepicker-mobile-days-wrapper]")
     const months = wheelDatePicker.querySelector("[data-bc-datepicker-mobile-months-wrapper]")
     const years = wheelDatePicker.querySelector("[data-bc-datepicker-mobile-years-wrapper]")
@@ -237,12 +237,15 @@ export class UiDatePickerMobile {
         month: this.selectMonth,
         day: this.selectDay,
       }      
+      console.log("ok?")
       const nextDay = this.range.dateUtil.getRangeForDate(selectDate,"after",this.selectRange)
       const selectDateText  : string= this.selectYear +"/"+ this.selectMonth+"/"+ this.selectDay
       const nextDateText : string = nextDay.year+"/"+nextDay.month + "/" + nextDay.day  
       if(this.range.options.sourceid){
         $bc.setSource(this.range.options.sourceid ,  [{"from": selectDateText , "to" : nextDateText }]);
       }
+      
+    
     })
 
 

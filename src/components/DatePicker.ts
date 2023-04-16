@@ -304,6 +304,15 @@ export class DatePicker {
       dayWrapper.appendChild(faSpan);
       weekNameWrapper.appendChild(dayWrapper);
     }
+    // if (this.options.action) {
+    //   // const copyActionItemLayout = actionItemLayout
+    //   // const actionUI = $bc.util.toHTMLElement(copyActionItemLayout) as HTMLAnchorElement;
+    //                             actionUI.addEventListener("click", e => {
+    //                                 e.preventDefault();
+    //                                 object.action(node, actionUI);
+    // }
+   
+    //                           });
     return weekNameWrapper;
   }
   protected createMountBody(): Node {
@@ -445,4 +454,5 @@ export class DatePicker {
   
     return this.renderAsync();
   }
+
 }

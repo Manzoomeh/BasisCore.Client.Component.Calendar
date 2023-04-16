@@ -82,5 +82,7 @@ export interface IDatePickerOptions {
   type?: Type ,
   sourceid? :string,
   mode?: Mode,
-  style?: string
+  style?: string,
+  action?: IActionCallback;
 }
+export type IActionCallback = (element: HTMLElement) => any;

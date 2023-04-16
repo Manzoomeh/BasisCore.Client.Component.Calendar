@@ -37,6 +37,8 @@ export default class BcComponent implements IComponentManager {
 
     this.container.classList.add("date-picker-input");
     this.container.setAttribute("name", name);
+    
+   
     this.owner.setContent(this.container);
     const initFrom = await this.owner.getAttributeValueAsync("from");
     const initTo = await this.owner.getAttributeValueAsync("to");
