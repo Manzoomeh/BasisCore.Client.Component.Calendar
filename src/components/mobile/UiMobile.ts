@@ -147,6 +147,13 @@ export class UiMbobile {
     
     let cancelBtn = document.createElement("button");
     const catsList= editCodeWrapper.querySelector("[data-bc-select-category]")
+    if(this.range.categories.length == 0){
+      catsList.setAttribute("disabled" , "true")
+      const errDiv = document.createElement("din")
+      errDiv.textContent="از ویجت دسته‌بندی‌ها، یک دسته‌بندی جدید ایجاد کنید."
+      errDiv.classList.add("calendar-category-new")
+      catsList.parentElement.after(errDiv)
+    }
     this.range.categories.forEach((e) => {
       const catLi = document.createElement("option")
       catLi.textContent = e.title
@@ -488,9 +495,14 @@ else{
       modalBody.innerHTML = "";
       newBox.innerHTML = newForm;
       const timeInputt : HTMLElement= newBox.querySelector("[bc-calendar-time-input]") 
-      const datePickerOptions : OptionTypes = {mobile: false , okLabel :"تایید" , cancelLabel:"انصراف",amLabel:"ق.ظ",pmLabel:"ب.ظ",clockType:"24h" ,timeLabel : "",delayHandler:10};
+      const datePickerOptions : OptionTypes = {editable:true , mobile: false , okLabel :"تایید" , cancelLabel:"انصراف",amLabel:"ق.ظ",pmLabel:"ب.ظ",clockType:"24h" ,timeLabel : "",delayHandler:10};
       const newTimepicker = new TimepickerUI(timeInputt, datePickerOptions);
       const modalParent : HTMLElement = modalBody.closest("[data-modal-form]") 
+      const timeInputIcon :HTMLElement = newBox.querySelector("[new-note-clock]")
+      timeInputIcon.addEventListener("click",timeElement => {   
+        modalParent.style.display="none"
+         newTimepicker.open();
+       })
       timeInputt.addEventListener("click",timeElement => {        
       
       //  modalParent.style.display="none"
@@ -513,6 +525,13 @@ else{
       // newBox.querySelector("[bc-calendar-drop-down-btn]").innerHTML=this.range.options.labels.categoryTitle
       newBox.querySelector("[new-form-submit-button]").innerHTML=this.range.options.labels.submitKeyTitle
       const catsList= newBox.querySelector("[data-bc-select-category]")
+      if(this.range.categories.length == 0){
+        catsList.setAttribute("disabled" , "true")
+        const errDiv = document.createElement("din")
+        errDiv.textContent="از ویجت دسته‌بندی‌ها، یک دسته‌بندی جدید ایجاد کنید."
+        errDiv.classList.add("calendar-category-new")
+        catsList.parentElement.after(errDiv)
+      }
       this.range.categories.forEach((e) => {
         const catLi = document.createElement("option")
         catLi.textContent = e.title
@@ -1198,9 +1217,14 @@ else{
       modalBody.innerHTML = "";
       modalBody.appendChild(this.generateNoteForm(x,x.creator));  
       const timeInputt : HTMLElement= modalBody.querySelector("[bc-calendar-time-input]") 
-      const datePickerOptions : OptionTypes = {okLabel :"تایید" , cancelLabel:"انصراف",amLabel:"ق.ظ",pmLabel:"ب.ظ",clockType:"24h" ,timeLabel : ""};
+      const datePickerOptions : OptionTypes = {editable:true , okLabel :"تایید" , cancelLabel:"انصراف",amLabel:"ق.ظ",pmLabel:"ب.ظ",clockType:"24h" ,timeLabel : ""};
       const newTimepicker = new TimepickerUI(timeInputt, datePickerOptions);
       const modalParent : HTMLElement = modalBody.closest("[data-modal-form]") 
+      const timeInputIcon :HTMLElement = modalBody.querySelector("[new-note-clock]")
+      timeInputIcon.addEventListener("click",timeElement => {   
+        modalParent.style.display="none"
+         newTimepicker.open();
+       })
       timeInputt.addEventListener("click",timeElement => {        
 
        modalParent.style.display="none"

@@ -34,7 +34,7 @@ export default class BcComponent implements IComponentManager {
     } else {
       this.container = document.createElement("input");
     }
-
+    this.container.setAttribute("readonly","")
     this.container.classList.add("date-picker-input");
     this.container.setAttribute("name", name);
     
