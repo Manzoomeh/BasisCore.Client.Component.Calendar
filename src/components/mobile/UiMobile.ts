@@ -166,7 +166,7 @@ export class UiMbobile {
       titleInput.value = note.note;
       descInput.value = note.description;
       timeInput.value = note.time;
-      catidInput.value = note.catid.toString()
+      catidInput.value = note.catid?.toString()
       const catsLi = editCodeWrapper.querySelectorAll("li")
       const catsText = editCodeWrapper.querySelector("[bc-calendar-drop-down-btn]")
       catsLi.forEach((e) => {
