@@ -8,10 +8,13 @@ import {
   YearValue,
   Culture,
   MonthNumber,
-  Status
+  Status,
+  DayValueAndMonthName,
 } from "../type-alias";
 export class BasisCoreDateUtil implements IDateUtil {
   json;
+  jalaliHolidays;
+  qamariHolidays;
   readonly sMonthsNameCultureEnLangFa: string[] = [
     "",
     "ژانویه",
@@ -26,10 +29,9 @@ export class BasisCoreDateUtil implements IDateUtil {
     "اکتبر",
     "نوامبر",
     "دسامبر",
-   
   ];
   readonly sMonthsNameCultureEn: string[] = [
-    "",    
+    "",
     "January",
     "February",
     "March",
@@ -41,7 +43,7 @@ export class BasisCoreDateUtil implements IDateUtil {
     "September",
     "October",
     "November",
-    "December"
+    "December",
   ];
   readonly sMonthsNameFa: string[] = [
     "",
@@ -84,7 +86,7 @@ export class BasisCoreDateUtil implements IDateUtil {
     "شنبه",
   ];
   readonly weeksEnName: string[] = [
-    "",    
+    "",
     "Sun",
     "Mon",
     "Tue",
@@ -93,21 +95,25 @@ export class BasisCoreDateUtil implements IDateUtil {
     "Fri",
     "Sat",
   ];
-  readonly weeksNameEn:string[]= [
-    "",    
+  readonly weeksNameEn: string[] = [
+    "",
     "Sun",
     "Mon",
     "Tue",
     "Wed",
     "Thu",
     "Fri",
-    "Sat"
-  ]
+    "Sat",
+  ];
   constructor() {
     this.json = require("./tdate.json");
+    this.jalaliHolidays = require("./jalali.json");
+    this.qamariHolidays = require("./qamari.json");
+  }
+  isHoliday(dateid: string) {
+    // return !!this.jalaliHolidays.find(e => e.)
   }
   getObj(year: number, month: MonthNumber, day?: DayNumber) {
-    
     if (year > 1300 && year < 1500 && day) {
       return this.json.find((item) => {
         return item.syear == year && item.smonth == month && item.sdate == day;
@@ -121,23 +127,21 @@ export class BasisCoreDateUtil implements IDateUtil {
       return this.json.find((item) => {
         return item.nyear == year && item.mmonth == month && item.mdate == day;
       });
-    }
-    else if (year > 1800 && year < 3000 && !day) {
+    } else if (year > 1800 && year < 3000 && !day) {
       var filtered = this.json.filter(function (element) {
         return element.nyear == year && element.mmonth == month;
       });
       return filtered;
-    } 
+    }
   }
   getObjWithId(id: number) {
     var filtered = this.json.find((item) => {
-        return item.id == id;
-      });
-    return filtered
+      return item.id == id;
+    });
+    return filtered;
   }
   getMonthName(month: MonthValue, culture: Culture, lid: Lid): string {
-   
-    if(culture == "fa"){
+    if (culture == "fa") {
       let sMonth = this.getObj(month.year, month.month, 1).smonth;
       if (lid == 1) {
         return this.sMonthsNameFa[sMonth];
@@ -145,7 +149,7 @@ export class BasisCoreDateUtil implements IDateUtil {
         return this.sMonthsNameEn[sMonth];
       }
     }
-    if(culture == "en"){
+    if (culture == "en") {
       let sMonth = this.getObj(month.year, month.month, 1).mmonth;
       if (lid == 1) {
         return this.sMonthsNameCultureEnLangFa[sMonth];
@@ -153,7 +157,6 @@ export class BasisCoreDateUtil implements IDateUtil {
         return this.sMonthsNameCultureEn[sMonth];
       }
     }
-    
   }
   getDaysNumber(month: MonthValue, culture: Culture): DayNumber {
     let sMonth = this.getObj(month.year, month.month).length;
@@ -161,10 +164,9 @@ export class BasisCoreDateUtil implements IDateUtil {
   }
   getDayName(day: DayValue, culture: Culture, lid: Lid): string {
     let weekday = this.getObj(day.year, day.month, day.day).weekday;
-    if(culture == "en"){
+    if (culture == "en") {
       return this.weeksNameEn[weekday];
-    }
-    else if (lid == 1) {
+    } else if (lid == 1) {
       return this.weeksName[weekday];
     } else {
       return this.weeksEnName[weekday];
@@ -176,8 +178,71 @@ export class BasisCoreDateUtil implements IDateUtil {
 
   getWeekday(day: DayValue, culture: Culture): number {
     return this.getObj(day.year, day.month, day.day).weekday;
-    
-    
+  }
+  getHolidays(from: DayValue, to: DayValue, filters: any[]): any[] {
+    let holidays = [];
+    if (filters.filter((e) => e.value === "jalali").length > 0) {
+      holidays = [
+        ...holidays,
+        ...this.jalaliHolidays.filter(
+          (e) =>
+            (e.month === from.month &&
+              e.day >= from.day &&
+              e.month === to.month &&
+              e.day <= to.day) ||
+            (e.month === to.month && e.day <= to.day) ||
+            (e.month === from.month && e.month < to.month && e.day >= from.day)
+        ),
+      ];
+    }
+    if (filters.filter((e) => e.value === "qamari").length > 0) {
+      const qfrom = this.json.find(
+        (e) =>
+          e.sdate === from.day &&
+          e.smonth === from.month &&
+          e.syear === from.year
+      );
+      const qamariFrom = qfrom.qamari.split("/");
+      const qto = this.json.find(
+        (e) => e.sdate === to.day && e.smonth === to.month && to.year == e.syear
+      );
+      const qamariTo = qto.qamari.split("/");
+
+      holidays = [
+        ...holidays,
+        ...this.qamariHolidays
+          .filter(
+            (e) =>
+              (e.month === Number(qamariFrom[1]) &&
+                e.day >= Number(qamariFrom[2]) &&
+                e.month === Number(qamariTo[1]) &&
+                e.day <= Number(qamariTo[2])) ||
+              (e.month === Number(qamariTo[1]) &&
+                e.day <= Number(qamariTo[2])) ||
+              (e.month === Number(qamariFrom[1]) &&
+                e.month < Number(qamariTo[1]) &&
+                e.day >= Number(qamariFrom[2]))
+          )
+          .map((i) => {
+            const jalaliDate = this.json.find(
+              (j) =>
+                j.id >= qfrom.id &&
+                j.id <= qto.id &&
+                j.qamari.includes(String(i.month) + "/" + String(i.day))
+            );
+
+            return {
+              ...i,
+              day: jalaliDate.sdate,
+              month: jalaliDate.smonth,
+            };
+          }),
+      ];
+    }
+    return holidays;
+  }
+  getJalaliDateByQamariDate(qamariDate: string) {
+    return this.json.find((e) => e.qamari === qamariDate);
   }
   getIsHoliday(day: DayValue, culture: Culture): boolean {
     let weekday = this.getObj(day.year, day.month, day.day).weekday;
@@ -192,34 +257,32 @@ export class BasisCoreDateUtil implements IDateUtil {
   }
   getMonthValueList(from: DayValue, to: DayValue): MonthValue[] {
     let months: MonthValue[] = [];
-    let startYear = false
-    for(var j = from.year ; j <= to.year ; j++){
-      if(startYear == true){
-        from.month = 1
+    let startYear = false;
+    for (var j = from.year; j <= to.year; j++) {
+      if (startYear == true) {
+        from.month = 1;
       }
-      if(from.year == to.year){
+      if (from.year == to.year) {
         for (var i = from.month; i <= to.month; i++) {
           months.push({ year: j, month: i });
         }
-      }
-      else if(from.year < to.year && j != to.year){
+      } else if (from.year < to.year && j != to.year) {
         for (var i = from.month; i <= 12; i++) {
           months.push({ year: j, month: i });
           if (i == 12) {
-            startYear = true
-            break
+            startYear = true;
+            break;
           }
         }
-      }
-      else if(from.year < to.year && j == to.year){        
+      } else if (from.year < to.year && j == to.year) {
         for (var i = from.month; i <= to.month; i++) {
           months.push({ year: j, month: i });
           if (i == 12) {
-            startYear = true
-            break
+            startYear = true;
+            break;
           }
         }
-      }      
+      }
     }
     return months;
   }
@@ -252,17 +315,24 @@ export class BasisCoreDateUtil implements IDateUtil {
         : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     return weekName;
   }
-  getDayShortNames(lid: Lid , culture : Culture): string[] {
-    
-      if(culture == "fa"){
-        var weekName: string[] = lid == 1
-        ? ["ش", "ی", "د", "س", "چ", "پ", "ج"]
-        : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-      }
-      else{
-        var weekName: string[]= ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-      }
-      
+  getDayShortNames(lid: Lid, culture: Culture): string[] {
+    if (culture == "fa") {
+      var weekName: string[] =
+        lid == 1
+          ? ["ش", "ی", "د", "س", "چ", "پ", "ج"]
+          : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    } else {
+      var weekName: string[] = [
+        "Sun",
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+      ];
+    }
+
     return weekName;
   }
   nextMonth(month: Month, culture: Culture): MonthValue {
@@ -304,7 +374,7 @@ export class BasisCoreDateUtil implements IDateUtil {
     }
     return false;
   }
-  getBasisToDayId (day : DayValue): number{
+  getBasisToDayId(day: DayValue): number {
     const javaScriptTody = new Date()
       .toLocaleDateString("fa-IR")
       .replace(/([۰-۹])/g, (token) =>
@@ -319,18 +389,29 @@ export class BasisCoreDateUtil implements IDateUtil {
     ) {
       return basisDate.id;
     }
-    return 0 
+    return 0;
   }
-  convertToGregorian(day : MonthValue ) : DayValue{
+  convertToGregorian(day: MonthValue): DayValue {
     const basisDate = this.getObj(day.year, day.month, 1);
     var gregorianDate: DayValue = {
       year: basisDate.nyear,
       month: basisDate.mmonth,
       day: basisDate.mdate,
     };
-    return gregorianDate
+    return gregorianDate;
   }
-  convertToJalali(day : MonthValue ) : DayValue{
+  convertDateToGregorian(day: DayValue): DayValueAndMonthName {
+    const basisDate = this.getObj(day.year, day.month, day.day);
+    var gregorianDate = {
+      year: basisDate.nyear,
+      month: basisDate.mmonth,
+      day: basisDate.mdate,
+      monthName: this.sMonthsNameCultureEn[basisDate.mmonth],
+    };
+    return gregorianDate;
+  }
+
+  convertToJalali(day: MonthValue): DayValue {
     const basisDate = this.getObj(day.year, day.month, 1);
     var jalaliDate: DayValue = {
       year: basisDate.syear,
@@ -340,29 +421,31 @@ export class BasisCoreDateUtil implements IDateUtil {
     return jalaliDate;
   }
 
-  getGregorianDaysNumber(day : DayValue ) : DayNumber{
+  getGregorianDaysNumber(day: DayValue): DayNumber {
     const basisDate = this.getObj(day.year, day.month, day.day);
-    
-    return basisDate.mdate
+
+    return basisDate.mdate;
   }
-  getGregorianMonthsName(month : MonthValue): string{    
-    const first = this.getObj(month.year, month.month,1).mmonth;
-    const last = this.getObj(month.year, month.month,28).mmonth;
-    return this.sMonthsNameCultureEn[first] + " - " + this.sMonthsNameCultureEn[last]
+  getGregorianMonthsName(month: MonthValue): string {
+    const first = this.getObj(month.year, month.month, 1).mmonth;
+    const last = this.getObj(month.year, month.month, 28).mmonth;
+    return (
+      this.sMonthsNameCultureEn[first] + " - " + this.sMonthsNameCultureEn[last]
+    );
   }
-  getJalaliMonthsName(month : MonthValue): string{
-    const first = this.getObj(month.year, month.month,1).smonth;
-    const last = this.getObj(month.year, month.month,28).smonth;
-    return this.sMonthsNameFa[first] + " - " + this.sMonthsNameFa[last]
+  getJalaliMonthsName(month: MonthValue): string {
+    const first = this.getObj(month.year, month.month, 1).smonth;
+    const last = this.getObj(month.year, month.month, 28).smonth;
+    return this.sMonthsNameFa[first] + " - " + this.sMonthsNameFa[last];
   }
-  getJalaliDaysNumber(day : DayValue ) : DayNumber{
+  getJalaliDaysNumber(day: DayValue): DayNumber {
     const basisDate = this.getObj(day.year, day.month, day.day);
-    return basisDate.sdate
+    return basisDate.sdate;
   }
-  nextYear(month: Month, culture: Culture): MonthValue{
+  nextYear(month: Month, culture: Culture): MonthValue {
     let retVal: MonthValue;
     let nextMonth: MonthNumber = (month.value.month + 1) as MonthNumber;
-    let currentYear: number = month.value.year + 1 ;
+    let currentYear: number = month.value.year + 1;
     if (nextMonth > 12) {
       currentYear++;
       nextMonth = 1;
@@ -370,19 +453,19 @@ export class BasisCoreDateUtil implements IDateUtil {
     retVal = { year: currentYear, month: nextMonth };
     return retVal;
   }
-  convertToGregorianFullDate(day : DayValue ) : DayValue{
+  convertToGregorianFullDate(day: DayValue): DayValue {
     const basisDate = this.getObj(day.year, day.month, day.day);
     var gregorianDate: DayValue = {
       year: basisDate.nyear,
       month: basisDate.mmonth,
       day: basisDate.mdate,
     };
-    return gregorianDate
+    return gregorianDate;
   }
-  prevYear(month: Month, culture: Culture): MonthValue{
+  prevYear(month: Month, culture: Culture): MonthValue {
     let retVal: MonthValue;
     let nextMonth: MonthNumber = (month.value.month + 1) as MonthNumber;
-    let currentYear: number = month.value.year - 1 ;
+    let currentYear: number = month.value.year - 1;
     if (nextMonth > 12) {
       currentYear++;
       nextMonth = 1;
@@ -390,41 +473,35 @@ export class BasisCoreDateUtil implements IDateUtil {
     retVal = { year: currentYear, month: nextMonth };
     return retVal;
   }
-  getRangeForDate(day : DayValue , status : Status , count: number ) : DayValue{
-    if(status == "after"){
-      const calculatedDateId = this.getObj(day.year, day.month , day.day)
-      const calculatedDate = this.getObjWithId(calculatedDateId.id + count)
+  getRangeForDate(day: DayValue, status: Status, count: number): DayValue {
+    if (status == "after") {
+      const calculatedDateId = this.getObj(day.year, day.month, day.day);
+      const calculatedDate = this.getObjWithId(calculatedDateId.id + count);
       return {
-        year : calculatedDate.syear,
-        month : calculatedDate.smonth,
-        day : calculatedDate.sdate
-      }
-    }
-    else if(status == "before"){
-      const calculatedDateId = this.getObj(day.year, day.month , day.day)
-      const calculatedDate = this.getObjWithId(calculatedDateId.id - count)
+        year: calculatedDate.syear,
+        month: calculatedDate.smonth,
+        day: calculatedDate.sdate,
+      };
+    } else if (status == "before") {
+      const calculatedDateId = this.getObj(day.year, day.month, day.day);
+      const calculatedDate = this.getObjWithId(calculatedDateId.id - count);
       return {
-        year : calculatedDate.syear,
-        month : calculatedDate.smonth,
-        day : calculatedDate.sdate
-      }
-    }
-    else{
-      return null
+        year: calculatedDate.syear,
+        month: calculatedDate.smonth,
+        day: calculatedDate.sdate,
+      };
+    } else {
+      return null;
     }
   }
-  getCurrentYear(day:DayValue ,culture : Culture) : number {
-    if(culture == "fa"){
-      const currentYear = this.getObj(day.year, day.month , day.day)
-      return currentYear.syear
+  getCurrentYear(day: DayValue, culture: Culture): number {
+    if (culture == "fa") {
+      const currentYear = this.getObj(day.year, day.month, day.day);
+      return currentYear.syear;
+    } else {
+      const currentYear = this.getObj(day.year, day.month, day.day);
+
+      return currentYear.nyear;
     }
-    else{
-      
-      const currentYear = this.getObj(day.year, day.month , day.day)
-      
-      return currentYear.nyear
-    }
-   
-  
   }
 }

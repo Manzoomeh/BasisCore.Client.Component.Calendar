@@ -17,6 +17,7 @@ export default class BcComponent implements IComponentManager {
   private options: IDatePickerOptions = {
     culture: "fa",
     lid: 1,
+    isFilter: false,
     type: "load",
   };
   constructor(owner: IUserDefineComponent) {
@@ -34,11 +35,10 @@ export default class BcComponent implements IComponentManager {
     } else {
       this.container = document.createElement("input");
     }
-    this.container.setAttribute("readonly","")
+    this.container.setAttribute("readonly", "");
     this.container.classList.add("date-picker-input");
     this.container.setAttribute("name", name);
-    
-   
+
     this.owner.setContent(this.container);
     const initFrom = await this.owner.getAttributeValueAsync("from");
     const initTo = await this.owner.getAttributeValueAsync("to");
@@ -58,8 +58,8 @@ export default class BcComponent implements IComponentManager {
     return true;
   }
   async loadCalendar(from: string, to: string, obj: object) {
-    const fromParts = from.split("/");
-    const toParts = to.split("/");
+    const fromParts = from?.split("/");
+    const toParts = to?.split("/");
     this.from = {
       year: parseInt(fromParts[0]),
       month: parseInt(fromParts[1]) as MonthNumber,
@@ -130,5 +130,4 @@ export default class BcComponent implements IComponentManager {
     }
     return retVal;
   }
- 
 }

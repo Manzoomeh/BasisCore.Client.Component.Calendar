@@ -1,72 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/bclib.js"></script>
+    <title>Calendar</title>
+    <style>
+      #basis-calendar,
+      input,
+      button,
+      [data-modal-form] {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+    </style>
 
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="/bclib.js"></script>
-        <title>Calendar</title>
-        <style>
-  
-        #basis-calendar,input , button,[data-modal-form]{
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        </style>
+    <script>
+      const host = {
+        repositories: {
+          "calendar.calendar": "/basiscore.calendar.component.js",
+          "calendar.datepicker": "/basiscore.calendar.component.js",
+        },
+      };
+    </script>
+  </head>
 
-        <script>
-            const host = {
-                repositories: {
-                    "calendar.calendar": "/basiscore.calendar.component.js",
-                    "calendar.datepicker": "/basiscore.calendar.component.js"
-                }
-            }
-        </script>
-    </head>
+  <body>
+    <Basis
+      core="component.calendar.calendar"
+      run="atclient"
+      sourceid="db.form"
+      from="2023/11/01"
+      to="2023/11/30"
+      options="mySetting"
+      rkey="0FB1A577-B7E2-4089-BC21-9D7F6F40555B"
+    ></Basis>
 
-    <body>
-     
-        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="2023/11/01" to="2023/11/30" options="mySetting" rkey="0FB1A577-B7E2-4089-BC21-9D7F6F40555B"></Basis>
-
-        <script>   
-                var mySetting = {
-                dateProvider: "basisCalendar",
-                culture: "en",
-                lid:2,
-                todayButton: false,
-                dmnid : 6,
-                style: "../css/calendar-style-lid2.css",
-                baseUrl: {                   
-                    "userid" : "https://trust-login.com/api/userid",
-                    "viewnote" :"https://basispanel.ir/user/fa/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/viewcalendarnote",
-                    "usernotes" :"https://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/calendarnotes",
-                    "removenote":"http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/removenote",
-                    "addnote":"https://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/addcalendarnote",
-                    "reminder" : "http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/editnotereminder",
-                    "catlist":"https://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/fa/notecatlist",
-                    "sharing" :"https://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/sharing",
-                    "removesharing":"https://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/removesharing"
-                },
-                labels: {
-                    todayTitle : "Today",
-                    titrTitle:"Title",
-                    categoryTitle : "Category",
-                    noteTitle : "Note",
-                    submitKeyTitle : "Submit",
-                    timeTitle : "Enter the time in 18:45 format",
-                    emptyNoteList : "There are no Notes on this day.",
-                    editMenuTitle :"Edit",
-                    deleteMenuTitle:"Delete",
-                    shareMenuTitle:"Share",
-                    deleteTextTitle : "Are you sure to delete this note? ",
-                    cancelKeyTitle : "Close",
-                    shareTextTitle : "Enter email to share",
-                    deleteKeyTitle: "Delete",
-                    shareBoxTitle : "Sharing"
-                }
-
-            }
-        </script>
-    </body>
-
+    <script>
+      var mySetting = {
+        dateProvider: "basisCalendar",
+        culture: "en",
+        lid: 2,
+        todayButton: false,
+        dmnid: 6,
+        style: "../css/calendar-style-lid2.css",
+        baseUrl: {
+          userid: "https://trust-login.com/api/userid",
+          viewnote:
+            "https://basispanel.ir/user/fa/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/viewcalendarnote",
+          usernotes:
+            "https://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/calendarnotes",
+          removenote:
+            "http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/removenote",
+          addnote:
+            "https://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/addcalendarnote",
+          reminder:
+            "http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/editnotereminder",
+          catlist:
+            "https://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/fa/notecatlist",
+          sharing:
+            "https://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/sharing",
+          removesharing:
+            "https://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/removesharing",
+        },
+        labels: {
+          todayTitle: "Today",
+          titrTitle: "Title",
+          categoryTitle: "Category",
+          noteTitle: "Note",
+          submitKeyTitle: "Submit",
+          timeTitle: "Enter the time in 18:45 format",
+          emptyNoteList: "There are no Notes on this day.",
+          editMenuTitle: "Edit",
+          deleteMenuTitle: "Delete",
+          shareMenuTitle: "Share",
+          deleteTextTitle: "Are you sure to delete this note? ",
+          cancelKeyTitle: "Close",
+          shareTextTitle: "Enter email to share",
+          deleteKeyTitle: "Delete",
+          shareBoxTitle: "Sharing",
+        },
+      };
+    </script>
+  </body>
 </html>

@@ -3,7 +3,7 @@ import { DayValue, DayNumber } from "../type-alias";
 export class Day {
   readonly month: Month;
   readonly value: DayNumber;
-  readonly secondValue : DayNumber;
+  readonly secondValue: DayNumber;
   readonly id: number;
   readonly dayOfWeek: number;
   readonly isHoliday: boolean;
@@ -11,11 +11,12 @@ export class Day {
   readonly dateId: number;
   readonly currentDay: DayValue;
   readonly mcurrentDay: DayValue;
-  readonly isPast : boolean = false
+  readonly isPast: boolean = false;
   //dayName: string;
   public constructor(owner: Month, value: DayNumber) {
     this.month = owner;
     this.value = value;
+    this.isHoliday;
     this.currentDay = {
       year: this.month.value.year,
       month: this.month.value.month,
@@ -25,27 +26,37 @@ export class Day {
       this.currentDay,
       this.month.range.options.culture
     );
-    this.mcurrentDay = this.month.range.dateUtil.convertToGregorianFullDate(this.currentDay)
-    if(this.month.range.options.secondCulture && this.month.range.options.secondCulture == "en"){
-      this.secondValue =this.month.range.dateUtil.getGregorianDaysNumber(this.currentDay)
+    this.mcurrentDay = this.month.range.dateUtil.convertToGregorianFullDate(
+      this.currentDay
+    );
+    if (
+      this.month.range.options.secondCulture &&
+      this.month.range.options.secondCulture == "en"
+    ) {
+      this.secondValue = this.month.range.dateUtil.getGregorianDaysNumber(
+        this.currentDay
+      );
+    } else if (
+      this.month.range.options.secondCulture &&
+      this.month.range.options.secondCulture == "fa"
+    ) {
+      this.secondValue = this.month.range.dateUtil.getJalaliDaysNumber(
+        this.currentDay
+      );
     }
-    else if (this.month.range.options.secondCulture && this.month.range.options.secondCulture == "fa"){
-      this.secondValue =this.month.range.dateUtil.getJalaliDaysNumber(this.currentDay)
-
-    }    
     this.isHoliday = this.month.range.dateUtil.getIsHoliday(
       this.currentDay,
       this.month.range.options.culture
     );
     this.dateId = this.month.range.dateUtil.getBasisDayId(this.currentDay);
     this.isToday = this.month.range.dateUtil.getIsToday(this.currentDay);
-    
-    if( this.isToday == true){
-      this.month.range.todayId = this.dateId
+
+    if (this.isToday == true) {
+      this.month.range.todayId = this.dateId;
     }
 
-    if( this.month.range.todayId  ==  0 ){
-      this.isPast = true
+    if (this.month.range.todayId == 0) {
+      this.isPast = true;
     }
   }
   getDayName() {
@@ -54,6 +65,5 @@ export class Day {
       this.month.range.options.culture,
       this.month.range.options.lid
     );
- 
   }
 }
