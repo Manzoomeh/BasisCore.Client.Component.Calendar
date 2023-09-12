@@ -7,7 +7,8 @@ import {
   DayNumber,
   YearValue,
   Culture,
-  Status
+  Status,
+  DayValueAndMonthName,
 } from "../type-alias";
 export class PersianDateUtil implements IDateUtil {
   readonly persianDate: any;
@@ -17,6 +18,14 @@ export class PersianDateUtil implements IDateUtil {
   };
   constructor() {
     this.persianDate = require("persian-date");
+  }
+  getHolidays(from: DayValue, to: DayValue, filters: string[]): any[] {
+    let holidays = [];
+
+    return holidays;
+  }
+  convertDateToGregorian(day: DayValue): DayValueAndMonthName {
+    return;
   }
   getMonthName(month: MonthValue, culture: Culture, lid: Lid): string {
     return new this.persianDate([month.year, month.month, 1])
@@ -79,7 +88,7 @@ export class PersianDateUtil implements IDateUtil {
     };
     return basisCoreObjToday;
   }
-  getDayNames(lid: Lid, culture:Culture): string[] {
+  getDayNames(lid: Lid, culture: Culture): string[] {
     let weekName: string[] =
       lid == 1
         ? [
@@ -94,7 +103,7 @@ export class PersianDateUtil implements IDateUtil {
         : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     return weekName;
   }
-  getDayShortNames(lid: Lid , culture:Culture): string[] {
+  getDayShortNames(lid: Lid, culture: Culture): string[] {
     let weekName: string[] =
       lid == 1
         ? ["ش", "ی", "د", "س", "چ", "پ", "ج"]
@@ -110,40 +119,40 @@ export class PersianDateUtil implements IDateUtil {
   getIsToday(day: DayValue): boolean {
     return true;
   }
-  convertToGregorian(day : MonthValue ) : DayValue{
-    return null
+  convertToGregorian(day: MonthValue): DayValue {
+    return null;
   }
-  convertToJalali(day : MonthValue ) : DayValue{
-    return null
+  convertToJalali(day: MonthValue): DayValue {
+    return null;
   }
-  getGregorianDaysNumber(day : DayValue) : DayNumber{
-    return null
+  getGregorianDaysNumber(day: DayValue): DayNumber {
+    return null;
   }
-  getGregorianMonthsName(month : MonthValue): string{
-    return null
+  getGregorianMonthsName(month: MonthValue): string {
+    return null;
   }
-  getJalaliMonthsName(month : MonthValue): string{
-    return null
+  getJalaliMonthsName(month: MonthValue): string {
+    return null;
   }
-  getJalaliDaysNumber(day : DayValue ) : DayNumber{
-    return null
+  getJalaliDaysNumber(day: DayValue): DayNumber {
+    return null;
   }
-  nextYear(month: Month, culture: Culture): MonthValue{
-    return null
+  nextYear(month: Month, culture: Culture): MonthValue {
+    return null;
   }
-  prevYear(month: Month, culture: Culture): MonthValue{
-    return null
+  prevYear(month: Month, culture: Culture): MonthValue {
+    return null;
   }
-  getRangeForDate(day : DayValue , status : Status , count: number ) : DayValue{
-    return null
+  getRangeForDate(day: DayValue, status: Status, count: number): DayValue {
+    return null;
   }
-  getCurrentYear(day:DayValue ,  culture : Culture) : number {
-    return null
+  getCurrentYear(day: DayValue, culture: Culture): number {
+    return null;
   }
-  convertToGregorianFullDate(day : DayValue ) : DayValue{
-    return null
+  convertToGregorianFullDate(day: DayValue): DayValue {
+    return null;
   }
-  getBasisToDayId (day : DayValue): number{
-    return null
+  getBasisToDayId(day: DayValue): number {
+    return null;
   }
 }

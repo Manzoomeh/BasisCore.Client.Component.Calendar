@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://basispanel.ir/asset/css/light.css?v=5"
+      rel="stylesheet"
+    />
+    <script src="/bclib.js"></script>
+    <title>Calendar</title>
+    <style>
+      .date-picker-input {
+        border: none;
+        background: none;
+      }
+      .date-picker-wrapper {
+        background: rgba(0, 0, 0, 0.04);
+        border-radius: 4px 4px 0 0;
+        padding: 0.75em 0.75em 0;
+        width: 200px;
+        display: flex;
+        border-bottom: 1px solid #000;
+      }
+      .date-picker-wrapper:hover {
+        border-bottom: 2px solid #000;
+      }
+      .date-picker-wrapper button {
+        background: none;
+        border: none;
+      }
+
+      .date-picker-input-wrapper {
+        direction: rtl;
+        text-align: right;
+      }
+      .body {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+    </style>
+    <style>
+      @font-face {
+        font-family: IRANSans1;
+        font-style: normal;
+        font-weight: normal;
+        src: url("../fonts/IRANSansWeb.eot");
+        src: url("../fonts/IRANSansWeb.ttf") format("embedded-opentype"),
+          /* IE6-8 */ url("../fonts/IRANSansWeb.woff") format("woff"),
+          /* FF39+,Chrome36+, Opera24+*/ url("../fonts/IRANSansWeb.woff2")
+            format("woff2");
+      }
+      #basis-calendar,
+      input,
+      button,
+      [data-modal-form] {
+        font-family: IRANSans1;
+      }
+      [data-sys-button-disable] {
+        background: #ccc !important;
+        border-color: #ccc !important;
+        color: #fff !important;
+        opacity: 1 !important;
+      }
+
+      [data-sys-button-disable] svg,
+      [data-sys-button-disable] path {
+        fill: #fff !important;
+      }
+    </style>
+    <script>
+      const host = {
+        repositories: {
+          "calendar.calendar": "/basiscore.calendar.component.js",
+          "calendar.datepicker": "/basiscore.calendar.component.js",
+        },
+      };
+    </script>
+  </head>
+  [##db.form.from##] [##db.form.to##]
+  <body>
+    <form name="db.form" bc-triggers="submit" style="direction: rtl">
+      <div class="form-inside">
+        <div class="from">
+          <div class="date-picker-wrapper">
+            <button>
+              <svg
+                viewbox="0 0 24 24"
+                width="24px"
+                height="24px"
+                fill="currentColor"
+                focusable="false"
+                class="mat-datepicker-toggle-default-icon ng-star-inserted"
+              >
+                <path
+                  d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"
+                ></path>
+              </svg>
+            </button>
+            <div class="date-picker-input-wrapper">
+              <span>از تاریخ </span>
+              <basis
+                core="component.calendar.datepicker"
+                name="from"
+                run="atclient"
+                options="mySetting"
+              ></basis>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <br />
+
+    <Basis
+      core="component.calendar.calendar"
+      run="atclient"
+      sourceid="db.form"
+      from="1402/8/16"
+      to="1402/10/17"
+      options="mySetting1"
+      rkey="6F5FBAA5-6294-4E66-9DB8-79ED89CD999A"
+    ></Basis>
+
+    <script>
+      var mySetting = {
+        dateProvider: "basisCalendar",
+        displayNote: true,
+        culture: "fa",
+        lid: 1,
+        yearsList: true,
+        monthList: true,
+        rangeDates: true,
+        switchType: false,
+        theme: "basic",
+        type: "click",
+        isFilter: true,
+        mode: "desktop",
+        style: "../css/datepicker-style.css",
+        sourceid: "db.form",
+        action: (el) => {},
+      };
+      var mySetting1 = {
+        dateProvider: "basisCalendar",
+        culture: "fa",
+        secondCulture: "en",
+        sourceid: "db.form",
+
+        lid: 1,
+        todayButton: false,
+        dmnid: 6,
+        style: "../css/calendar-style.css",
+        baseUrl: {
+          userid: "https://trust-login.com/api/userid",
+          viewnote:
+            "https://basispanel.ir/user/fa/6F5FBAA5-6294-4E66-9DB8-79ED89CD999A/viewcalendarnote",
+          usernotes:
+            "https://basispanel.ir/user/6F5FBAA5-6294-4E66-9DB8-79ED89CD999A/calendarnotes",
+          removenote:
+            "http://basispanel.ir/user/6F5FBAA5-6294-4E66-9DB8-79ED89CD999A/removenote",
+          addnote:
+            "https://basispanel.ir/user/6F5FBAA5-6294-4E66-9DB8-79ED89CD999A/addcalendarnote",
+          reminder:
+            "http://basispanel.ir/user/6F5FBAA5-6294-4E66-9DB8-79ED89CD999A/editnotereminder",
+          catlist:
+            "https://basispanel.ir/user/6F5FBAA5-6294-4E66-9DB8-79ED89CD999A/fa/notecatlist",
+          sharing:
+            "https://basispanel.ir/user/6F5FBAA5-6294-4E66-9DB8-79ED89CD999A/sharing",
+          removesharing:
+            "https://basispanel.ir/user/6F5FBAA5-6294-4E66-9DB8-79ED89CD999A/removesharing",
+        },
+        labels: {
+          todayTitle: "امروز",
+          titrTitle: "عنوان",
+          categoryTitle: "دسته بندی",
+          noteTitle: "یادداشت",
+          submitKeyTitle: "ثبت",
+          timeTitle: "زمان با فرمت 18:45 وارد شود",
+          emptyNoteList: "هیچ یادداشتی در این روز وجود ندارد.",
+          editMenuTitle: "ویرایش",
+          deleteMenuTitle: "حذف",
+          shareMenuTitle: "اشتراک‌گذاری",
+          deleteTextTitle: "آیا از حذف این یادداشت مطمئن هستید ؟ ",
+          cancelKeyTitle: "انصراف",
+          shareTextTitle: "برای به اشتراک‌گذاری ایمیل را وارد کنید",
+          deleteKeyTitle: "حذف",
+          shareBoxTitle: "به اشتراک‌گذاری",
+        },
+      };
+    </script>
+  </body>
+</html>

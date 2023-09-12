@@ -8,6 +8,10 @@ export declare type MonthValue = YearValue & {
 export declare type DayValue = MonthValue & {
   day: DayNumber;
 };
+export declare type DayValueAndMonthName = DayValue & {
+  monthName: string;
+};
+export declare type catFilter = { title: string; id: number };
 export declare type Lid = 1 | 2;
 export declare type MonthNumber =
   | 1
