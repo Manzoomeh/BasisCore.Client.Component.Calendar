@@ -32,7 +32,9 @@ export class DatePicker {
       rangeDates : false,
       switchType : false,
       theme :"basic",
-      type: "load"
+      type: "load",
+      disabledPrevButton: false,
+      rangeDatesSeparated: false
     };
 
   public constructor(

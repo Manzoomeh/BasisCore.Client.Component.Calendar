@@ -20,7 +20,9 @@ export interface INote {
   catid : number,
   creator : number,
   creatoruser : number
-  sharinginfo? : Iownerinfo
+  sharinginfo? : Iownerinfo,
+  disabledPrevButton?: boolean;
+  rangeDatesSeparated?: boolean;
 }
 
 export interface Iownerinfo{
