@@ -64,7 +64,8 @@ export class DatePicker {
 
   }
 
-  nextMonth(): void {
+  nextMonth(nextButtonWrapper : HTMLElement): void {
+    if(this.options.disabledPrevButton){nextButtonWrapper.previousElementSibling.previousElementSibling.removeAttribute("data-disabled-prev")};
     let nextMonthValues: MonthValue;
     nextMonthValues = this.dateUtil.nextMonth(
       this.months[this.activeIndex],
@@ -74,7 +75,23 @@ export class DatePicker {
 
     this.renderAsync();
   }
-  prevMonth(): void {
+  prevMonth(prevButtonWrapper : HTMLElement): void {
+    if(this.options.disabledPrevButton){
+      const objCurrentDate = {
+        year: this.months[this.activeIndex].currentDate.year,
+        month: this.months[this.activeIndex].currentDate.month
+      }
+      if (objCurrentDate.year == this.activeMonth().value.year && objCurrentDate.month == this.activeMonth().value.month) {
+          prevButtonWrapper.setAttribute("data-disabled-prev", "")
+      } else {
+          prevButtonWrapper.removeAttribute("data-disabled-prev"),
+          this.runPrevMonth()
+      }
+    }else{
+        this.runPrevMonth()
+    }
+  }
+  runPrevMonth(): void {
     let nextMonthValues: MonthValue;
     nextMonthValues = this.dateUtil.prevMonth(
       this.months[this.activeIndex],
