@@ -20,7 +20,7 @@ export interface INote {
   catid : number,
   creator : number,
   creatoruser : number
-  sharinginfo? : Iownerinfo
+  sharinginfo? : Iownerinfo,
 }
 
 export interface Iownerinfo{
@@ -84,5 +84,7 @@ export interface IDatePickerOptions {
   mode?: Mode,
   style?: string,
   action?: IActionCallback;
+  disabledPrevButton?: boolean;
+  rangeDatesSeparated?: boolean;
 }
 export type IActionCallback = (element: HTMLElement) => any;

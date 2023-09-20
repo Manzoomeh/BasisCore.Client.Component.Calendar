@@ -116,7 +116,11 @@ export class UiDatePicker {
         if(parentElement.querySelector("[data-datepicker-end-day]")){
           parentElement.querySelector("[data-datepicker-end-day]").removeAttribute("data-datepicker-end-day")
         }
-        this.range.datePickerInput.value += " - " + selectDate;
+        if(this.range.options.rangeDatesSeparated){
+          this.range.datePickerInput.value += " " + selectDate;
+        }else{
+          this.range.datePickerInput.value += " - " + selectDate;
+        }
         this.range.datePickerInput.setAttribute(
           "data-datepicker-to-dateid",
           this.day.dateId.toString()
