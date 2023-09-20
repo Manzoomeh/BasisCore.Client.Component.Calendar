@@ -162,13 +162,17 @@ export class UiDatePicker {
       const selectedDateId :number = this.range.dateUtil.getBasisDayId(this.range.datesArray[0])      
       const dates =Array.from(parentElement.querySelectorAll("[data-datepicker-day]"))
       dates.map((x) => {
-        const dateId = x.getAttribute("data-datepicker-id")        
+        const dateId = x.getAttribute("data-datepicker-id")  
+        const spans = x.querySelectorAll("span")
+        x.removeAttribute("data-datepicker-selected") 
+        spans.forEach(e => {
+          e.removeAttribute("data-sys-text-white")     
+        })       
         if(parseInt(dateId) < selectedDateId){
           x.setAttribute("data-disabled" , "")
         }
         else if(parseInt(dateId) == selectedDateId){
           x.setAttribute("data-datepicker-selected" , "")  
-          const spans = x.querySelectorAll("span")
           spans.forEach(e => {
             e.setAttribute("data-sys-text-white","")     
           })
@@ -183,6 +187,7 @@ export class UiDatePicker {
     if(this.range.datesArray.length == 0){
       const dates =Array.from(parentElement.querySelectorAll("[data-datepicker-day]"))
       dates.map((x) => { 
+          x.removeAttribute("data-datepicker-hover")
           const dateId = x.getAttribute("data-datepicker-id")
           x.removeAttribute("data-disabled")
           if(parseInt(dateId) < lastDayId && parseInt(dateId) > startDay){
