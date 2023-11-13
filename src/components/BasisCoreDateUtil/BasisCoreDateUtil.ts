@@ -418,7 +418,9 @@ export class BasisCoreDateUtil implements IDateUtil {
       return currentYear.syear
     }
     else{
+      
       const currentYear = this.getObj(day.year, day.month , day.day)
+      console.log("ssss",currentYear)
       return currentYear.nyear
     }
    

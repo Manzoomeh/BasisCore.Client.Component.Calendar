@@ -35,7 +35,7 @@ export interface ICatNote{
 }
 
 export interface ILabels{
-  todayTitle : string,
+  todayTitle : string ,
   titrTitle:string,
   categoryTitle : string,
   noteTitle : string,
@@ -49,7 +49,41 @@ export interface ILabels{
   cancelKeyTitle : string,
   shareTextTitle : string,
   deleteKeyTitle:string,
-  shareBoxTitle : string
+  shareBoxTitle : string,
+  reminderMenuTitle : string,
+  dateViewNote: string,
+  sharingViewNote: string,
+  timeViewNote : string,
+  categoryViewNote : string,
+  reminderViewNote : string,
+  reminderErrorForLastDays : string,
+  reminderCount: string,
+  reminderTitle: string,
+  forme: string,
+  forall: string,
+  email: string,
+  sms: string,
+  day: string,
+  hour: string,
+  minute: string,
+  viewMenuTitle : string,
+  sharingSuccessMessage: string,
+  sharingrepeatMessage:string,
+  setTimeForReminderMessage: string,
+  errorMessage: string,
+  successMessage: string,
+  noGrouoForReciver: string,
+  amLabel: string,
+  pmLabel: string,
+  noCategoryError:string,
+  repeatUser: string,
+  sharingErrorWithOwner:  string,
+  wrongUser: string,
+  before: string,
+  for: string,
+  me: string,
+  all: string,
+  SharingBy : string
 
 }
 

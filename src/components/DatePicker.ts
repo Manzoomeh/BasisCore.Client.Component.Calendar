@@ -58,7 +58,9 @@ export class DatePicker {
     style.setAttribute("type" , "text/css")
     document.querySelector("head").appendChild(style)
     this.monthValues = this.dateUtil.getMonthValueList(from, to);
+    console.log("aaa",this.monthValues)
     this.monthValues.map((x) => this.months.push(new Month(this, x)));
+    console.log( this.monthValues)
     this.bodyElement =  document.createElement("div");
  
 
@@ -344,7 +346,7 @@ export class DatePicker {
     }
     let firstDayInMonth = this.months[this.activeIndex].firstDayInMonth;
     const lastDayInMonth = this.months[this.activeIndex].lastDayInMonth;
-    // this.bodyElement.append(this.generateDaysName());
+    this.bodyElement.append(this.generateDaysName());
     if(this.options.culture == "en"){
       firstDayInMonth = firstDayInMonth - 1 
       firstDayInMonth =  firstDayInMonth== -1 ? 6 : firstDayInMonth
@@ -395,7 +397,7 @@ export class DatePicker {
       });
       todayButton.setAttribute("data-datepicker-today-btn", "");
       if(this.options.mode=="desktop"){
-        todayButton.innerHTML = this.options.lid == 1 ? "امروز" : "Today";
+        todayButton.innerHTML = this.options.lid == 1 ? `${this.options.todayButton}` : "Today";
       }
       
       footerElement.appendChild(todayButton);
@@ -449,7 +451,7 @@ export class DatePicker {
       this.wrapper.appendChild(styles)
 
   }
-  public async createUIAsync(container?: Element): Promise<void> {
+public async createUIAsync(container?: Element): Promise<void> {
     this.datePickerInput = container as HTMLInputElement;
     this.wrapper = document.createElement("div");
     if(this.options.type == "load"){
@@ -457,6 +459,20 @@ export class DatePicker {
     }
     else{
       container.addEventListener("click", (e) => {
+        const inputElement = e.target as HTMLInputElement;
+        if(this.options.rangeDates == false){
+          if(inputElement.getAttribute("data-datepicker-dateid") !== null){
+            inputElement.value = "";
+            inputElement.setAttribute("value","");inputElement.removeAttribute("data-datepicker-dateid");inputElement.removeAttribute("data-datepicker-sstring");
+          }
+          
+        }
+        else {
+          if(inputElement.getAttribute("data-datepicker-to-dateid") !== null){
+            inputElement.value = "";
+            inputElement.setAttribute("value","");inputElement.removeAttribute("data-datepicker-dateid");inputElement.removeAttribute("data-datepicker-to-dateid");inputElement.removeAttribute("data-datepicker-sstring");inputElement.removeAttribute("data-datepicker-to-sstring");
+          }
+        }
         e.stopPropagation();
         container.parentNode.insertBefore(this.wrapper, container.nextSibling);
       });
@@ -467,11 +483,5 @@ export class DatePicker {
         e.stopPropagation();
       });
     }
-  
-   
-    
-  
-    return this.renderAsync();
-  }
 
 }

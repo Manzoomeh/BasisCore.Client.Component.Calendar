@@ -23,9 +23,10 @@ export class Month {
   readonly currentYear : number;
   
   public constructor(owner: DateRange | DatePicker, value: MonthValue) {
+    
     this.range = owner;
     this.value = value;
-   
+    
     const firstDay: DayValue = {
       year: this.value.year,
       month: this.value.month,
@@ -55,7 +56,7 @@ export class Month {
       this.range.options.culture
     )
 
-  
+
     this.currentYear = this.range.dateUtil.getCurrentYear( firstDay , this.range.options.culture)
 
 
@@ -86,4 +87,5 @@ export class Month {
       this.days.push(new Day(this, (i + 1) as DayNumber));
     }
   }
+
 }

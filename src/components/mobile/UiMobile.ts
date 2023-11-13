@@ -150,7 +150,7 @@ export class UiMbobile {
     if(this.range.categories.length == 0){
       catsList.setAttribute("disabled" , "true")
       const errDiv = document.createElement("din")
-      errDiv.textContent="از ویجت دسته‌بندی‌ها، یک دسته‌بندی جدید ایجاد کنید."
+      errDiv.textContent= this.range.options.labels.noCategoryError
       errDiv.classList.add("calendar-category-new")
       catsList.parentElement.after(errDiv)
     }
@@ -254,7 +254,19 @@ export class UiMbobile {
   generateReminderRow(body : HTMLElement){
     body.querySelector("[data-bc-new-row-reminder]").innerHTML = ""
     body.querySelector("[data-bc-new-row-reminder]").innerHTML = reminderRow
+    var reminderRowBody =  body.querySelector("[data-bc-new-row-reminder]")
+    reminderRowBody.querySelector("[data-calendar-time-value]").setAttribute("placeHolder",this.range.options.labels.reminderCount)
+    reminderRowBody.querySelector("[tab-button-status-email]").textContent = this.range.options.labels.email
+    reminderRowBody.querySelector("[tab-button-status-mobile]").textContent = this.range.options.labels.sms
     
+    let timeUnitSelect = reminderRowBody.querySelector("[data-bc-select-time]")
+    let timeUnitSelectOption = timeUnitSelect.querySelectorAll("option")
+    timeUnitSelectOption.forEach((e,i) => {
+      timeUnitSelectOption[0].textContent= this.range.options.labels.day
+      timeUnitSelectOption[1].textContent= this.range.options.labels.hour
+      timeUnitSelectOption[2].textContent= this.range.options.labels.minute
+    })
+
     const switchButtons = body.querySelectorAll("[bc-calendar-change-button]")
     switchButtons.forEach(x => {
       x.addEventListener("click" , function(e)  {
@@ -291,13 +303,24 @@ export class UiMbobile {
     if(creator == 0){
       formWrapper.innerHTML = reminderForm;
       formWrapper.querySelector("[data-bc-new-row-reminder]").innerHTML = reminderRowShare
+      let reminderRowBodyShare = formWrapper.querySelector("[data-bc-new-row-reminder]")
+      reminderRowBodyShare.querySelector("[data-calendar-time-value]").setAttribute("placeHolder", this.range.options.labels.reminderCount)
+      reminderRowBodyShare.querySelector("[tab-button-status-email]").textContent= this.range.options.labels.email
+      reminderRowBodyShare.querySelector("[tab-button-status-mobile]").textContent= this.range.options.labels.sms
+      let timeUnitSelect = reminderRowBodyShare.querySelector("[data-bc-select-time]")
+      let timeUnitSelectOption = timeUnitSelect.querySelectorAll("option")
+      timeUnitSelectOption.forEach((e,i) => {
+        timeUnitSelectOption[0].textContent= this.range.options.labels.day
+        timeUnitSelectOption[1].textContent= this.range.options.labels.hour
+        timeUnitSelectOption[2].textContent= this.range.options.labels.minute
+      })
       
     }
     else{
       formWrapper.innerHTML = reminderForm;
       formWrapper.querySelector("[data-bc-new-row-reminder]").innerHTML = reminderRow
     }
-    
+    formWrapper.querySelector("#reminder-title").textContent =this.range.options.labels.reminderTitle
     let unitId = 1
     return formWrapper
   }
@@ -314,12 +337,24 @@ export class UiMbobile {
         reminderItemDiv.setAttribute("data-bc-reminder-row","")
         reminderItemDiv.setAttribute("data-bcreminder-List","")
         reminderItemDiv.innerHTML = reminderList
+        // reminderItemDiv.querySelector("#hour-label").textContent = this.range.options.labels.timeViewNote
         let actionidVal =reminderItem.actionID
         let timetypeVal = reminderItem.timetype
         if(this.range.options.level == "user"){
           timetypeVal = reminderItem.timeunitid
           actionidVal = reminderItem.actionid
         }
+        reminderItemDiv.querySelector("[data-calendar-time-value]").setAttribute("placeHolder" , this.range.options.labels.reminderCount)
+        reminderItemDiv.querySelector("[tab-button-status-email]").textContent =  this.range.options.labels.email
+        reminderItemDiv.querySelector("[tab-button-status-mobile]").textContent =  this.range.options.labels.sms
+        let timeUnitSelect = reminderItemDiv.querySelector("[data-bc-select-time]")
+        let timeUnitSelectOption = timeUnitSelect.querySelectorAll("option")
+        timeUnitSelectOption.forEach((e,i) => {
+          timeUnitSelectOption[0].textContent= this.range.options.labels.day
+          timeUnitSelectOption[1].textContent= this.range.options.labels.hour
+          timeUnitSelectOption[2].textContent= this.range.options.labels.minute
+        })
+        
         const timeType :HTMLInputElement = reminderItemDiv.querySelector("[data-bc-select-time]") as HTMLInputElement
         const typeidValue :HTMLInputElement = reminderItemDiv.querySelector("[data-bc-select-user-share]") as HTMLInputElement          
         const timeInput :HTMLInputElement = reminderItemDiv.querySelector("[data-calendar-time-value]") as HTMLInputElement
@@ -364,7 +399,7 @@ export class UiMbobile {
       error.setAttribute("style","display: block")
       error.innerHTML=`
      <span>
-   هیچ گروه کاربری برای گروه فرستنده تعریف نشده است
+   ${this.range.options.labels.noGrouoForReciver}
      <i class="lni lni-close"></i>
      </span> `
       
@@ -495,7 +530,7 @@ else{
       modalBody.innerHTML = "";
       newBox.innerHTML = newForm;
       const timeInputt : HTMLElement= newBox.querySelector("[bc-calendar-time-input]") 
-      const datePickerOptions : OptionTypes = {editable:true , mobile: false , okLabel :"تایید" , cancelLabel:"انصراف",amLabel:"ق.ظ",pmLabel:"ب.ظ",clockType:"24h" ,timeLabel : "",delayHandler:10};
+      const datePickerOptions : OptionTypes = {editable:true , mobile: false , okLabel :"تایید" , cancelLabel:"انصراف",amLabel: this.range.options.labels.amLabel ,pmLabel:this.range.options.labels.pmLabel,clockType:"24h" ,timeLabel : "",delayHandler:10};
       const newTimepicker = new TimepickerUI(timeInputt, datePickerOptions);
       const modalParent : HTMLElement = modalBody.closest("[data-modal-form]") 
       const timeInputIcon :HTMLElement = newBox.querySelector("[new-note-clock]")
@@ -528,7 +563,7 @@ else{
       if(this.range.categories.length == 0){
         catsList.setAttribute("disabled" , "true")
         const errDiv = document.createElement("din")
-        errDiv.textContent="از ویجت دسته‌بندی‌ها، یک دسته‌بندی جدید ایجاد کنید."
+        errDiv.textContent=this.range.options.labels.noCategoryError
         errDiv.classList.add("calendar-category-new")
         catsList.parentElement.after(errDiv)
       }
@@ -643,7 +678,7 @@ else{
         sharedfrom.innerHTML = `<svg width="20" height="15" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M10.2609 8.08235L11.2335 5.16439C12.0832 2.61531 12.5081 1.34076 11.8353 0.667978C11.1625 -0.0048075 9.88795 0.420039 7.33887 1.26973L4.42091 2.24239C2.36355 2.92817 1.33487 3.27107 1.04255 3.77389C0.764462 4.25224 0.764462 4.84303 1.04255 5.32138C1.33487 5.8242 2.36355 6.1671 4.42091 6.85288C4.67588 6.93787 4.96272 6.87719 5.15365 6.68803L8.27351 3.59708C8.44903 3.42318 8.73228 3.4245 8.90618 3.60002C9.08007 3.77554 9.07875 4.0588 8.90323 4.23269L5.83375 7.27373C5.62331 7.48222 5.5567 7.80132 5.65037 8.08235C6.33615 10.1397 6.67905 11.1684 7.18188 11.4607C7.66022 11.7388 8.25101 11.7388 8.72936 11.4607C9.23219 11.1684 9.57508 10.1397 10.2609 8.08235Z" fill="#767676"/>
         </svg>
-        اشتراک‌گذاری توسط : 
+        ${this.range.options.labels.SharingBy}
         <span>
         ${x.sharinginfo["from"].name}</span>
         `
@@ -664,6 +699,8 @@ else{
         //   moreButtonBox.querySelector("[bc-calendar-reminder-note]").remove()
           
         // }
+        moreButton.querySelector("[data-view-btn]").textContent=  this.range.options.labels.viewMenuTitle
+        moreButtonBox.querySelector("[reminder-button]").textContent=  this.range.options.labels.reminderMenuTitle
         moreButton.appendChild(moreButtonBox);
       moreButton.addEventListener("click", (e) => {
         const moreButtonDropDown = moreButtonBox.querySelector(
@@ -679,6 +716,8 @@ else{
         //   moreButtonBox.querySelector("[bc-calendar-reminder-note]").remove()
           
         // }
+        moreButton.querySelector("[data-bc-view-btn]").textContent = this.range.options.labels.viewMenuTitle
+        moreButtonBox.querySelector("[reminder-button]").textContent = this.range.options.labels.reminderMenuTitle
         moreButtonBox.querySelector("[data-bc-edit-btn]").innerHTML = this.range.options.labels.editMenuTitle
         moreButtonBox.querySelector("[data-bc-delete-btn]").innerHTML = this.range.options.labels.deleteMenuTitle
         moreButtonBox.querySelector("[data-bc-share-btn]").innerHTML = this.range.options.labels.shareMenuTitle
@@ -776,7 +815,7 @@ else{
                 error.setAttribute("style","display: block")
                 error.innerHTML=` 
                <span>
-              کاربر تکراری است 
+              ${this.range.options.labels.repeatUser}
               <i class="lni lni-close"></i>
                </span> `
                 inputs[i].appendChild(error)
@@ -790,7 +829,7 @@ else{
                 error.innerHTML=`
                <span>
                <i class="lni lni-close"></i>
-             امکان به اشتراک‌گذاری با مالک یادداشت وجود ندارد.
+             ${this.range.options.labels.sharingErrorWithOwner}
              
                </span> `
                 inputs[i].appendChild(error)
@@ -804,7 +843,7 @@ else{
                 error.setAttribute("style","display: block")
                 error.innerHTML=` 
                <span>
-              نام کاربری اشتباه است 
+              ${this.range.options.labels.wrongUser}
               <i class="lni lni-close"></i>
                </span> `
                 inputs[i].appendChild(error)
@@ -854,7 +893,7 @@ else{
                 error.setAttribute("data-sys-message-success-fade-in","")
                 error.setAttribute("style","display: block")
                 error.innerHTML=`  <span>
-               اشتراک‌گذاری با موفقیت انجام شد
+               ${this.range.options.labels.sharingSuccessMessage}
                 <i class="lni lni-checkmark"></i>
                 </span> 
               `
@@ -870,7 +909,7 @@ else{
                 error.setAttribute("style","display: block")
                 error.innerHTML=`
                <span>
-              کاربر تکراری است 
+               ${this.range.options.labels.repeatUser}
               <i class="lni lni-close"></i>
                </span> `
                 inputs[i].appendChild(error)
@@ -916,7 +955,7 @@ else{
            error.setAttribute("data-sys-message-success-fade-in","")
            error.setAttribute("style","display: block")
            error.innerHTML=`  <span>
-          اشتراک‌گذاری با موفقیت انجام شد
+          ${this.range.options.labels.sharingSuccessMessage}
            <i class="lni lni-checkmark"></i>
            </span> 
          `
@@ -938,7 +977,7 @@ else{
           error.innerHTML=`
          <span>
          <i class="lni lni-close"></i>
-        اشتراک‌گذاری برای این گروه کاربری، قبلا انجام شده است.            
+        ${this.range.options.labels.sharingrepeatMessage}
          </span> `
          document.getElementById("errors").appendChild(error)
            modalBody.querySelector("[data-calendar-submit]").setAttribute("data-bc-calendar-disable-button","")
@@ -1054,7 +1093,7 @@ else{
         error.setAttribute("style","display: block")
         error.innerHTML=`  <span>
         <i class="lni lni-close"></i>
-        امکان ثبت Reminder برای روزهای گذشته وجود ندارد.
+        ${this.range.options.labels.reminderErrorForLastDays}
      
         </span> 
       `
@@ -1073,7 +1112,7 @@ else{
 
         error.innerHTML=`  <span>
         <i class="lni lni-close"></i>
-        لطفا برای یادداشت خود یک زمان تعیین کنید.
+        ${this.range.options.labels.setTimeForReminderMessage}
      
         </span> 
       `
@@ -1150,7 +1189,7 @@ else{
           error.setAttribute("style","display: block")
           error.innerHTML=`  <span>
           <i class="lni lni-close"></i>
-         ابتدا برای یادداشت خود، ساعت انتخاب کنید
+         ${this.range.options.labels.setTimeForReminderMessage}
         
           </span> 
         `
@@ -1169,7 +1208,7 @@ else{
           error.setAttribute("style","display: block")
           error.innerHTML=`  <span>
           <i class="lni lni-close"></i>
-          عملیات با خطا روبرو شد
+          ${this.range.options.labels.errorMessage}
         
           </span> 
         `
@@ -1189,7 +1228,7 @@ else{
           modalBody.querySelector("[data-calendar-submit]").setAttribute("data-bc-calendar-disable-button","")
           error.innerHTML=`  <span>
           <i class="lni lni-checkmark"></i>
-          عملیات با موفقیت انجام شد
+          ${this.range.options.labels.successMessage}
           
           </span> 
         `
@@ -1217,7 +1256,7 @@ else{
       modalBody.innerHTML = "";
       modalBody.appendChild(this.generateNoteForm(x,x.creator));  
       const timeInputt : HTMLElement= modalBody.querySelector("[bc-calendar-time-input]") 
-      const datePickerOptions : OptionTypes = {editable:true , okLabel :"تایید" , cancelLabel:"انصراف",amLabel:"ق.ظ",pmLabel:"ب.ظ",clockType:"24h" ,timeLabel : ""};
+      const datePickerOptions : OptionTypes = {editable:true , okLabel :"تایید" , cancelLabel:"انصراف",amLabel:this.range.options.labels.amLabel,pmLabel:this.range.options.labels.pmLabel,clockType:"24h" ,timeLabel : ""};
       const newTimepicker = new TimepickerUI(timeInputt, datePickerOptions);
       const modalParent : HTMLElement = modalBody.closest("[data-modal-form]") 
       const timeInputIcon :HTMLElement = modalBody.querySelector("[new-note-clock]")

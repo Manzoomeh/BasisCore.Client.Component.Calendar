@@ -42,8 +42,10 @@ export default class BcComponent implements IComponentManager {
     this.owner.setContent(this.container);
     const initFrom = await this.owner.getAttributeValueAsync("from");
     const initTo = await this.owner.getAttributeValueAsync("to");
+  
     if (!initFrom || !initTo) {
-      if (this.options.culture == "fa" || this.options.culture) {
+    
+      if (this.options.culture == "fa" || !this.options.culture) {
         this.loadDefaultFaCalendar();
       } else if (this.options.culture == "en") {
         this.loadDefaultEnCalendar();
@@ -68,7 +70,6 @@ export default class BcComponent implements IComponentManager {
       month: parseInt(toParts[1]) as MonthNumber,
       day: parseInt(toParts[2]) as DayNumber,
     };
-
     this.dateRange = new DatePicker(this.from, this.to, obj);
     this.dateRange.createUIAsync(this.container);
   }
@@ -86,6 +87,7 @@ export default class BcComponent implements IComponentManager {
     var curr_month = date.getMonth() + 1; //Months are zero based
     var curr_year = date.getFullYear();
     const from: string = curr_year + "/" + curr_month + "/" + curr_date;
+    console.log( curr_month)
     this.loadCalendar(from, from, this.options);
   }
 
