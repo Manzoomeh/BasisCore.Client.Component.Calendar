@@ -237,7 +237,7 @@ export class UiDatePickerMobile {
         month: this.selectMonth,
         day: this.selectDay,
       }      
-      console.log("ok?")
+      
       const nextDay = this.range.dateUtil.getRangeForDate(selectDate,"after",this.selectRange)
       const selectDateText  : string= this.selectYear +"/"+ this.selectMonth+"/"+ this.selectDay
       const nextDateText : string = nextDay.year+"/"+nextDay.month + "/" + nextDay.day  

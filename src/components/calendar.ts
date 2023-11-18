@@ -381,8 +381,14 @@ export class DateRange {
     const mainElement = document.createElement("div");
     bodyElement.setAttribute("data-calendar-body", "");
     mainElement.setAttribute("data-calendar-days", "");
-    const firstDayInMonth = this.months[this.activeIndex].firstDayInMonth;
-    const lastDayInMonth = this.months[this.activeIndex].lastDayInMonth;
+    
+    let firstDayInMonth = this.months[this.activeIndex].firstDayInMonth ;
+    let lastDayInMonth = this.months[this.activeIndex].lastDayInMonth ;
+    if(this.options.culture == "en"){
+       firstDayInMonth = this.months[this.activeIndex].firstDayInMonth - 1;
+       lastDayInMonth = this.months[this.activeIndex].lastDayInMonth - 1;
+    }
+ 
     bodyElement.append(this.generateDaysName());
     for (var j = 0; j < firstDayInMonth; j++) {
       let dayElement = document.createElement("div");

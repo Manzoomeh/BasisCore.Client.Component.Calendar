@@ -58,9 +58,7 @@ export class DatePicker {
     style.setAttribute("type" , "text/css")
     document.querySelector("head").appendChild(style)
     this.monthValues = this.dateUtil.getMonthValueList(from, to);
-    console.log("aaa",this.monthValues)
     this.monthValues.map((x) => this.months.push(new Month(this, x)));
-    console.log( this.monthValues)
     this.bodyElement =  document.createElement("div");
  
 
@@ -451,7 +449,7 @@ export class DatePicker {
       this.wrapper.appendChild(styles)
 
   }
-public async createUIAsync(container?: Element): Promise<void> {
+  public async createUIAsync(container?: Element): Promise<void> {
     this.datePickerInput = container as HTMLInputElement;
     this.wrapper = document.createElement("div");
     if(this.options.type == "load"){
@@ -459,20 +457,6 @@ public async createUIAsync(container?: Element): Promise<void> {
     }
     else{
       container.addEventListener("click", (e) => {
-        const inputElement = e.target as HTMLInputElement;
-        if(this.options.rangeDates == false){
-          if(inputElement.getAttribute("data-datepicker-dateid") !== null){
-            inputElement.value = "";
-            inputElement.setAttribute("value","");inputElement.removeAttribute("data-datepicker-dateid");inputElement.removeAttribute("data-datepicker-sstring");
-          }
-          
-        }
-        else {
-          if(inputElement.getAttribute("data-datepicker-to-dateid") !== null){
-            inputElement.value = "";
-            inputElement.setAttribute("value","");inputElement.removeAttribute("data-datepicker-dateid");inputElement.removeAttribute("data-datepicker-to-dateid");inputElement.removeAttribute("data-datepicker-sstring");inputElement.removeAttribute("data-datepicker-to-sstring");
-          }
-        }
         e.stopPropagation();
         container.parentNode.insertBefore(this.wrapper, container.nextSibling);
       });
@@ -483,5 +467,11 @@ public async createUIAsync(container?: Element): Promise<void> {
         e.stopPropagation();
       });
     }
+  
+   
+    
+  
+    return this.renderAsync();
+  }
 
 }

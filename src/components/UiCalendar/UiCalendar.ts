@@ -553,7 +553,7 @@ export class UiCalendar {
       modalBody.innerHTML = "";
       newBox.innerHTML = newForm;
       const timeInputt : HTMLElement= newBox.querySelector("[bc-calendar-time-input]") 
-      const datePickerOptions : OptionTypes = {editable:true , okLabel :"تایید" , cancelLabel:"انصراف",amLabel:this.range.options.labels.amLabel,pmLabel:this.range.options.labels.pmLabel,clockType:"24h" ,timeLabel : "",delayHandler:10};
+      const datePickerOptions : OptionTypes = {editable:true , okLabel :this.range.options.labels.submitKeyTitle , cancelLabel:this.range.options.labels.cancelKeyTitle,amLabel:this.range.options.labels.amLabel,pmLabel:this.range.options.labels.pmLabel,clockType:"24h" ,timeLabel : "",delayHandler:10};
       const newTimepicker = new TimepickerUI(timeInputt, datePickerOptions);
       const modalParent : HTMLElement = modalBody.closest("[data-modal-form]") 
       const timeInputIcon :HTMLElement = newBox.querySelector("[new-note-clock]")
@@ -1272,7 +1272,7 @@ export class UiCalendar {
       modalBody.appendChild(this.generateNoteForm(x,x.creator));  
       const timeInputt : HTMLElement= modalBody.querySelector("[bc-calendar-time-input]") 
       
-      const datePickerOptions : OptionTypes = {editable:true , okLabel :"تایید" , cancelLabel:"انصراف",amLabel:this.range.options.labels.amLabel,pmLabel:this.range.options.labels.pmLabel,clockType:"24h" ,timeLabel : ""};
+      const datePickerOptions : OptionTypes = {editable:true , okLabel :this.range.options.labels.submitKeyTitle, cancelLabel:this.range.options.labels.cancelKeyTitle,amLabel:this.range.options.labels.amLabel,pmLabel:this.range.options.labels.pmLabel,clockType:"24h" ,timeLabel : ""};
       const newTimepicker = new TimepickerUI(timeInputt, datePickerOptions);
       const modalParent : HTMLElement = modalBody.closest("[data-modal-form]") 
       const timeInputIcon :HTMLElement = modalBody.querySelector("[new-note-clock]")

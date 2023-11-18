@@ -44,7 +44,7 @@
         </script>
     </head>
     <body>
-        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="1402/01/01" to="1402/01/30" options="mySetting" rkey="7BCCE056-57EB-43DA-8D4D-89D261DA81D3"></Basis>
+        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="1402/07/01" to="1402/07/30" options="mySetting" rkey="7BCCE056-57EB-43DA-8D4D-89D261DA81D3"></Basis>
         <script>   
                 var mySetting = {
                 dateProvider: "basisCalendar",
@@ -54,19 +54,19 @@
                 dmnid : 6,
                 style: "../css/calendar-style.css",
                 baseUrl: {                   
-                    "userid" : "https://basispanel.ir/trustservice/checkrkey/A20A74E2-5FE7-4939-8D79-DE821B3EB8C6",
-                    "viewnote" :"https://basispanel.ir/service/fa/A20A74E2-5FE7-4939-8D79-DE821B3EB8C6/viewcalendarnote",
-                    "usernotes" :"https://basispanel.ir/service/A20A74E2-5FE7-4939-8D79-DE821B3EB8C6/calendarnotes",
-                    "removenote":"http://basispanel.ir/service/A20A74E2-5FE7-4939-8D79-DE821B3EB8C6/removenote",
-                    "addnote":"https://basispanel.ir/service/A20A74E2-5FE7-4939-8D79-DE821B3EB8C6/addcalendarnote",
-                    "reminder" : "https://basispanel.ir/service/A20A74E2-5FE7-4939-8D79-DE821B3EB8C6/notereminder",
-                    "catlist":"http://basispanel.ir/service/A20A74E2-5FE7-4939-8D79-DE821B3EB8C6/fa/notecatlist",
-                    "sharing" :"https://basispanel.ir/service/A20A74E2-5FE7-4939-8D79-DE821B3EB8C6/sharing",
-                    "removesharing":"https://basispanel.ir/service/A20A74E2-5FE7-4939-8D79-DE821B3EB8C6/calendarnote/removesharing",
-                    "sender":"https://basispanel.ir/service/A20A74E2-5FE7-4939-8D79-DE821B3EB8C6/fa/usercategories",
-                    "reciver":"https://basispanel.ir/service/A20A74E2-5FE7-4939-8D79-DE821B3EB8C6/fa/usercategoryrelations/${catid}",
-                    "sharingService" : "https://basispanel.ir/service/A20A74E2-5FE7-4939-8D79-DE821B3EB8C6/sharing",
-                    "removeReminder" : "https://basispanel.ir/service/A20A74E2-5FE7-4939-8D79-DE821B3EB8C6/removereminder/${usedforid}"
+                    "userid" : "https://basispanel.ir/trustservice/checkrkey/8F9C7B34-9C5E-4876-944F-D03A5522DF8F",
+                    "viewnote" :"https://basispanel.ir/service/fa/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/viewcalendarnote",
+                    "usernotes" :"https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/calendarnotes",
+                    "removenote":"http://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/removenote",
+                    "addnote":"https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/addcalendarnote",
+                    "reminder" : "https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/notereminder",
+                    "catlist":"http://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/fa/notecatlist",
+                    "sharing" :"https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/sharing",
+                    "removesharing":"https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/calendarnote/removesharing",
+                    "sender":"https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/fa/usercategories",
+                    "reciver":"https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/fa/usercategoryrelations/${catid}",
+                    "sharingService" : "https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/sharing",
+                    "removeReminder" : "https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/removereminder/${usedforid}"
                 },
                 level : "service" , 
                 labels: {
@@ -84,7 +84,44 @@
                     cancelKeyTitle : "انصراف",
                     shareTextTitle : "برای به اشتراک‌گذاری ایمیل را وارد کنید",
                     deleteKeyTitle: "حذف",
-                    shareBoxTitle : "به اشتراک‌گذاری"
+                    shareBoxTitle : "به اشتراک‌گذاری",
+                    viewMenuTitle: "نمایش",
+                    reminderMenuTitle: "یادآوری",
+                    dateViewNote: "تاریخ",
+
+                    sharingViewNote: "اشتراک‌گذاری",
+                    timeViewNote: "ساعت",
+                    categoryViewNote: "دسته‌بندی",
+                    reminderViewNote: "یادآوری",
+                    reminderErrorForLastDays:
+                    "امکان ثبت Reminder برای روزهای گذشته وجود ندارد. 1",
+                    reminderCount: "تعداد",
+                    reminderTitle: " به شما یادآوری کنیم ؟ ",
+                    forme: "برای خودم",
+                    forall: "برای همه اعضای گروه",
+                    email: "ایمیل",
+                    sms: "موبایل",
+                    day: "روز",
+                    hour: "ساعت",
+                    minute: "دقیقه",
+                    sharingSuccessMessage: "اشتراک‌گذاری با موفقیت انجام شد",
+                    sharingrepeatMessage:
+                    "اشتراک‌گذاری برای این گروه کاربری، قبلا انجام شده است.  ",
+                    setTimeForReminderMessage: "لطفا برای یادداشت خود یک زمان تعیین کنید.",
+                    errorMessage: "عملیات با خطا روبرو شد",
+                    successMessage: "عملیات با موفقیت انجام شد",
+                    noGrouoForReciver: "هیچ گروه کاربری برای گروه فرستنده تعریف نشده است",
+                    amLabel: "ق.ظ",
+                    pmLabel: "ب.ظ",
+                    noCategoryError: "از ویجت دسته‌بندی‌ها، یک دسته‌بندی جدید ایجاد کنید.",
+                    repeatUser: "کاربر تکراری است ",
+                    sharingErrorWithOwner:
+                    "امکان به اشتراک‌گذاری با مالک یادداشت وجود ندارد.",
+                    wrongUser: "نام کاربری اشتباه است ",
+                    before: "قبل",
+                    for: "برای",
+                    me: "خودمfor me",
+                    all: "همه",
                 }
 
             }

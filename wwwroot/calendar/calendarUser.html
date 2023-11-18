@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://basispanel.ir/asset/css/light.css?v=5"  rel="stylesheet" />
+        <link href="http://basispanel.ir/asset/css/light.css?v=5"  rel="stylesheet" />
         <script src="/bclib.js"></script>
         <title>Calendar</title>
         <style>
@@ -44,7 +44,7 @@
         </script>
     </head>
     <body>
-        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="1402/01/30" to="1402/01/01" options="mySetting" rkey="7BCCE056-57EB-43DA-8D4D-89D261DA81D3"></Basis>
+        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="1402/08/01" to="1402/08/30" options="mySetting" rkey="7BCCE056-57EB-43DA-8D4D-89D261DA81D3"></Basis>
         <script>   
                 var mySetting = {
                 dateProvider: "basisCalendar",
@@ -54,38 +54,73 @@
                 dmnid : 6,
                 style: "../css/calendar-style.css",
                 baseUrl: {                   
-                    "userid" : "https://basispanel.ir/trustservice/checkrkey/1A217DD6-DF97-4E9C-9B32-A5B6E46AF4C4",
-                    "viewnote" :"https://basispanel.ir/user/fa/1A217DD6-DF97-4E9C-9B32-A5B6E46AF4C4/viewcalendarnote",
-                    "usernotes" :"https://basispanel.ir/user/1A217DD6-DF97-4E9C-9B32-A5B6E46AF4C4/calendarnotes",
-                    "removenote":"http://basispanel.ir/user/1A217DD6-DF97-4E9C-9B32-A5B6E46AF4C4/removenote",
-                    "addnote":"https://basispanel.ir/user/1A217DD6-DF97-4E9C-9B32-A5B6E46AF4C4/addcalendarnote",
-                    "reminder" : "https://basispanel.ir/user/1A217DD6-DF97-4E9C-9B32-A5B6E46AF4C4/notereminder",
-                    "catlist":"http://basispanel.ir/user/1A217DD6-DF97-4E9C-9B32-A5B6E46AF4C4/fa/notecatlist",
-                    "sharing" :"https://basispanel.ir/user/1A217DD6-DF97-4E9C-9B32-A5B6E46AF4C4/sharing",
-                    "removesharing":"https://basispanel.ir/user/1A217DD6-DF97-4E9C-9B32-A5B6E46AF4C4/calendarnote/removesharing",
-                    "sender":"https://basispanel.ir/user/1A217DD6-DF97-4E9C-9B32-A5B6E46AF4C4/fa/usercategories",
-                    "reciver":"https://basispanel.ir/user/1A217DD6-DF97-4E9C-9B32-A5B6E46AF4C4/fa/usercategoryrelations/${catid}",
-                    "sharingService" : "https://basispanel.ir/user/1A217DD6-DF97-4E9C-9B32-A5B6E46AF4C4/sharing",
-                    "removeReminder" : "https://basispanel.ir/user/1A217DD6-DF97-4E9C-9B32-A5B6E46AF4C4/removereminder/${usedforid}"
+                    "userid" : "http://basispanel.ir/trustservice/checkrkey/0FB1A577-B7E2-4089-BC21-9D7F6F40555B",
+                    "viewnote" :"http://basispanel.ir/user/fa/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/viewcalendarnote",
+                    "usernotes" :"http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/calendarnotes",
+                    "removenote":"http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/removenote",
+                    "addnote":"http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/addcalendarnote",
+                    "reminder" : "http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/notereminder",
+                    "catlist":"http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/fa/notecatlist",
+                    "sharing" :"http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/sharing",
+                    "removesharing":"http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/calendarnote/removesharing",
+                    "sender":"http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/fa/usercategories",
+                    "reciver":"http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/fa/usercategoryrelations/${catid}",
+                    "sharingService" : "http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/sharing",
+                    "removeReminder" : "http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/removereminder/${usedforid}"
                 },
                 level : "user" , 
                 displayNote : true , 
                 labels: {
                     todayTitle : "امروز",
-                    titrTitle:"عنوان",
+                    titrTitle:"onvan",
                     categoryTitle : "دسته بندی",
-                    noteTitle : "یادداشت",
-                    submitKeyTitle : "ثبت",
-                    timeTitle : "از قالب 24 ساعته استفاده کنید",
+                    noteTitle : "یادداشت1",
+                    submitKeyTitle : "",
+                    timeTitle : "از قالب 326 ساعته استفاده کنید",
                     emptyNoteList : "هیچ یادداشتی در این روز وجود ندارد.",
-                    editMenuTitle :"ویرایش",
+                    editMenuTitle :"virayesh",
                     deleteMenuTitle:"حذف",
                     shareMenuTitle:"اشتراک‌گذاری",
                     deleteTextTitle : "آیا از حذف این یادداشت مطمئن هستید ؟ ",
                     cancelKeyTitle : "انصراف",
-                    shareTextTitle : "برای به اشتراک‌گذاری ایمیل را وارد کنید",
+                    shareTextTitle : "برای 2به اشتراک‌گذاری ایمیل را وارد کنید",
                     deleteKeyTitle: "حذف",
-                    shareBoxTitle : "به اشتراک‌گذاری"
+                    shareBoxTitle : "به اشتراک‌گذاری",
+                    viewMenuTitle: "namayesh",
+                    reminderMenuTitle: "yadd avari",
+                    dateViewNote: "تاریخ",
+                    sharingViewNote: "اشتراک‌گذاری1",
+                    SharingBy: " tavasote اشتراک‌گذاری",
+timeViewNote: "ساعت1",
+
+                    categoryViewNote: "دسته‌بندی1",
+                    reminderViewNote: "یادآوری",
+                    reminderErrorForLastDays:"امکان ثبت Reminder برای روزهای گذشته وجود ندارد. ",
+                    reminderCount: "تعداد",
+                    reminderTitle: " really? ",
+                    forme: "برای خودم",
+                    forall: "برای همه اعضای گروه",
+                    email: "ایمیل",
+                    sms: "موبایل",
+                    day: "day",
+                    hour: "hour",
+                    minute: "minute",
+                    sharingSuccessMessage: "sharing is done",
+                    sharingrepeatMessage:"sharing in repeate",
+                    setTimeForReminderMessage: "set time for note",
+                    errorMessage: "error",
+                    successMessage: "success",
+                    noGrouoForReciver: "not define group",
+                    amLabel: "ق.ظ",
+                    pmLabel: "ب.ظ",
+                    noCategoryError: "create a category",
+                    repeatUser: "repeated user ",
+                    sharingErrorWithOwner:"this persion is note owner ",
+                    wrongUser: "wrong username ",
+                    before: "before",
+                    for: "for",
+                    me: "khodam",
+                    all: "hame",
                 }
 
             }

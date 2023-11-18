@@ -23,7 +23,7 @@ export class Month {
   readonly currentYear : number;
   
   public constructor(owner: DateRange | DatePicker, value: MonthValue) {
-    
+ 
     this.range = owner;
     this.value = value;
     
@@ -34,12 +34,15 @@ export class Month {
     };
    
     const year: YearValue = { year: this.value.year };
+
     this.monthName = this.range.dateUtil.getMonthName(
       this.value,
       this.range.options.culture,
       this.range.options.lid
     );
+   
     if(this.range.options.secondCulture && this.range.options.secondCulture == "en"){
+    
       this.secondMonthName = this.range.dateUtil.getGregorianMonthsName(value)
       
     }

@@ -342,9 +342,10 @@ export class BasisCoreDateUtil implements IDateUtil {
 
   getGregorianDaysNumber(day : DayValue ) : DayNumber{
     const basisDate = this.getObj(day.year, day.month, day.day);
+    
     return basisDate.mdate
   }
-  getGregorianMonthsName(month : MonthValue): string{
+  getGregorianMonthsName(month : MonthValue): string{    
     const first = this.getObj(month.year, month.month,1).mmonth;
     const last = this.getObj(month.year, month.month,28).mmonth;
     return this.sMonthsNameCultureEn[first] + " - " + this.sMonthsNameCultureEn[last]
@@ -420,7 +421,7 @@ export class BasisCoreDateUtil implements IDateUtil {
     else{
       
       const currentYear = this.getObj(day.year, day.month , day.day)
-      console.log("ssss",currentYear)
+      
       return currentYear.nyear
     }
    
