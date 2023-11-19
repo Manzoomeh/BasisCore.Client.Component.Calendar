@@ -395,7 +395,7 @@ export class DatePicker {
       });
       todayButton.setAttribute("data-datepicker-today-btn", "");
       if(this.options.mode=="desktop"){
-        todayButton.innerHTML = this.options.lid == 1 ? `${this.options.todayButton}` : "Today";
+        todayButton.innerHTML = this.options.lid == 1 ? "امروز" : "Today";
       }
       
       footerElement.appendChild(todayButton);
@@ -457,6 +457,18 @@ export class DatePicker {
     }
     else{
       container.addEventListener("click", (e) => {
+        const inputElement = e.target as HTMLInputElement;
+        if(this.options.rangeDates == false){
+          if(inputElement.getAttribute("data-datepicker-dateid") !== null){
+            inputElement.value = "";
+            inputElement.setAttribute("value","");inputElement.removeAttribute("data-datepicker-dateid");inputElement.removeAttribute("data-datepicker-sstring");
+          }
+        }else {
+          if(inputElement.getAttribute("data-datepicker-to-dateid") !== null){
+            inputElement.value = "";
+            inputElement.setAttribute("value","");inputElement.removeAttribute("data-datepicker-dateid");inputElement.removeAttribute("data-datepicker-to-dateid");inputElement.removeAttribute("data-datepicker-sstring");inputElement.removeAttribute("data-datepicker-to-sstring");
+          }
+        }
         e.stopPropagation();
         container.parentNode.insertBefore(this.wrapper, container.nextSibling);
       });
