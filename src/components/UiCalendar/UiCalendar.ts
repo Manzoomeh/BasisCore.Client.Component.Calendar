@@ -967,7 +967,7 @@ export class UiCalendar {
               error.setAttribute("style","display: block")
               error.innerHTML=`  <span>
               <i class="lni lni-checkmark"></i>
-             ${this.range.options.labels.errorMessage}
+             ${this.range.options.labels.sharingSuccessMessage}
               
               </span> 
             `
