@@ -343,7 +343,15 @@ export class UiCalendar {
     remindeRowBody.querySelector("[data-calendar-time-value]").setAttribute("placeHolder", this.range.options.labels.reminderCount)
     remindeRowBody.querySelector("[tab-button-status-email]").textContent =  this.range.options.labels.email
     remindeRowBody.querySelector("[tab-button-status-mobile]").textContent =  this.range.options.labels.sms
-    
+      
+    let timeUnitSelect = remindeRowBody.querySelector("[data-bc-select-time]")
+    let timeUnitSelectOption = timeUnitSelect.querySelectorAll("option")
+    timeUnitSelectOption.forEach((e,i) => {
+      timeUnitSelectOption[0].textContent= this.range.options.labels.day
+      timeUnitSelectOption[1].textContent= this.range.options.labels.hour
+      timeUnitSelectOption[2].textContent= this.range.options.labels.minute
+    })
+
     let sharingSelect = remindeRowBody.querySelector("[data-bc-select-service-reminder]")
     let sharingSelectOption  = sharingSelect.querySelectorAll("option")
     sharingSelectOption.forEach((e,i) => {
@@ -398,7 +406,14 @@ export class UiCalendar {
       bodyRowNumberShare.querySelector("[data-calendar-time-value]").setAttribute("placeHolder" , this.range.options.labels.reminderCount)
       bodyRowNumberShare.querySelector("[tab-button-status-email]").textContent = this.range.options.labels.email
       bodyRowNumberShare.querySelector("[tab-button-status-mobile]").textContent = this.range.options.labels.sms
-      
+      let timeUnitSelect = bodyRowNumberShare.querySelector("[data-bc-select-time]")
+      let timeUnitSelectOption = timeUnitSelect.querySelectorAll("option")
+      timeUnitSelectOption.forEach((e,i) => {
+        timeUnitSelectOption[0].textContent= this.range.options.labels.day
+        timeUnitSelectOption[1].textContent= this.range.options.labels.hour
+        timeUnitSelectOption[2].textContent= this.range.options.labels.minute
+      })
+    //tonight   
     }
     else{
       
@@ -408,6 +423,13 @@ export class UiCalendar {
       bodyRowNumberShare.querySelector("[data-calendar-time-value]").setAttribute("placeHolder" , this.range.options.labels.reminderCount)
       bodyRowNumberShare.querySelector("[tab-button-status-email]").textContent = this.range.options.labels.email
       bodyRowNumberShare.querySelector("[tab-button-status-mobile]").textContent = this.range.options.labels.sms
+      let timeUnitSelect = bodyRowNumberShare.querySelector("[data-bc-select-time]")
+      let timeUnitSelectOption = timeUnitSelect.querySelectorAll("option")
+      timeUnitSelectOption.forEach((e,i) => {
+        timeUnitSelectOption[0].textContent= this.range.options.labels.day
+        timeUnitSelectOption[1].textContent= this.range.options.labels.hour
+        timeUnitSelectOption[2].textContent= this.range.options.labels.minute
+      })
     }
     // const reminderSelects = formWrapper.querySelectorAll("[data-bc-calendar-select]")
     // let inputNewWrapper = formWrapper.querySelector("[data-bc-new-row-reminder]") as HTMLElement
@@ -461,7 +483,13 @@ export class UiCalendar {
       reminderItemDiv.querySelector("[data-calendar-time-value]").setAttribute("placeHolder", this.range.options.labels.reminderCount)
       reminderItemDiv.querySelector("[tab-button-status-email]").textContent= this.range.options.labels.email
       reminderItemDiv.querySelector("[tab-button-status-mobile]").textContent= this.range.options.labels.sms
-      
+      let timeUnitSelect = reminderItemDiv.querySelector("[data-bc-select-time]")
+      let timeUnitSelectOption = timeUnitSelect.querySelectorAll("option")
+      timeUnitSelectOption.forEach((e,i) => {
+        timeUnitSelectOption[0].textContent= this.range.options.labels.day
+        timeUnitSelectOption[1].textContent= this.range.options.labels.hour
+        timeUnitSelectOption[2].textContent= this.range.options.labels.minute
+      })
       
       let sharingSelect = reminderItemDiv.querySelector("[data-bc-select-service-reminder]")
       let sharingSelectOption  = sharingSelect.querySelectorAll("option")
