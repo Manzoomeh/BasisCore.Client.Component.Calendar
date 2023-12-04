@@ -255,6 +255,7 @@ export class UiMbobile {
     body.querySelector("[data-bc-new-row-reminder]").innerHTML = ""
     body.querySelector("[data-bc-new-row-reminder]").innerHTML = reminderRow
     var reminderRowBody =  body.querySelector("[data-bc-new-row-reminder]")
+  
     reminderRowBody.querySelector("[data-calendar-time-value]").setAttribute("placeHolder",this.range.options.labels.reminderCount)
     reminderRowBody.querySelector("[tab-button-status-email]").textContent = this.range.options.labels.email
     reminderRowBody.querySelector("[tab-button-status-mobile]").textContent = this.range.options.labels.sms
@@ -299,29 +300,65 @@ export class UiMbobile {
   }
   generateReminderForm(creator:number): Node{
     let formWrapper = document.createElement("form");
-    formWrapper.setAttribute("data-bc-calendar-form","")
     if(creator == 0){
       formWrapper.innerHTML = reminderForm;
       formWrapper.querySelector("[data-bc-new-row-reminder]").innerHTML = reminderRowShare
-      let reminderRowBodyShare = formWrapper.querySelector("[data-bc-new-row-reminder]")
-      reminderRowBodyShare.querySelector("[data-calendar-time-value]").setAttribute("placeHolder", this.range.options.labels.reminderCount)
-      reminderRowBodyShare.querySelector("[tab-button-status-email]").textContent= this.range.options.labels.email
-      reminderRowBodyShare.querySelector("[tab-button-status-mobile]").textContent= this.range.options.labels.sms
-      let timeUnitSelect = reminderRowBodyShare.querySelector("[data-bc-select-time]")
+      let bodyRowNumberShare = formWrapper.querySelector("[data-bc-new-row-reminder]")
+      bodyRowNumberShare.querySelector("[data-calendar-time-value]").setAttribute("placeHolder" , this.range.options.labels.reminderCount)
+      bodyRowNumberShare.querySelector("[tab-button-status-email]").textContent = this.range.options.labels.email
+      bodyRowNumberShare.querySelector("[tab-button-status-mobile]").textContent = this.range.options.labels.sms
+      let timeUnitSelect = bodyRowNumberShare.querySelector("[data-bc-select-time]")
       let timeUnitSelectOption = timeUnitSelect.querySelectorAll("option")
       timeUnitSelectOption.forEach((e,i) => {
         timeUnitSelectOption[0].textContent= this.range.options.labels.day
         timeUnitSelectOption[1].textContent= this.range.options.labels.hour
         timeUnitSelectOption[2].textContent= this.range.options.labels.minute
       })
-      
+    //tonight   
     }
     else{
+      
       formWrapper.innerHTML = reminderForm;
       formWrapper.querySelector("[data-bc-new-row-reminder]").innerHTML = reminderRow
+      let bodyRowNumberShare = formWrapper.querySelector("[data-bc-new-row-reminder]")
+      bodyRowNumberShare.querySelector("[data-calendar-time-value]").setAttribute("placeHolder" , this.range.options.labels.reminderCount)
+      bodyRowNumberShare.querySelector("[tab-button-status-email]").textContent = this.range.options.labels.email
+      bodyRowNumberShare.querySelector("[tab-button-status-mobile]").textContent = this.range.options.labels.sms
+      let timeUnitSelect = bodyRowNumberShare.querySelector("[data-bc-select-time]")
+      let timeUnitSelectOption = timeUnitSelect.querySelectorAll("option")
+      timeUnitSelectOption.forEach((e,i) => {
+        timeUnitSelectOption[0].textContent= this.range.options.labels.day
+        timeUnitSelectOption[1].textContent= this.range.options.labels.hour
+        timeUnitSelectOption[2].textContent= this.range.options.labels.minute
+      })
     }
+    // const reminderSelects = formWrapper.querySelectorAll("[data-bc-calendar-select]")
+    // let inputNewWrapper = formWrapper.querySelector("[data-bc-new-row-reminder]") as HTMLElement
+    // let inputNew = inputNewWrapper.querySelector("[data-calendar-time-value]") as HTMLInputElement
+    // inputNew.addEventListener("keyup",e => {
+    //    if(inputNew.value != "" && inputNew.value != undefined){
+    //   formWrapper.querySelector("[data-reminder-submit]").removeAttribute("data-bc-calendar-disable-button")
+    //    }
+    //    else{
+    //     formWrapper.querySelector("[data-reminder-submit]").setAttribute("data-bc-calendar-disable-button","")
+    //    }
+    // })
+    let sharingSelect = formWrapper.querySelector("[data-bc-select-service-reminder]")
+    let sharingSelectOption  = sharingSelect.querySelectorAll("option")
+    sharingSelectOption.forEach((e,i) => {
+      let thisOptin = e as HTMLElement
+      if(i ==0){
+        thisOptin.textContent =  this.range.options.labels.forme
+        
+      }
+      else if (i == 1){
+        thisOptin.textContent =  this.range.options.labels.forall
+      }
+      
+    })
+    
     formWrapper.querySelector("#reminder-title").textContent =this.range.options.labels.reminderTitle
-    let unitId = 1
+    let unitId = 1  
     return formWrapper
   }
   async createReminderList(id:number , body: HTMLElement){
@@ -331,22 +368,22 @@ export class UiMbobile {
     }
     const viewNote =await this.range.sendAsyncDataPostJson(obj , this.range.options.baseUrl["viewnote"])
     body.querySelector("[data-calendar-reminder-note-wrapper]").innerHTML= ""
-    if(viewNote[0]?.reminder.length > 0){   
-      viewNote[0]?.reminder.forEach( reminderItem => {
+    const reminderArray = viewNote[0]?.reminder ? viewNote[0]?.reminder : viewNote[0]?.reminders
+    if(reminderArray.length > 0){   
+      reminderArray.forEach( reminderItem => {      
         const reminderItemDiv = document.createElement("div")
         reminderItemDiv.setAttribute("data-bc-reminder-row","")
-        reminderItemDiv.setAttribute("data-bcreminder-List","")
         reminderItemDiv.innerHTML = reminderList
-        // reminderItemDiv.querySelector("#hour-label").textContent = this.range.options.labels.timeViewNote
         let actionidVal =reminderItem.actionID
         let timetypeVal = reminderItem.timetype
         if(this.range.options.level == "user"){
           timetypeVal = reminderItem.timeunitid
           actionidVal = reminderItem.actionid
         }
-        reminderItemDiv.querySelector("[data-calendar-time-value]").setAttribute("placeHolder" , this.range.options.labels.reminderCount)
-        reminderItemDiv.querySelector("[tab-button-status-email]").textContent =  this.range.options.labels.email
-        reminderItemDiv.querySelector("[tab-button-status-mobile]").textContent =  this.range.options.labels.sms
+        
+        reminderItemDiv.querySelector("[data-calendar-time-value]").setAttribute("placeHolder", this.range.options.labels.reminderCount)
+        reminderItemDiv.querySelector("[tab-button-status-email]").textContent= this.range.options.labels.email
+        reminderItemDiv.querySelector("[tab-button-status-mobile]").textContent= this.range.options.labels.sms
         let timeUnitSelect = reminderItemDiv.querySelector("[data-bc-select-time]")
         let timeUnitSelectOption = timeUnitSelect.querySelectorAll("option")
         timeUnitSelectOption.forEach((e,i) => {
@@ -355,6 +392,19 @@ export class UiMbobile {
           timeUnitSelectOption[2].textContent= this.range.options.labels.minute
         })
         
+        let sharingSelect = reminderItemDiv.querySelector("[data-bc-select-service-reminder]")
+        let sharingSelectOption  = sharingSelect.querySelectorAll("option")
+        sharingSelectOption.forEach((e,i) => {
+          let thisOptin = e as HTMLElement
+          if(i ==0){
+            thisOptin.textContent =  this.range.options.labels.forme
+            
+          }
+          else if (i == 1){
+            thisOptin.textContent =  this.range.options.labels.forall
+          }
+          
+        })
         const timeType :HTMLInputElement = reminderItemDiv.querySelector("[data-bc-select-time]") as HTMLInputElement
         const typeidValue :HTMLInputElement = reminderItemDiv.querySelector("[data-bc-select-user-share]") as HTMLInputElement          
         const timeInput :HTMLInputElement = reminderItemDiv.querySelector("[data-calendar-time-value]") as HTMLInputElement
@@ -368,6 +418,7 @@ export class UiMbobile {
           const tab = reminderItemDiv.querySelector(".tabActive") as HTMLElement
           tab.style.transform = `translateX(-100%)`;
         }
+        
         deleteRoW.addEventListener("click" ,async (element) => {
           const reciverData=await this.range.sendAsyncDataGetMethod(this.range.options.baseUrl["removeReminder"].replace("${usedforid}" , reminderItem.id))
           if(reciverData.errorid == 4){  
@@ -380,11 +431,10 @@ export class UiMbobile {
         })
         body.querySelector("[ data-calendar-reminder-note-wrapper]") .appendChild(reminderItemDiv)
       })
-    
+      
   
     }
    }
-
   async initReciverData(id:number, formWrapper : HTMLElement) {    
     const reciverData=await this.range.sendAsyncDataGetMethod(this.range.options.baseUrl["reciver"].replace("${catid}" , id))
     if(reciverData.length == 0){      
@@ -646,7 +696,7 @@ else{
       const color: object = this.hexToRgb(`${x.color}`);
       if(color){
         divElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},0.2)`;
-        divElement.style.borderRight = `20px solid rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
+        divElement.style.borderRight = `10px solid rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
       }
       else{
         divElement.style.background = `#999999`;
@@ -716,7 +766,7 @@ else{
         //   moreButtonBox.querySelector("[bc-calendar-reminder-note]").remove()
           
         // }
-        moreButton.querySelector("[data-bc-view-btn]").textContent = this.range.options.labels.viewMenuTitle
+        moreButtonBox.querySelector("[data-bc-view-btn]").textContent = this.range.options.labels.viewMenuTitle
         moreButtonBox.querySelector("[reminder-button]").textContent = this.range.options.labels.reminderMenuTitle
         moreButtonBox.querySelector("[data-bc-edit-btn]").innerHTML = this.range.options.labels.editMenuTitle
         moreButtonBox.querySelector("[data-bc-delete-btn]").innerHTML = this.range.options.labels.deleteMenuTitle
@@ -1331,6 +1381,7 @@ else{
       noteid : note.id,
       creatoruser:  this.range.userId
     }
+   
     const viewNote =await this.range.sendAsyncDataPostJson(obj , this.range.options.baseUrl["viewnote"])
     wrapper.innerHTML = ""
     viewNote[0].sharing.forEach((e) => {

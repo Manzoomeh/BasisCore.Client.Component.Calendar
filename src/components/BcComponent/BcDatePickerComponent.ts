@@ -87,7 +87,6 @@ export default class BcComponent implements IComponentManager {
     var curr_month = date.getMonth() + 1; //Months are zero based
     var curr_year = date.getFullYear();
     const from: string = curr_year + "/" + curr_month + "/" + curr_date;
-    console.log( curr_month)
     this.loadCalendar(from, from, this.options);
   }
 

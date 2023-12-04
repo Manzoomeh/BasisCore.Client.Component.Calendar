@@ -44,7 +44,7 @@
         </script>
     </head>
     <body>
-        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="1402/08/01" to="1402/08/30" options="mySetting" rkey="7BCCE056-57EB-43DA-8D4D-89D261DA81D3"></Basis>
+        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="1402/09/01" to="1402/09/30" options="mySetting" rkey="7BCCE056-57EB-43DA-8D4D-89D261DA81D3"></Basis>
         <script>   
                 var mySetting = {
                 dateProvider: "basisCalendar",
@@ -52,15 +52,16 @@
                 lid:1,
                 todayButton: false,
                 dmnid : 6,
+                
                 style: "../css/calendar-style.css",
                 baseUrl: {                   
                     "userid" : "http://basispanel.ir/trustservice/checkrkey/0FB1A577-B7E2-4089-BC21-9D7F6F40555B",
-                    "viewnote" :"http://basispanel.ir/user/fa/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/viewcalendarnote",
-                    "usernotes" :"http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/calendarnotes",
+                    "viewnote" :"http://localhost:3000/viewcalendarnote",
+                    "usernotes" :"http://localhost:3000/calendarnotes",
                     "removenote":"http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/removenote",
                     "addnote":"http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/addcalendarnote",
                     "reminder" : "http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/notereminder",
-                    "catlist":"http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/fa/notecatlist",
+                    "catlist":"http://localhost:3000/notecatlist",
                     "sharing" :"http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/sharing",
                     "removesharing":"http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/calendarnote/removesharing",
                     "sender":"http://basispanel.ir/user/0FB1A577-B7E2-4089-BC21-9D7F6F40555B/fa/usercategories",

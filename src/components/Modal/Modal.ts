@@ -20,7 +20,6 @@ export class Modal {
     // let modalInside = this.generateNoteList();
     let modalInside = modalContent;
     this.cover.setAttribute("data-cover", "");
-    // console.log(document.querySelector("[data-bc-bp-main-container]").clientHeight)
     if(document.querySelector("[data-bc-bp-main-container]")){
       this.cover.setAttribute("style", `height:${ document.querySelector("[data-bc-bp-main-container]").clientHeight}px`)
     }
