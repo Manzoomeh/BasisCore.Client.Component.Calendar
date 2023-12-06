@@ -314,7 +314,6 @@ export class UiDatePickerMobile {
         month: this.selectMonth,
         day: this.selectDay,
       };
-
       const nextDay = this.range.dateUtil.getRangeForDate(
         selectDate,
         "after",

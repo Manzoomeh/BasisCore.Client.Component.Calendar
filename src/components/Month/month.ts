@@ -97,5 +97,6 @@ export class Month {
     for (let i = 0; i < this.dayInMonth; i++) {
       this.days.push(new Day(this, (i + 1) as DayNumber));
     }
+    console.log("Month :>> ", this);
   }
 }

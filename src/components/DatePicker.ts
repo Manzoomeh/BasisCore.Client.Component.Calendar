@@ -7,6 +7,9 @@ import { PersianDateUtil } from "./PersianDateUtil/PersianDateUtil";
 import { UiDatePicker } from "./UiDatePicker/UiDatePicker";
 import { DatePickerThemes } from "./DatePickerThemes/DatePickerThemes";
 import { UiDatePickerMobile } from "./UiDatePickerMobile/UiDatePickerMobile";
+import { DateRange } from "./calendar";
+declare const $bc: any;
+
 export class DatePicker {
   public readonly dateUtil: IDateUtil;
   public months: Array<Month> = new Array<Month>();
@@ -18,6 +21,10 @@ export class DatePicker {
   public datePickerInput: HTMLInputElement;
   public activeIndex: number;
   public todayId: number = 0;
+  public from;
+  public to;
+  public range;
+  public datesIds: number[] = [];
   public datesArray: DayValue[] = [];
   fromdate: string;
   private static readonly defaultCalenderOptions: Partial<IDatePickerOptions> =
@@ -27,8 +34,9 @@ export class DatePicker {
       lid: 1,
       todayButton: false,
       yearsList: false,
+      isModalPicker: false,
       monthList: false,
-      rangeDates: false,
+      pickerType: "range",
       switchType: false,
       theme: "basic",
       type: "load",
@@ -39,8 +47,12 @@ export class DatePicker {
   public constructor(
     from: DayValue,
     to: DayValue,
-    options?: IDatePickerOptions
+    options?: IDatePickerOptions,
+    range?: DateRange
   ) {
+    this.from = from;
+    this.to = to;
+    this.range = range || "";
     this.activeIndex = 0;
     this.options = {
       ...DatePicker.defaultCalenderOptions,
@@ -55,7 +67,7 @@ export class DatePicker {
     style.setAttribute("rel", "stylesheet");
     style.setAttribute("type", "text/css");
     document.querySelector("head").appendChild(style);
-    this.monthValues = this.dateUtil.getMonthValueList(from, to);
+    this.monthValues = this.range.monthValues;
     this.monthValues.map((x) => this.months.push(new Month(this, x)));
     this.bodyElement = document.createElement("div");
   }
@@ -116,16 +128,15 @@ export class DatePicker {
     this.headerElement = document.createElement("div");
     const monthNameElement = document.createElement("div");
     const nextButton = document.createElement("button");
-    const refreshButton = document.createElement("div");
     const prevButton = document.createElement("button");
     const yearNumber = document.createElement("span");
     const monthName = document.createElement("div");
-    const monthNameFa = document.createElement("span");
-    monthNameFa.setAttribute("data-datepicker-month-jalali", "");
-    const monthNameEn = document.createElement("span");
-    monthNameEn.setAttribute("data-datepicker-month-miladi", "");
-    monthName.appendChild(monthNameFa);
-    monthName.appendChild(monthNameEn);
+    const monthNameMain = document.createElement("span");
+    monthNameMain.setAttribute("data-datepicker-month-main", "");
+    const monthNameSub = document.createElement("span");
+    monthNameSub.setAttribute("data-datepicker-month-second", "");
+    monthName.appendChild(monthNameMain);
+    monthName.appendChild(monthNameSub);
     const headerTitles = document.createElement("div");
     headerTitles.setAttribute("data-datepicker-button-full", "");
     const secondMonthNameElement = document.createElement("div");
@@ -138,25 +149,40 @@ export class DatePicker {
     monthNameElement.setAttribute("data-datepicker-title", "");
     monthNameElement.setAttribute("data-sys-text", "");
     if (this.options.isFilter) {
-      // monthNameEn.textContent = this.months[this.activeIndex];
+      // monthNameSub.textContent = this.months[this.activeIndex];
     } else {
       monthNameElement.appendChild(yearNumber);
     }
-    monthNameFa.textContent = this.months[this.activeIndex].monthName;
-    monthNameEn.textContent =
-      this.months[this.activeIndex].days[0].mcurrentDay.day +
-      this.dateUtil.convertDateToGregorian(
-        this.months[this.activeIndex].days[0].mcurrentDay
-      ).monthName +
-      " _ " +
-      this.months[this.activeIndex].days[
-        this.months[this.activeIndex].days.length - 1
-      ].mcurrentDay.day +
-      this.dateUtil.convertDateToGregorian(
-        this.months[this.activeIndex].days[
-          this.months[this.activeIndex].days.length - 1
-        ].mcurrentDay
-      ).monthName;
+
+    monthNameMain.textContent = this.months[this.activeIndex].monthName;
+    monthNameSub.textContent =
+      this.options.culture === "fa"
+        ? this.months[this.activeIndex].days[0].mcurrentDay.day +
+          this.dateUtil.convertDateToGregorian(
+            this.months[this.activeIndex].days[0].mcurrentDay
+          ).monthName +
+          " _ " +
+          this.months[this.activeIndex].days[
+            this.months[this.activeIndex].days.length - 1
+          ].mcurrentDay.day +
+          this.dateUtil.convertDateToGregorian(
+            this.months[this.activeIndex].days[
+              this.months[this.activeIndex].days.length - 1
+            ].mcurrentDay
+          ).monthName
+        : this.months[this.activeIndex].days[0].currentDay.day +
+          this.dateUtil.convertDateToJalali(
+            this.months[this.activeIndex].days[0].currentDay
+          ).monthName +
+          " _ " +
+          this.months[this.activeIndex].days[
+            this.months[this.activeIndex].days.length - 1
+          ].currentDay.day +
+          this.dateUtil.convertDateToJalali(
+            this.months[this.activeIndex].days[
+              this.months[this.activeIndex].days.length - 1
+            ].currentDay
+          ).monthName;
     monthNameElement.appendChild(monthName);
     headerTitles.appendChild(monthNameElement);
     headerTitles.appendChild(secondMonthName);
@@ -208,12 +234,10 @@ export class DatePicker {
 
     const headerTitle = document.createElement("div");
     headerTitle.setAttribute("data-datepicker-header-title", "");
-    headerTitle.appendChild(refreshButton);
     headerTitle.appendChild(prevButton);
     headerTitle.appendChild(headerTitles);
     headerTitle.appendChild(nextButton);
     this.headerElement.appendChild(headerTitle);
-    //hello
     if (this.options.switchType) {
       const changeTypeButton = document.createElement("button");
       changeTypeButton.setAttribute("data-datepicker-chaneType-btn", "");
@@ -222,6 +246,7 @@ export class DatePicker {
       <path data-sys-text="" d="M10.5299 8.37692H6.76923V12.1846H10.5299V8.37692ZM9.77778 0V1.52308H3.76068V0H2.25641V1.52308H1.50427C0.669402 1.52308 0.00752136 2.20846 0.00752136 3.04615L0 13.7077C0 14.5454 0.669402 15.2308 1.50427 15.2308H12.0342C12.8615 15.2308 13.5385 14.5454 13.5385 13.7077V3.04615C13.5385 2.20846 12.8615 1.52308 12.0342 1.52308H11.2821V0H9.77778ZM12.0342 13.7077H1.50427V5.33077H12.0342V13.7077Z" fill="#767676"/>
       </svg>
       `;
+
       changeTypeButton.addEventListener("click", (e) => {
         this.goToday();
         if (this.options.culture == "en") {
@@ -237,15 +262,34 @@ export class DatePicker {
           this.options.secondCulture =
             this.options.secondCulture == "en" ? "fa" : "en";
         }
-        this.options.lid = this.options.culture == "en" ? 1 : 2;
+
+        this.range.options.lid = this.options.lid == 2 ? 1 : 2;
+        this.options.lid = this.options.lid == 2 ? 1 : 2;
+        this.range.options.culture = this.options.culture == "en" ? "fa" : "en";
         this.options.culture = this.options.culture == "en" ? "fa" : "en";
-        this.monthValues = this.dateUtil.getMonthValueList(
+        this.range.monthValues = this.dateUtil.getMonthValueList(
           convertDate,
           convertDate
         );
-        this.months = [];
-        this.monthValues.map((x) => this.months.push(new Month(this, x)));
-        this.renderAsync();
+        console.log(
+          "this.dateUtil.getMonthValueList(convertDate,convertDate); :>> ",
+          this.dateUtil.getMonthValueList(convertDate, convertDate),
+          convertDate
+        );
+        this.range.months = [];
+        this.range.monthValues.map((x) =>
+          this.range.months.push(new Month(this, x))
+        );
+        // $bc.setSource(this.options.sourceid, [
+        //   {
+        //     from: this.from.year + "/" + this.from.month + "/" + this.from.day,
+        //     to: this.to.year + "/" + this.to.month + "/" + this.to.day,
+        //     culture: this.options.culture,
+        //     lid: this.options.lid,
+        //   },
+        // ]);
+        // this.renderAsync();
+        this.range.runAsync();
       });
       this.headerElement.appendChild(changeTypeButton);
     }
@@ -312,15 +356,26 @@ export class DatePicker {
     monthList.setAttribute("data-datepicker-month-list", "");
     for (var i = 1; i <= 12; i++) {
       const currentMonth = this.activeMonth();
+      console.log("currentMonth :>> ", currentMonth);
       const currentMonthInLoop: MonthValue = {
         year: currentMonth.value.year,
         month: i as MonthNumber,
       };
+      if (this.options.lid == 1) {
+        currentMonthInLoop.year = this.dateUtil.convertDateToJalali({
+          year: currentMonth.value.year,
+          month: i as MonthNumber,
+          day: 1,
+        }).year;
+      }
+
+      console.log("currentMonthInLoop :>> ", currentMonthInLoop);
       const t = this.dateUtil.getMonthName(
         currentMonthInLoop,
         this.options.culture,
         this.options.lid
       );
+      console.log("t :>> ", t);
       const monthListLi = document.createElement("li");
       monthListLi.textContent = t;
       monthListLi.setAttribute("month-number", i.toString());
@@ -402,10 +457,15 @@ export class DatePicker {
     }
     if (this.options.mode == "desktop") {
       this.months[this.activeIndex].days.map((x) => {
-        if (this.options.rangeDates == false) {
+        console.log("this.options.pickerType :>> ", this.options.pickerType);
+        if (this.options.pickerType == "action") {
           new UiDatePicker(this, x).generateDaysUi(mainElement);
-        } else {
+        } else if (this.options.pickerType == "range") {
           new UiDatePicker(this, x).generateDaysUiWithDateRange(mainElement);
+        } else if (this.options.pickerType == "multiple") {
+          new UiDatePicker(this, x).generateDaysUiWithMultipleChoices(
+            mainElement
+          );
         }
       });
     } else {

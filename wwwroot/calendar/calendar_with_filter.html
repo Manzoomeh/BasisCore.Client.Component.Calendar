@@ -4,10 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://basispanel.ir/asset/css/light.css?v=5"
-      rel="stylesheet"
-    />
+
     <script src="/bclib.js"></script>
     <title>Calendar</title>
     <style>
@@ -79,70 +76,18 @@
       };
     </script>
   </head>
-  [##db.form.from##] [##db.form.to##]
   <body>
-    <form name="db.form" bc-triggers="submit" style="direction: rtl">
-      <div class="form-inside">
-        <div class="from">
-          <div class="date-picker-wrapper">
-            <button>
-              <svg
-                viewbox="0 0 24 24"
-                width="24px"
-                height="24px"
-                fill="currentColor"
-                focusable="false"
-                class="mat-datepicker-toggle-default-icon ng-star-inserted"
-              >
-                <path
-                  d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"
-                ></path>
-              </svg>
-            </button>
-            <div class="date-picker-input-wrapper">
-              <span>از تاریخ </span>
-              <basis
-                core="component.calendar.datepicker"
-                name="from"
-                run="atclient"
-                options="mySetting"
-              ></basis>
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
-
-    <br />
-
     <Basis
       core="component.calendar.calendar"
       run="atclient"
       sourceid="db.form"
-      from="1402/8/16"
-      to="1402/10/17"
+      from="2023/10/1"
+      to="2023/10/31"
       options="mySetting1"
-      rkey="AEFB6C78-123E-4226-B61D-1A42391A3BA8"
+      rkey="094E8C33-4943-47F8-BB9D-C99DCDDDFEC4"
     ></Basis>
 
     <script>
-      var mySetting = {
-        dateProvider: "basisCalendar",
-        displayNote: true,
-        culture: "fa",
-        lid: 1,
-        yearsList: true,
-        monthList: true,
-        rangeDates: true,
-        switchType: false,
-        theme: "basic",
-        type: "click",
-        isFilter: true,
-        mode: "desktop",
-        style: "../css/datepicker-style.css",
-        sourceid: "db.form",
-        action: (el) => {},
-      };
       var mySetting1 = {
         dateProvider: "basisCalendar",
         culture: "fa",
@@ -156,21 +101,29 @@
         baseUrl: {
           userid: "https://trust-login.com/api/userid",
           viewnote:
-            "https://basispanel.ir/user/fa/AEFB6C78-123E-4226-B61D-1A42391A3BA8/viewcalendarnote",
+            "https://basispanel.ir/user/fa/094E8C33-4943-47F8-BB9D-C99DCDDDFEC4/viewcalendarnote",
           usernotes:
-            "https://basispanel.ir/user/AEFB6C78-123E-4226-B61D-1A42391A3BA8/calendarnotes",
+            "https://basispanel.ir/user/094E8C33-4943-47F8-BB9D-C99DCDDDFEC4/calendarnotes",
           removenote:
-            "http://basispanel.ir/user/AEFB6C78-123E-4226-B61D-1A42391A3BA8/removenote",
+            "http://basispanel.ir/user/094E8C33-4943-47F8-BB9D-C99DCDDDFEC4/removenote",
           addnote:
-            "https://basispanel.ir/user/AEFB6C78-123E-4226-B61D-1A42391A3BA8/addcalendarnote",
+            "https://basispanel.ir/user/094E8C33-4943-47F8-BB9D-C99DCDDDFEC4/addcalendarnote",
           reminder:
-            "http://basispanel.ir/user/AEFB6C78-123E-4226-B61D-1A42391A3BA8/editnotereminder",
+            "http://basispanel.ir/user/094E8C33-4943-47F8-BB9D-C99DCDDDFEC4/editnotereminder",
           catlist:
-            "https://basispanel.ir/user/AEFB6C78-123E-4226-B61D-1A42391A3BA8/fa/notecatlist",
+            "https://basispanel.ir/user/094E8C33-4943-47F8-BB9D-C99DCDDDFEC4/fa/notecatlist",
           sharing:
-            "https://basispanel.ir/user/AEFB6C78-123E-4226-B61D-1A42391A3BA8/sharing",
+            "https://basispanel.ir/user/094E8C33-4943-47F8-BB9D-C99DCDDDFEC4/sharing",
           removesharing:
-            "https://basispanel.ir/user/AEFB6C78-123E-4226-B61D-1A42391A3BA8/removesharing",
+            "https://basispanel.ir/user/094E8C33-4943-47F8-BB9D-C99DCDDDFEC4/removesharing",
+          userholiday:
+            "https://basispanel.ir/user/094E8C33-4943-47F8-BB9D-C99DCDDDFEC4/fa/calendartemplates",
+          serviceholiday:
+            "https://basispanel.ir/service/094E8C33-4943-47F8-BB9D-C99DCDDDFEC4/fa/calendartemplates",
+          holidaysinrange:
+            "https://basispanel.ir/user/094E8C33-4943-47F8-BB9D-C99DCDDDFEC4/fa/calendarevents",
+          createholidaycategory:
+            "https://basispanel.ir/service/094E8C33-4943-47F8-BB9D-C99DCDDDFEC4/fa/editcalendartemplates",
         },
         labels: {
           todayTitle: "امروز",

@@ -1,5 +1,6 @@
 import { Day } from "../Day/Day";
 import { DatePicker } from "../DatePicker";
+import { Month } from "../Month/Month";
 declare const $bc: any;
 export class UiDatePicker {
   private readonly day: Day;
@@ -14,8 +15,6 @@ export class UiDatePicker {
     let secondDayNumber = document.createElement("span");
     dayElement.setAttribute("data-datepicker-day", "");
     secondDayNumber.setAttribute("data-datepicker-second-culture-day", "");
-    secondDayNumber.setAttribute("data-sys-text", "");
-    spanElement.setAttribute("data-sys-text", "");
     secondDayNumber.textContent = this.day.secondValue
       ? this.day.secondValue + ""
       : "";
@@ -42,7 +41,8 @@ export class UiDatePicker {
         "/" +
         this.day.mcurrentDay.day;
 
-      this.range.datePickerInput.value = selectDate;
+      this.range.datePickerInput.value =
+        this.range.options.culture === "fa" ? selectDate : mselectDate;
 
       this.range.datePickerInput.setAttribute(
         "data-datepicker-dateid",
@@ -57,12 +57,105 @@ export class UiDatePicker {
         mselectDate
       );
       if (this.range.options.action) {
-        // dayElement.addEventListener("click", e => {
-        e.preventDefault();
-        this.range.options.action(dayElement);
-        // });
+        dayElement.addEventListener("click", (e) => {
+          e.preventDefault();
+          this.range.options.action(dayElement);
+        });
       }
       this.range.wrapper.remove();
+    });
+    parentElement.appendChild(dayElement);
+  }
+
+  generateDaysUiWithMultipleChoices(parentElement: HTMLElement): void {
+    let dayElement = document.createElement("div");
+    let spanElement = document.createElement("span");
+    const dayValue =
+      this.range.options.culture === "fa"
+        ? this.day.currentDay
+        : this.day.mcurrentDay;
+    dayElement.setAttribute("data-datepicker-day", "");
+
+    spanElement.textContent = dayValue.day + "";
+    dayElement.setAttribute("data-datepicker-id", this.day.dateId.toString());
+    dayElement.setAttribute("data-sys-inherit", "");
+    dayElement.appendChild(spanElement);
+    if (this.day.isToday == true) {
+      dayElement.setAttribute("data-datepicker-today", "");
+    }
+    if (
+      this.range.datesArray.find(
+        (e) =>
+          e.day == dayValue.day &&
+          e.month == dayValue.month &&
+          e.year == dayValue.year
+      )
+    ) {
+      dayElement.setAttribute("data-datepicker-start-day", "");
+    }
+    console.log(
+      "object :>> ",
+      this.range.datesArray,
+      dayValue,
+      this.range.datesArray.find(
+        (e) =>
+          e.day == dayValue.day &&
+          e.month == dayValue.month &&
+          e.year == dayValue.year
+      )
+    );
+    dayElement.addEventListener("click", async (e) => {
+      console.log("this.day :>> ", this.day);
+      const selected =
+        this.range.options.culture === "fa"
+          ? this.day.currentDay
+          : this.day.mcurrentDay;
+      const selectDate =
+        selected.year + "/" + selected.month + "/" + selected.day;
+
+      if (!this.range.datesArray.includes(selected)) {
+        this.range.datesArray.push(selected);
+        this.range.datesIds.push(this.day.dateId);
+        // if (parentElement.querySelector("[data-datepicker-start-day]")) {
+        //   parentElement
+        //     .querySelector("[data-datepicker-start-day]")
+        //     .removeAttribute("data-datepicker-start-day");
+        // }
+        dayElement.setAttribute("data-datepicker-start-day", "");
+        if (this.range.options.isModalPicker) {
+          (
+            document.querySelector(
+              "[data-modal-input-dates]"
+            ) as HTMLInputElement
+          ).value = this.range.datesArray
+            .map(
+              (e) =>
+                String(e.year) + "/" + String(e.month) + "/" + String(e.day)
+            )
+            .join(",");
+        }
+        this.range.fromdate = selectDate;
+      } else {
+        dayElement.removeAttribute("data-datepicker-start-day");
+        this.range.datesArray = this.range.datesArray.filter(
+          (e) => e != selected
+        );
+        this.range.datesIds = this.range.datesIds.filter(
+          (e) => e != this.day.dateId
+        );
+        if (this.range.options.isModalPicker) {
+          (
+            document.querySelector(
+              "[data-modal-input-dates]"
+            ) as HTMLInputElement
+          ).value = this.range.datesArray
+            .map(
+              (e) =>
+                String(e.year) + "/" + String(e.month) + "/" + String(e.day)
+            )
+            .join(",");
+        }
+      }
     });
     parentElement.appendChild(dayElement);
   }
@@ -72,12 +165,15 @@ export class UiDatePicker {
     let secondDayNumber = document.createElement("span");
     dayElement.setAttribute("data-datepicker-day", "");
     secondDayNumber.setAttribute("data-datepicker-second-culture-day", "");
-    secondDayNumber.setAttribute("data-sys-text", "");
-    spanElement.setAttribute("data-sys-text", "");
-    secondDayNumber.textContent = this.day.secondValue
-      ? this.day.secondValue + ""
-      : "";
-    spanElement.textContent = this.day.currentDay.day + "";
+    secondDayNumber.textContent =
+      this.range.options.culture === "fa"
+        ? this.day.mcurrentDay.day + ""
+        : this.day.currentDay.day + "";
+
+    spanElement.textContent =
+      this.range.options.culture === "fa"
+        ? this.day.currentDay.day + ""
+        : this.day.mcurrentDay.day + "";
     dayElement.setAttribute("data-datepicker-id", this.day.dateId.toString());
     dayElement.setAttribute("data-sys-inherit", "");
     dayElement.appendChild(spanElement);
@@ -86,15 +182,15 @@ export class UiDatePicker {
       dayElement.setAttribute("data-datepicker-today", "");
     }
 
-    dayElement.addEventListener("click", (e) => {
+    dayElement.addEventListener("click", async (e) => {
+      const selected =
+        this.range.options.culture === "fa"
+          ? this.day.currentDay
+          : this.day.mcurrentDay;
       const selectDate =
-        this.day.currentDay.year +
-        "/" +
-        this.day.currentDay.month +
-        "/" +
-        this.day.currentDay.day;
+        selected.year + "/" + selected.month + "/" + selected.day;
 
-      this.range.datesArray.push(this.day.currentDay);
+      this.range.datesArray.push(selected);
       if (this.range.datesArray.length == 1) {
         if (parentElement.querySelector("[data-datepicker-start-day]")) {
           parentElement
@@ -104,7 +200,7 @@ export class UiDatePicker {
         dayElement.setAttribute("data-datepicker-start-day", "");
         this.disabledDays(parentElement);
         this.range.datePickerInput.value = selectDate;
-        document.querySelector("[data-datepicker-month-jalali]").innerHTML =
+        document.querySelector("[data-datepicker-month-main]").innerHTML =
           String(this.range.datesArray[0].day) +
           " " +
           this.range.months[this.range.activeIndex].monthName;
@@ -119,6 +215,7 @@ export class UiDatePicker {
 
         this.range.fromdate = selectDate;
       } else if (this.range.datesArray.length > 1) {
+        console.log("this.range.datesArray :>> ", this.range.datesArray);
         if (parentElement.querySelector("[data-datepicker-end-day]")) {
           parentElement
             .querySelector("[data-datepicker-end-day]")
@@ -153,12 +250,39 @@ export class UiDatePicker {
         if (this.range.options.type == "click") {
           this.range.wrapper.remove();
         }
-
-        if (this.range.options.sourceid) {
-          $bc.setSource(this.range.options.sourceid, [
-            { from: this.range.fromdate, to: selectDate },
-          ]);
+        this.range.range.from = this.range.dateUtil.convertStringToDayValue(
+          this.range.fromdate
+        );
+        this.range.range.to =
+          this.range.dateUtil.convertStringToDayValue(selectDate);
+        console.log(
+          "object :>> ",
+          this.range.fromdate,
+          selectDate,
+          this.range.range.from,
+          this.range.range.to
+        );
+        console.log(
+          `this.range.dateUtil.getMonthValueList(
+          this.range.from,
+          this.range.to
+        ); :>> `,
+          this.range.dateUtil.getMonthValueList(this.range.from, this.range.to)
+        );
+        this.range.range.monthValues = this.range.dateUtil.getMonthValueList(
+          this.range.range.from,
+          this.range.range.to
+        );
+        this.range.range.months = [];
+        this.range.range.monthValues.map((x) => {
+          console.log("x :>> ", x);
+          this.range.range.months.push(new Month(this.range, x));
+        });
+        if (this.range.range.options.displayNote) {
+          //load notes from server;
+          await this.range.range.refreshNotesAsync();
         }
+        this.range.range.runAsync();
         if (this.range.options.action) {
           // dayElement.addEventListener("change", e => {
           e.preventDefault();

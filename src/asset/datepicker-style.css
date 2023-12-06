@@ -98,7 +98,6 @@ select {
   font-style: normal;
   font-weight: 400;
   line-height: 22px; /* 122.222% */
-  width: 153px;
   height: 16px;
   flex-shrink: 0;
 }
@@ -200,9 +199,9 @@ select {
   position: relative;
   display: flex;
   align-items: center;
-  flex-direction: row;
+  flex-direction: row-reverse;
   width: 100%;
-  direction: ltr;
+  direction: initial;
   justify-content: space-between;
 }
 [data-datepicker-title] {
@@ -337,13 +336,13 @@ select {
 }
 [data-datepicker-years-list] li,
 [data-datepicker-month-list] li {
-  border-bottom: 1px solid #d2d2d2;
-  border-left: 1px solid #d2d2d2;
-  width: 63px;
-  height: 30px;
+  margin: auto;
+  width: 70px;
+  height: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 12px;
   cursor: pointer;
 }
 [data-datepicker-body-years-list] {
@@ -353,10 +352,7 @@ select {
   display: flex;
   justify-content: center;
 }
-[data-datepicker-years-list] li:nth-child(4n),
-[data-datepicker-month-list] li:nth-child(4n) {
-  border-left: none;
-}
+
 [data-bc-close-year-list] {
   float: left;
   font: 14px;

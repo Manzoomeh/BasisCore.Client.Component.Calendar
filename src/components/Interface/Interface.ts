@@ -105,12 +105,13 @@ export interface IDatePickerOptions {
   dateProvider?: DateUtilProvider;
   culture?: Culture;
   lid?: Lid;
+  isModalPicker?: boolean;
   todayButton?: boolean;
   yearsList?: boolean;
   monthList?: boolean;
-  rangeDates?: boolean;
+  pickerType?: "range" | "multiple" | "action";
   isFilter?: boolean;
-
+  rangeDates?: boolean;
   switchType?: boolean;
   secondCulture?: Culture;
   theme?: string;

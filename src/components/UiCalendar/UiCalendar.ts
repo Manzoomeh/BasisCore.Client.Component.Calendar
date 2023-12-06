@@ -1,3 +1,4 @@
+import { DatePicker } from "./../DatePicker";
 import { Day } from "../Day/Day";
 import { Modal } from "../Modal/Modal";
 import { DateRange } from "../calendar";
@@ -15,12 +16,14 @@ import reminderRowShare from "../UiCalendar/asset/reminderRowShare.html";
 import { TimepickerUI } from "timepicker-ui";
 import { OptionTypes } from "timepicker-ui";
 import { ViewNote } from "./ViewNote";
+
 declare const $bc: any;
 export class UiCalendar {
   private viewNote: ViewNote;
   public modal: Modal;
   readonly range: DateRange;
   public readonly day: Day;
+  private picker: DatePicker;
   constructor(owner: DateRange, day: Day) {
     this.day = day;
     this.range = owner;
@@ -49,6 +52,50 @@ export class UiCalendar {
         : null;
     }
   }
+  async createHolidayCategory(title) {
+    const url = this.range.options.baseUrl["createholidaycategory"];
+
+    // const body = {
+    //   id: 0,
+    //   typeid: 1,
+    //   title,
+    //   events: [{ id: 2, title: "a", dateids: this.picker.datesIds }],
+    // };
+    const body = {
+      id: (
+        document.querySelector(
+          "[data-modal-select-category]"
+        ) as HTMLSelectElement
+      ).value,
+      typeid: 1,
+      title: (
+        document.querySelector("[data-modal-title-input]") as HTMLInputElement
+      ).value,
+      events: [
+        {
+          id: "0",
+          title: (
+            document.querySelector(
+              "[data-modal-title-input]"
+            ) as HTMLInputElement
+          ).value,
+          dateids: this.picker.datesArray.map((e) =>
+            this.range.dateUtil.getBasisDayId(e)
+          ),
+        },
+      ],
+    };
+
+    const data = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: { "Content-Type": "application/json" },
+    });
+    const result = await data.json();
+    if (result.message === "successful") {
+      this.range.syncHolidayCategories();
+    }
+  }
   generateDaysUi(filters, holidays, categories): Node {
     let dayElement = document.createElement("div");
     let spanElement = document.createElement("span");
@@ -58,8 +105,14 @@ export class UiCalendar {
     dayElement.setAttribute("data-sys-inherit", "");
     secondCulture.setAttribute("data-calendar-second-day", "");
     dateWrapper.setAttribute("bc-calendar-date-wrppaer", "");
-    secondCulture.textContent = this.day.secondValue + "";
-    spanElement.textContent = this.day.currentDay.day + "";
+    secondCulture.textContent =
+      this.range.options.culture === "fa"
+        ? this.day.mcurrentDay.day + ""
+        : this.day.currentDay.day + "";
+    spanElement.textContent =
+      this.range.options.culture === "fa"
+        ? this.day.currentDay.day + ""
+        : this.day.mcurrentDay.day + "";
     dayElement.setAttribute("data-id1", this.day.dateId.toString());
     dateWrapper.appendChild(spanElement);
     dateWrapper.appendChild(secondCulture);
@@ -76,14 +129,20 @@ export class UiCalendar {
     noteElement.setAttribute("data-calendar-note-lists", "");
     var displayNotes = this.range.options.displayNote;
     noteElement.appendChild(ulElement);
+    console.log("this.day :>> ", this.day);
     if (holidays.length > 0) {
-      const todaytHolidays = this.range.dateUtil
-        .getHolidays(this.range.from, this.range.to, holidays)
-        .filter((e) => e.day === this.day.value);
+      const todaytHolidays = this.range.holidays.filter(
+        (e) => e.dateID == this.day.dateId
+      );
+      console.log(
+        "todaytHolidays,this.range.holidays :>> ",
+        todaytHolidays,
+        this.range.holidays
+      );
       if (todaytHolidays.length > 0) {
         todaytHolidays.map((x) => {
           let liElement = document.createElement("li");
-          liElement.textContent = x.detail.occasion;
+          liElement.textContent = x.eventName;
           const liIcon = document.createElement("div");
           liIcon.style.display = "flex";
           liIcon.style.alignItems = "center";
@@ -206,6 +265,128 @@ export class UiCalendar {
       this.modal.openModal(modalInside);
     });
     return dayElement;
+  }
+  generatePersonalHolidayForm(): HTMLElement {
+    const datePickerModal = document.createElement("div");
+
+    const container = document.createElement("div");
+    datePickerModal.setAttribute("data-calendar-modal-picker", "");
+
+    datePickerModal.appendChild(container);
+    this.picker = new DatePicker(
+      this.range.from,
+      this.range.to,
+      {
+        dateProvider: "basisCalendar",
+        isModalPicker: true,
+        culture: this.range.options.culture,
+        lid: this.range.options.lid,
+        yearsList: true,
+        monthList: true,
+        pickerType: "multiple",
+        theme: "basic",
+        isFilter: true,
+        mode: "desktop",
+        style: "../css/datepicker-style.css",
+      },
+      this.range
+    );
+    this.picker.createUIAsync(container);
+    const formContainer = document.createElement("div");
+
+    const modalHeader = document.createElement("div");
+    const modalBody = document.createElement("div");
+    const modalFooter = document.createElement("div");
+    const modalTitle = document.createElement("div");
+    const submitBtn = document.createElement("button");
+    const deviderLine = document.createElement("div");
+    const cancelBtn = document.createElement("div");
+    const categoriesRow = document.createElement("div");
+    const firstInputRow = document.createElement("div");
+    const secondInputRow = document.createElement("div");
+    const categoriesOptionsTitle = document.createElement("div");
+    const subCategoriesOptionsTitle = document.createElement("div");
+    const firstInputTitle = document.createElement("div");
+    const secondInputTitle = document.createElement("div");
+    const categoriesOptions = document.createElement("select");
+    const firstInput = document.createElement("input");
+    const secondInput = document.createElement("input");
+    deviderLine.setAttribute("data-calendar-footer-devider", "");
+    modalFooter.setAttribute("data-modal-footer-container", "");
+    modalFooter.appendChild(submitBtn);
+    modalFooter.appendChild(cancelBtn);
+    categoriesOptions.setAttribute("data-modal-input-element", "");
+    categoriesOptions.setAttribute("data-modal-select-category", "");
+    firstInput.setAttribute("data-modal-input-element", "");
+    firstInput.setAttribute("data-modal-title-input", "");
+    secondInput.setAttribute("data-modal-input-element", "");
+    secondInput.setAttribute("data-modal-input-dates", "");
+    secondInput.setAttribute("data-modal-calendar-icon", "");
+    categoriesOptions.innerHTML = [
+      { id: 0, title: "جدید" },
+      ...this.range.holidayCategories,
+    ]
+      .map((e) => `<option value='${e.id}'>${e.title}</option>`)
+      .join("");
+    categoriesOptions.value = "0";
+    secondInput.disabled = true;
+    const inputIcon = document.createElement("div");
+    inputIcon.setAttribute("data-modal-input-icon", "");
+    inputIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.9987 16.6693C6.856 16.6693 5.28465 16.6693 4.30834 15.693C3.33203 14.7166 3.33203 13.1453 3.33203 10.0026C3.33203 6.85991 3.33203 5.28856 4.30834 4.31225C5.28465 3.33594 6.856 3.33594 9.9987 3.33594C13.1414 3.33594 14.7127 3.33594 15.6891 4.31225C16.6654 5.28856 16.6654 6.85991 16.6654 10.0026C16.6654 13.1453 16.6654 14.7166 15.6891 15.693C14.7127 16.6693 13.1414 16.6693 9.9987 16.6693ZM9.9987 7.16927C9.58448 7.16927 9.2487 7.50506 9.2487 7.91927C9.2487 8.19541 9.02484 8.41927 8.7487 8.41927C8.47256 8.41927 8.2487 8.19541 8.2487 7.91927C8.2487 6.95277 9.0322 6.16927 9.9987 6.16927C10.9652 6.16927 11.7487 6.95277 11.7487 7.91927C11.7487 8.39316 11.5597 8.82392 11.254 9.13858C11.1925 9.2019 11.1338 9.26052 11.0778 9.31644C10.934 9.46021 10.8079 9.58616 10.6973 9.72827C10.5513 9.91589 10.4987 10.0538 10.4987 10.1693V10.6693C10.4987 10.9454 10.2748 11.1693 9.9987 11.1693C9.72256 11.1693 9.4987 10.9454 9.4987 10.6693V10.1693C9.4987 9.73248 9.70204 9.3789 9.90814 9.11408C10.0606 8.91813 10.2523 8.72683 10.4079 8.57158C10.4548 8.52475 10.4984 8.48119 10.5367 8.44179C10.6684 8.30623 10.7487 8.12263 10.7487 7.91927C10.7487 7.50506 10.4129 7.16927 9.9987 7.16927ZM9.9987 13.3359C10.3669 13.3359 10.6654 13.0375 10.6654 12.6693C10.6654 12.3011 10.3669 12.0026 9.9987 12.0026C9.63051 12.0026 9.33203 12.3011 9.33203 12.6693C9.33203 13.0375 9.63051 13.3359 9.9987 13.3359Z" fill="#004B85"/>
+  </svg>`;
+    categoriesOptionsTitle.setAttribute("data-modal-input-title", "");
+    subCategoriesOptionsTitle.setAttribute("data-modal-input-title", "");
+    firstInputTitle.setAttribute("data-modal-input-title", "");
+    secondInputTitle.setAttribute("data-modal-input-title", "");
+    categoriesOptionsTitle.innerHTML = `نوع ${inputIcon.outerHTML}`;
+    subCategoriesOptionsTitle.innerHTML = `دسته ${inputIcon.outerHTML}`;
+    firstInputTitle.innerHTML = `عنوان ${inputIcon.outerHTML}`;
+    secondInputTitle.innerHTML = `بازه زمانی ${inputIcon.outerHTML}`;
+    modalTitle.setAttribute("data-calendar-modal-title", "");
+    categoriesRow.setAttribute("data-calendar-modal-row", "");
+    firstInputRow.setAttribute("data-calendar-modal-row", "");
+    secondInputRow.setAttribute("data-calendar-modal-row", "");
+    categoriesRow.appendChild(categoriesOptionsTitle);
+    categoriesRow.appendChild(categoriesOptions);
+    firstInputRow.appendChild(firstInputTitle);
+    secondInputRow.appendChild(secondInputTitle);
+    firstInputRow.appendChild(firstInput);
+    secondInputRow.appendChild(secondInput);
+    modalTitle.innerText = "شخصی سازی تعطیلات";
+    const closeBtn = document.createElement("div");
+    modalHeader.setAttribute("data-calendar-modal-header", "");
+    modalBody.setAttribute("data-calendar-modal-body", "");
+    closeBtn.setAttribute("data-calendar-close-btn", "");
+    closeBtn.innerHTML = `<svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path data-sys-text="" opacity="0.8" d="M8.05223 7.49989L13.3519 13.3409C13.6968 13.7208 13.6968 14.3351 13.3519 14.7151C13.0072 15.095 12.4498 15.095 12.1051 14.7151L6.80521 8.87405L1.50552 14.7151C1.16063 15.095 0.603404 15.095 0.258671 14.7151C-0.0862237 14.3351 -0.0862237 13.7208 0.258671 13.3409L5.55836 7.49989L0.258671 1.65889C-0.0862237 1.27896 -0.0862237 0.66466 0.258671 0.284728C0.430473 0.0952063 0.656366 0 0.882097 0C1.10783 0 1.33356 0.0952063 1.50552 0.284728L6.80521 6.12572L12.1051 0.284728C12.277 0.0952063 12.5028 0 12.7285 0C12.9542 0 13.18 0.0952063 13.3519 0.284728C13.6968 0.66466 13.6968 1.27896 13.3519 1.65889L8.05223 7.49989Z" fill="black"/>
+    </svg>
+    `;
+
+    closeBtn.addEventListener("click", (e) => {
+      this.modal.closeModal();
+    });
+    submitBtn.innerText = "ثبت";
+    submitBtn.setAttribute("new-form-submit-button", "");
+    submitBtn.addEventListener("click", async () => {
+      await this.createHolidayCategory(firstInput.value);
+    });
+    cancelBtn.innerText = "انصراف";
+    cancelBtn.setAttribute("new-form-cancel-buttons", "");
+    cancelBtn.addEventListener("click", () => {
+      this.modal.closeModal();
+    });
+    modalHeader.appendChild(closeBtn);
+    modalHeader.appendChild(modalTitle);
+    modalBody.append(categoriesRow);
+    modalBody.append(firstInputRow);
+    modalBody.append(secondInputRow);
+    modalBody.append(datePickerModal);
+    formContainer.appendChild(modalHeader);
+    formContainer.appendChild(modalBody);
+    formContainer.appendChild(deviderLine);
+    formContainer.appendChild(modalFooter);
+    return formContainer;
   }
   generateNoteForm(note?: INote, creator?: number): HTMLElement {
     const editCodeWrapper: HTMLElement = document.createElement("div");
@@ -740,7 +921,13 @@ export class UiCalendar {
     closeBtn.addEventListener("click", (e) => {
       this.modal.closeModal();
     });
-    currentDate.innerHTML = `<span>${this.day.currentDay.day}</span> <span>${this.day.month.monthName}</span> <span>${this.day.month.currentYear}</span>`;
+    currentDate.innerHTML = `<span>${
+      this.range.options.culture === "fa"
+        ? this.day.currentDay.day
+        : this.day.mcurrentDay.day
+    }</span> <span>${this.day.month.monthName}</span> <span>${
+      this.day.month.currentYear
+    }</span>`;
     modalBtns.appendChild(closeBtn);
     modalBtns.appendChild(newBtn);
     modalHeader.appendChild(modalBtns);

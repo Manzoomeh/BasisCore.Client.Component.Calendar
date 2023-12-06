@@ -17,18 +17,33 @@ export class Day {
     this.month = owner;
     this.value = value;
     this.isHoliday;
-    this.currentDay = {
-      year: this.month.value.year,
-      month: this.month.value.month,
-      day: this.value,
-    };
-    this.dayOfWeek = this.month.range.dateUtil.getWeekday(
-      this.currentDay,
-      this.month.range.options.culture
-    );
-    this.mcurrentDay = this.month.range.dateUtil.convertToGregorianFullDate(
-      this.currentDay
-    );
+    if (this.month.range.options.culture === "fa") {
+      this.currentDay = {
+        year: this.month.value.year,
+        month: this.month.value.month,
+        day: this.value,
+      };
+      this.dayOfWeek = this.month.range.dateUtil.getWeekday(
+        this.currentDay,
+        this.month.range.options.culture
+      );
+      this.mcurrentDay = this.month.range.dateUtil.convertToGregorianFullDate(
+        this.currentDay
+      );
+    } else {
+      this.mcurrentDay = {
+        year: this.month.value.year,
+        month: this.month.value.month,
+        day: this.value,
+      };
+      this.dayOfWeek = this.month.range.dateUtil.getWeekday(
+        this.mcurrentDay,
+        this.month.range.options.culture
+      );
+      this.currentDay = this.month.range.dateUtil.convertDateToJalali(
+        this.mcurrentDay
+      );
+    }
     if (
       this.month.range.options.secondCulture &&
       this.month.range.options.secondCulture == "en"

@@ -285,8 +285,8 @@ body{
  [data-datepicker-year-number]{margin-right:5px; display: inline-block; }
  [data-datepicker-yearnumber-select],[data-datepicker-month-select]{cursor: pointer;}
  [data-datepicker-years-list],[data-datepicker-month-list]{padding: 0 10px; display: flex; flex-wrap: wrap; display: flex; margin: 0; }
- [data-datepicker-years-list] li,[data-datepicker-month-list] li{border-bottom: 1px solid #d2d2d2;border-left: 1px solid #d2d2d2;
- width: 63px;height: 30px;
+ [data-datepicker-years-list] li,[data-datepicker-month-list] li{margin: auto;
+ width: 70px;height: 70px;
  display: flex;
  justify-content: center;
  align-items: center;cursor: pointer;}

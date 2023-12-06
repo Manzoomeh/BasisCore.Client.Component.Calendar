@@ -11,6 +11,12 @@ export declare type DayValue = MonthValue & {
 export declare type DayValueAndMonthName = DayValue & {
   monthName: string;
 };
+export declare type eventValue = {
+  temID: string;
+  eventID: string;
+  eventName: string;
+  dateID: number;
+};
 export declare type catFilter = { title: string; id: number };
 export declare type Lid = 1 | 2;
 export declare type MonthNumber =

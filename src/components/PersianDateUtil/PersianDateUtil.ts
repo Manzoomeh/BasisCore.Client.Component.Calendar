@@ -19,14 +19,17 @@ export class PersianDateUtil implements IDateUtil {
   constructor() {
     this.persianDate = require("persian-date");
   }
-  getHolidays(from: DayValue, to: DayValue, filters: string[]): any[] {
-    let holidays = [];
 
-    return holidays;
+  convertStringToDayValue(date: string): DayValue {
+    return;
   }
   convertDateToGregorian(day: DayValue): DayValueAndMonthName {
     return;
   }
+  convertDateToJalali(day: DayValue): DayValueAndMonthName {
+    return;
+  }
+
   getMonthName(month: MonthValue, culture: Culture, lid: Lid): string {
     return new this.persianDate([month.year, month.month, 1])
       .toLocale(this.lidConvertor[lid])

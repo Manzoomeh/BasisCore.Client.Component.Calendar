@@ -179,68 +179,7 @@ export class BasisCoreDateUtil implements IDateUtil {
   getWeekday(day: DayValue, culture: Culture): number {
     return this.getObj(day.year, day.month, day.day).weekday;
   }
-  getHolidays(from: DayValue, to: DayValue, filters: any[]): any[] {
-    let holidays = [];
-    if (filters.filter((e) => e.value === "jalali").length > 0) {
-      holidays = [
-        ...holidays,
-        ...this.jalaliHolidays.filter(
-          (e) =>
-            (e.month === from.month &&
-              e.day >= from.day &&
-              e.month === to.month &&
-              e.day <= to.day) ||
-            (e.month === to.month && e.day <= to.day) ||
-            (e.month === from.month && e.month < to.month && e.day >= from.day)
-        ),
-      ];
-    }
-    if (filters.filter((e) => e.value === "qamari").length > 0) {
-      const qfrom = this.json.find(
-        (e) =>
-          e.sdate === from.day &&
-          e.smonth === from.month &&
-          e.syear === from.year
-      );
-      const qamariFrom = qfrom.qamari.split("/");
-      const qto = this.json.find(
-        (e) => e.sdate === to.day && e.smonth === to.month && to.year == e.syear
-      );
-      const qamariTo = qto.qamari.split("/");
 
-      holidays = [
-        ...holidays,
-        ...this.qamariHolidays
-          .filter(
-            (e) =>
-              (e.month === Number(qamariFrom[1]) &&
-                e.day >= Number(qamariFrom[2]) &&
-                e.month === Number(qamariTo[1]) &&
-                e.day <= Number(qamariTo[2])) ||
-              (e.month === Number(qamariTo[1]) &&
-                e.day <= Number(qamariTo[2])) ||
-              (e.month === Number(qamariFrom[1]) &&
-                e.month < Number(qamariTo[1]) &&
-                e.day >= Number(qamariFrom[2]))
-          )
-          .map((i) => {
-            const jalaliDate = this.json.find(
-              (j) =>
-                j.id >= qfrom.id &&
-                j.id <= qto.id &&
-                j.qamari.includes(String(i.month) + "/" + String(i.day))
-            );
-
-            return {
-              ...i,
-              day: jalaliDate.sdate,
-              month: jalaliDate.smonth,
-            };
-          }),
-      ];
-    }
-    return holidays;
-  }
   getJalaliDateByQamariDate(qamariDate: string) {
     return this.json.find((e) => e.qamari === qamariDate);
   }
@@ -256,6 +195,7 @@ export class BasisCoreDateUtil implements IDateUtil {
     return false;
   }
   getMonthValueList(from: DayValue, to: DayValue): MonthValue[] {
+    console.log("from,to :>> ", from, to);
     let months: MonthValue[] = [];
     let startYear = false;
     for (var j = from.year; j <= to.year; j++) {
@@ -284,6 +224,7 @@ export class BasisCoreDateUtil implements IDateUtil {
         }
       }
     }
+    console.log("months :>> ", months);
     return months;
   }
   getCurrentDate(): DayValue {
@@ -410,6 +351,16 @@ export class BasisCoreDateUtil implements IDateUtil {
     };
     return gregorianDate;
   }
+  convertDateToJalali(day: DayValue): DayValueAndMonthName {
+    const basisDate = this.getObj(day.year, day.month, day.day);
+    var jalaliDate = {
+      year: basisDate.syear,
+      month: basisDate.smonth,
+      day: basisDate.sdate,
+      monthName: this.sMonthsNameFa[basisDate.smonth],
+    };
+    return jalaliDate;
+  }
 
   convertToJalali(day: MonthValue): DayValue {
     const basisDate = this.getObj(day.year, day.month, 1);
@@ -420,7 +371,14 @@ export class BasisCoreDateUtil implements IDateUtil {
     };
     return jalaliDate;
   }
-
+  convertStringToDayValue(date: string): DayValue {
+    const arr = date.split("/");
+    return {
+      year: Number(arr[0]),
+      month: Number(arr[1]) as MonthNumber,
+      day: Number(arr[2]) as MonthNumber,
+    };
+  }
   getGregorianDaysNumber(day: DayValue): DayNumber {
     const basisDate = this.getObj(day.year, day.month, day.day);
 

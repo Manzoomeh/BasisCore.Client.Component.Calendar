@@ -21,9 +21,9 @@ export interface IDateUtil {
   getIsLeapYear(year: YearValue, culture: Culture): boolean;
   getDayNames(lid: Lid, culture: Culture): string[];
   getDayShortNames(lid: Lid, culture: Culture): string[];
-  getHolidays(from: DayValue, to: DayValue, filters: string[]): any[];
   getMonthValueList(from: DayValue, to: DayValue): MonthValue[];
   getCurrentDate(): DayValue;
+  convertStringToDayValue(date: string): DayValue;
   getIsToday(day: DayValue): boolean;
   nextMonth(month: Month, culture: Culture): MonthValue;
   nextYear(month: Month, culture: Culture): MonthValue;
@@ -31,6 +31,7 @@ export interface IDateUtil {
   prevYear(month: Month, culture: Culture): MonthValue;
   convertToGregorian(day: MonthValue): DayValue;
   convertDateToGregorian(day: DayValue): DayValueAndMonthName;
+  convertDateToJalali(day: DayValue): DayValueAndMonthName;
   convertToJalali(day: MonthValue): DayValue;
   getGregorianDaysNumber(day: DayValue): DayNumber;
   getGregorianMonthsName(month: MonthValue): string;

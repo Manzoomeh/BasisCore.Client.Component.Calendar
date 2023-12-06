@@ -5,6 +5,7 @@ import {
   MonthValue,
   ReminderType,
   catFilter,
+  eventValue,
 } from "./type-alias";
 import { ICalenderOptions, INote, ICatNote } from "./Interface/Interface";
 import { IDateUtil } from "./IDateUtil/IDateUtil";
@@ -13,6 +14,8 @@ import { PersianDateUtil } from "./PersianDateUtil/PersianDateUtil";
 import { UiCalendar } from "./UiCalendar/UiCalendar";
 import { UiMbobile } from "./mobile/UiMobile";
 import IUserDefineComponent from "../basiscore/IUserDefineComponent";
+import { DatePicker } from "./DatePicker";
+import { EntryPlugin } from "webpack";
 declare const $bc: any;
 export class DateRange {
   public readonly dateUtil: BasisCoreDateUtil | PersianDateUtil;
@@ -25,7 +28,9 @@ export class DateRange {
   public activeIndex: number;
   public catFilters: catFilter[] = [];
   public userId: number = 0;
+  public holidayCategories = [];
   public holidays = [];
+
   public holidayFilters = [];
   public from: DayValue;
   public to: DayValue;
@@ -41,7 +46,7 @@ export class DateRange {
     lid: 1,
     theme: "basic",
     mode: "desktop",
-    level: "user",
+    level: "service",
   };
 
   public constructor(
@@ -64,6 +69,7 @@ export class DateRange {
     this.note = new Array<INote>();
     this.monthValues = this.dateUtil.getMonthValueList(from, to);
     this.monthValues.map((x) => this.months.push(new Month(this, x)));
+    this.syncHolidayCategories();
     this.getHolidays();
     this.getCategories();
   }
@@ -88,12 +94,29 @@ export class DateRange {
     this.userId = parseInt(userIdObj.userid);
     return null;
   }
-  public getHolidays() {
-    this.holidays = this.dateUtil.getHolidays(
-      this.from,
-      this.to,
-      this.holidayFilters
-    );
+  public async getHolidays(): Promise<void> {
+    const url = this.options.baseUrl["holidaysinrange"];
+    const fromDateId = this.dateUtil.getBasisDayId(this.from);
+    const toDateId = this.dateUtil.getBasisDayId(this.to);
+    console.log("catFilters :>> ", this.catFilters);
+    this.holidayFilters.map(async (e) => {
+      try {
+        console.log("e :>> ", e);
+        const res = await fetch(url, {
+          method: "POST",
+          body: JSON.stringify({
+            from: fromDateId,
+            to: toDateId,
+            tempid: e.id,
+            typeid: this.options.lid,
+          }),
+        });
+        const data = await res.json();
+        console.log("data :>> ", data);
+        this.holidays.push(data);
+        this.holidays = Array.from(new Set(this.holidays));
+      } catch {}
+    });
   }
   public async getCategories() {
     // this.Owner.addTrigger("")
@@ -125,6 +148,16 @@ export class DateRange {
     };
     await this.syncNotesAsync(from, to);
   }
+  public async syncHolidayCategories(): Promise<void> {
+    const url =
+      this.options.level === "service"
+        ? this.options.baseUrl["serviceholiday"]
+        : this.options.baseUrl["userholiday"];
+
+    const res = await fetch(url);
+    const data = await res.json();
+    this.holidayCategories = data.message ? [] : data;
+  }
 
   protected async syncNotesAsync(from: DayValue, to: DayValue): Promise<void> {
     //fetch push new data to server and fetch all data from server
@@ -132,7 +165,6 @@ export class DateRange {
     const fromDateId = this.dateUtil.getBasisDayId(from);
     const toDateId = this.dateUtil.getBasisDayId(to);
     const form = new FormData();
-    const useridd = await this.getUserId();
     form.append("shared", "0");
     // form.append("catid", "");
     form.append("from", `${fromDateId}`);
@@ -165,12 +197,7 @@ export class DateRange {
     var todayNote: INote[] = this.note.filter((x) => x.dateid == dateid);
     return todayNote;
   }
-  public getDayHolidays(dayNumber: number): any[] {
-    var todayHoliday: any[] = this.holidays.filter(
-      (x) => x.dateid == dayNumber
-    );
-    return todayHoliday;
-  }
+
   async nextMonth(): Promise<void> {
     let nextMonthValues: MonthValue;
     nextMonthValues = this.dateUtil.nextMonth(
@@ -199,7 +226,12 @@ export class DateRange {
         String(lastDay.month.value.month) +
         "/" +
         String(lastDay.value);
-      $bc.setSource(this.options.sourceid, { from, to });
+      $bc.setSource(this.options.sourceid, {
+        from,
+        to,
+        culture: this.options.culture,
+        lid: this.options.lid,
+      });
     }
     this.runAsync();
   }
@@ -231,7 +263,12 @@ export class DateRange {
         String(lastDay.month.value.month) +
         "/" +
         String(lastDay.value);
-      $bc.setSource(this.options.sourceid, { from, to });
+      $bc.setSource(this.options.sourceid, {
+        from,
+        to,
+        culture: this.options.culture,
+        lid: this.options.lid,
+      });
     }
     this.runAsync();
   }
@@ -263,7 +300,12 @@ export class DateRange {
         String(lastDay.month.value.month) +
         "/" +
         String(lastDay.value);
-      $bc.setSource(this.options.sourceid, { from, to });
+      $bc.setSource(this.options.sourceid, {
+        from,
+        to,
+        culture: this.options.culture,
+        lid: this.options.lid,
+      });
     }
     this.runAsync();
   }
@@ -295,7 +337,12 @@ export class DateRange {
         String(lastDay.month.value.month) +
         "/" +
         String(lastDay.value);
-      $bc.setSource(this.options.sourceid, { from, to });
+      $bc.setSource(this.options.sourceid, {
+        from,
+        to,
+        culture: this.options.culture,
+        lid: this.options.lid,
+      });
     }
     this.runAsync();
   }
@@ -325,7 +372,12 @@ export class DateRange {
         String(lastDay.month.value.month) +
         "/" +
         String(lastDay.value);
-      $bc.setSource(this.options.sourceid, { from, to });
+      $bc.setSource(this.options.sourceid, {
+        from,
+        to,
+        culture: this.options.culture,
+        lid: this.options.lid,
+      });
     }
     this.runAsync();
   }
@@ -356,7 +408,12 @@ export class DateRange {
         String(lastDay.month.value.month) +
         "/" +
         String(lastDay.value);
-      $bc.setSource(this.options.sourceid, { from, to });
+      $bc.setSource(this.options.sourceid, {
+        from,
+        to,
+        culture: this.options.culture,
+        lid: this.options.lid,
+      });
     }
     this.runAsync();
   }
@@ -484,7 +541,12 @@ export class DateRange {
               String(lastDay.month.value.month) +
               "/" +
               String(lastDay.value);
-            $bc.setSource(this.options.sourceid, { from, to });
+            $bc.setSource(this.options.sourceid, {
+              from,
+              to,
+              culture: this.options.culture,
+              lid: this.options.lid,
+            });
           }
           this.runAsync();
         });
@@ -502,25 +564,12 @@ export class DateRange {
     rightSideBtns.setAttribute("data-calendar-right-btns", "");
     rightSideBtns.appendChild(todayButton);
     rightSideBtns.appendChild(yearBtn);
-    const datePickerModal = document.createElement("div");
-    const monthes = [
-      "فروردین",
-      "اردیبهشت",
-      "خرداد",
-      "تیر",
-      "مرداد",
-      "شهریور",
-      "مهر",
-      "آبان",
-      "آذر",
-      "دی",
-      "بهمن",
-      "اسفند",
-    ];
-    const yearContainer = document.createElement("div");
-    const currentyear = document.createElement("div");
-    currentyear.innerText = String(this.months[this.activeIndex].currentYear);
-    yearContainer.setAttribute("data-calendar-year-container", "");
+    const container = document.createElement("div");
+
+    // const yearContainer = document.createElement("div");
+    // const currentyear = document.createElement("div");
+    // currentyear.innerText = String(this.months[this.activeIndex].currentYear);
+    // yearContainer.setAttribute("data-calendar-year-container", "");
     const nextYearIcon = document.createElement("div");
     const prevYearIcon = document.createElement("div");
     prevYearIcon.addEventListener("click", () => {
@@ -540,39 +589,15 @@ export class DateRange {
     prevYearIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="8" height="12" viewBox="0 0 8 12" fill="none">
     <path d="M6.71429 1L1 6L6.71429 11" stroke="#5F5F5F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>`;
-    yearContainer.appendChild(nextYearIcon);
+    // yearContainer.appendChild(nextYearIcon);
 
-    yearContainer.appendChild(currentyear);
-    yearContainer.appendChild(prevYearIcon);
+    // yearContainer.appendChild(currentyear);
+    // yearContainer.appendChild(prevYearIcon);
 
-    const refreshButton = document.createElement("div");
-    refreshButton.setAttribute("data-calendar-refresh-icon", "");
-    refreshButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="21" height="22" viewBox="0 0 21 22" fill="none">
-      <path d="M18.6154 16.9267L16.9231 18.619H18.1923C18.1923 20.0194 17.0542 21.1575 15.6538 21.1575C15.2265 21.1575 14.8204 21.0517 14.4692 20.8613L13.8515 21.479C14.3719 21.809 14.9896 22.0036 15.6538 22.0036C17.5238 22.0036 19.0385 20.489 19.0385 18.619H20.3077L18.6154 16.9267ZM13.1154 18.619C13.1154 17.2186 14.2535 16.0805 15.6538 16.0805C16.0812 16.0805 16.4873 16.1863 16.8385 16.3767L17.4562 15.759C16.9358 15.429 16.3181 15.2344 15.6538 15.2344C13.7838 15.2344 12.2692 16.749 12.2692 18.619H11L12.6923 20.3113L14.3846 18.619H13.1154Z" fill="#767676"/>
-      <path d="M10.5299 8.37692H6.76923V12.1846H10.5299V8.37692ZM9.77778 0V1.52308H3.76068V0H2.25641V1.52308H1.50427C0.669402 1.52308 0.00752136 2.20846 0.00752136 3.04615L0 13.7077C0 14.5454 0.669402 15.2308 1.50427 15.2308H12.0342C12.8615 15.2308 13.5385 14.5454 13.5385 13.7077V3.04615C13.5385 2.20846 12.8615 1.52308 12.0342 1.52308H11.2821V0H9.77778ZM12.0342 13.7077H1.50427V5.33077H12.0342V13.7077Z" fill="#767676"/>
-      </svg>`;
-    datePickerModal.appendChild(yearContainer);
-    datePickerModal.appendChild(refreshButton);
-    monthes.map((e, i) => {
-      const monthElement = document.createElement("div");
-      if (e == this.months[this.activeIndex].monthName) {
-        monthElement.setAttribute("data-calendar-month-button-selected", "");
-      } else {
-        monthElement.setAttribute("data-calendar-month-button", "");
-      }
-      monthElement.innerHTML = `<div data-calendar-month-index=${
-        i + 1
-      }>${e}</div>`;
-      monthElement.addEventListener("click", async (e) => {
-        const monthNumber = Number(
-          (e.target as HTMLElement).getAttribute(`data-calendar-month-index`)
-        );
-        this.goToMonth(monthNumber);
-      });
-      datePickerModal.appendChild(monthElement);
-    });
-
-    datePickerModal.setAttribute("data-calendar-date-modal", "");
+    // container.appendChild(yearContainer);
+    const empt = document.createElement("div");
+    container.setAttribute("data-calendar-date-modal", "");
+    container.appendChild(empt);
     yearBtn.innerHTML =
       `<svg xmlns="http://www.w3.org/2000/svg" width="6" height="9" viewBox="0 0 6 9" fill="none">
     <path d="M4.42857 1.5L1 4.5L4.42857 7.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -587,19 +612,17 @@ export class DateRange {
         yearBtn.removeAttribute("data-calendar-year-btn");
         yearBtn.setAttribute("data-calendar-year-btn-selected", "");
 
-        datePickerModal.style.display = "flex";
-        datePickerModal.style.top =
-          String(yearBtn.offsetTop + yearBtn.offsetHeight) + "px";
-        datePickerModal.style.left =
+        container.style.display = "flex";
+        container.style.top =
+          String(yearBtn.offsetTop + yearBtn.offsetHeight - 20) + "px";
+        container.style.left =
           String(
-            yearBtn.offsetLeft +
-              yearBtn.offsetWidth -
-              datePickerModal.offsetWidth
+            yearBtn.offsetLeft + yearBtn.offsetWidth - container.offsetWidth
           ) + "px";
       } else {
         yearBtn.removeAttribute("data-calendar-year-btn-selected");
         yearBtn.setAttribute("data-calendar-year-btn", "");
-        datePickerModal.style.display = "none";
+        container.style.display = "none";
       }
     });
     const filterBtn = document.createElement("div");
@@ -630,7 +653,27 @@ export class DateRange {
 
     headerElement.appendChild(filterBtn);
     headerElement.appendChild(rightSideBtns);
-    headerElement.appendChild(datePickerModal);
+    headerElement.appendChild(container);
+    const picker = new DatePicker(
+      this.from,
+      this.to,
+      {
+        dateProvider: "basisCalendar",
+        culture: this.options.culture,
+        lid: this.options.lid,
+        yearsList: true,
+        monthList: true,
+        pickerType: "range",
+        switchType: true,
+        theme: "basic",
+        isFilter: true,
+        mode: "desktop",
+        style: "../css/datepicker-style.css",
+        sourceid: "db.form",
+      },
+      this
+    );
+    picker.createUIAsync(empt);
     return headerElement;
   }
   protected generateDaysName(): Node {
@@ -663,7 +706,6 @@ export class DateRange {
     }
     return weekNameWrapper;
   }
-
   protected createMountBody(): Node {
     const monthsContainer = document.createElement("div");
     monthsContainer.setAttribute("data-calendar-month-container", "");
@@ -714,46 +756,54 @@ export class DateRange {
     <path d="M1 0.782366L4 4.21094L7 0.782366" stroke="#767676" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>`;
     const onCheck = (id: number, title: string) => {
+      console.log("hereee");
       if (this.catFilters.filter((e) => e.id === id).length > 0) {
         this.catFilters = this.catFilters.filter((i) => i.id !== id);
       } else {
         this.catFilters = [...this.catFilters, { id, title }];
       }
+      console.log("this.catFilterssss :>> ", this.catFilters);
       this.runAsync();
     };
-    const onHolidayCheck = (title: string, value: string) => {
-      if (this.holidayFilters.filter((e) => e.title === title).length > 0) {
-        this.holidayFilters = this.holidayFilters.filter(
-          (i) => i.title !== title
-        );
+    const onHolidayCheck = async ({
+      title,
+      id,
+    }: {
+      title: string;
+      id: string;
+    }) => {
+      console.log("value :>> ", id);
+      if (this.holidayFilters.filter((e) => e.id === id).length > 0) {
+        this.holidayFilters = this.holidayFilters.filter((i) => i.id !== id);
       } else {
-        this.holidayFilters = [...this.holidayFilters, { title, value }];
+        this.holidayFilters = [...this.holidayFilters, { title, id }];
       }
-
       this.runAsync();
     };
     const holidayFilters = document.createElement("div");
     holidayFilters.style.display = "none";
     holidayFilters.setAttribute("data-calendar-holiday-filters", "");
-    [
-      { title: "شمسی", value: "jalali" },
-      { title: "قمری", value: "qamari" },
-    ].map((e) => {
+    this.holidayCategories?.map((e) => {
       const filterRow = document.createElement("div");
       filterRow.setAttribute("data-calendar-filter-row", "");
       const input = document.createElement("input");
       const title = document.createElement("div");
       title.innerHTML = `${e.title}`;
+      title.setAttribute("data-bc-filter-title", "");
       input.setAttribute("type", "checkbox");
-      if (this.holidayFilters.find((i) => i.value === e.value)) {
+      if (this.holidayFilters.find((i) => i.id === e.id)) {
         input.setAttribute("checked", "true");
       }
-      input.addEventListener("click", () => onHolidayCheck(e.title, e.value));
+      console.log("e :>> ", e);
+      input.addEventListener("click", () => {
+        onHolidayCheck(e);
+      });
       filterRow.appendChild(input);
       filterRow.appendChild(title);
 
       holidayFilters.appendChild(filterRow);
     });
+
     holidayFilter.addEventListener("click", () => {
       if (holidayFilters.style.display == "none") {
         holidayFilters.style.display = "flex";
@@ -767,27 +817,48 @@ export class DateRange {
               holidayFilters.offsetWidth
           ) + "px";
         holidayFilters.innerHTML = "";
-        [
-          { title: "شمسی", value: "jalali" },
-          { title: "قمری", value: "qamari" },
-        ].map((e) => {
+        this.holidayCategories.map((e) => {
           const filterRow = document.createElement("div");
           filterRow.setAttribute("data-calendar-filter-row", "");
           const input = document.createElement("input");
           const title = document.createElement("div");
           title.innerHTML = `${e.title}`;
           input.setAttribute("type", "checkbox");
+          title.setAttribute("data-bc-filter-title", "");
+
           if (this.holidayFilters.find((i) => i.title === e.title)) {
             input.setAttribute("checked", "true");
           }
-          input.addEventListener("click", () =>
-            onHolidayCheck(e.title, e.value)
-          );
+          input.addEventListener("click", () => onHolidayCheck(e));
           filterRow.appendChild(input);
           filterRow.appendChild(title);
 
           holidayFilters.appendChild(filterRow);
         });
+        if (this.options.level !== "user") {
+          const newPersonalHoliday = document.createElement("button");
+          newPersonalHoliday.setAttribute("data-calendar-new-holiday", "");
+          newPersonalHoliday.innerHTML = `شخصی سازی<svg xmlns="http://www.w3.org/2000/svg" width="9" height="10" viewBox="0 0 9 10" fill="none">
+          <path d="M5.4 0.5H3.6V4.1H0V5.9H3.6V9.5H5.4V5.9H9V4.1H5.4V0.5Z" fill="#004B85"/>
+        </svg>`;
+          newPersonalHoliday.addEventListener("click", () => {
+            if (this.options.mode == "desktop") {
+              const UImanager = new UiCalendar(
+                this,
+                this.months[this.activeIndex].days[0]
+              );
+              UImanager.modal.openModal(
+                UImanager.generatePersonalHolidayForm()
+              );
+            } else if (this.options.mode == "mobile") {
+              const UImanager = new UiMbobile(
+                this,
+                this.months[this.activeIndex].days[0]
+              );
+            }
+          });
+          holidayFilters.appendChild(newPersonalHoliday);
+        }
       } else {
         holidayFilters.style.display = "none";
       }
@@ -803,6 +874,8 @@ export class DateRange {
       const title = document.createElement("div");
       title.innerHTML = `${e.title}`;
       input.setAttribute("type", "checkbox");
+      title.setAttribute("data-bc-filter-title", "");
+
       if (this.catFilters.find((i) => i.id === e.id)) {
         input.setAttribute("checked", "true");
       }
@@ -832,6 +905,8 @@ export class DateRange {
           const title = document.createElement("div");
           title.innerHTML = `${e.title}`;
           input.setAttribute("type", "checkbox");
+          title.setAttribute("data-bc-filter-title", "");
+
           if (this.catFilters.find((i) => i.id === e.id)) {
             input.setAttribute("checked", "true");
           }
@@ -872,9 +947,17 @@ export class DateRange {
     }
     this.months[this.activeIndex].days.map((x) => {
       if (this.options.mode == "desktop") {
+        console.log(
+          "holidayFilters :>> ",
+          this.holidays.filter((i) =>
+            this.holidayFilters.find((e) => e.id == i.temID)
+          )
+        );
         const dayElement = new UiCalendar(this, x).generateDaysUi(
           this.catFilters,
-          this.holidayFilters,
+          this.holidays.filter((i) =>
+            this.holidayFilters.find((e) => e.id == i.temID)
+          ),
           this.categories
         );
         mainElement.appendChild(dayElement);
@@ -915,6 +998,7 @@ export class DateRange {
         this.runAsync();
       });
       submittedFilters.appendChild(filterRemoveButton);
+      console.log("this.catFilterss :>> ", this.catFilters);
     });
     this.holidayFilters.map((e) => {
       const filterRemoveButton = document.createElement("div");
@@ -946,7 +1030,9 @@ export class DateRange {
     return submittedFilters;
   }
 
-  async runAsync(): Promise<void> {
+  public async runAsync(): Promise<void> {
+    console.log("this.catFilters :>> ", this.catFilters);
+    console.log("run", this.options.culture);
     this.wrapper.innerHTML = "";
     this.wrapper.setAttribute("id", "basis-calendar");
     const headerPart = this.createMountHeader();
