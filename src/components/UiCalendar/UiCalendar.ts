@@ -686,13 +686,19 @@ export class UiCalendar {
       const sharedfrom : HTMLElement = document.createElement("div");
       const color: object = this.hexToRgb(`${x.color}`);
       if(color){
-        divElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
+        divElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},0.1)`;
+        divElement.style.border = `1px solid rgba(${color["r"]},${color["g"]},${color["b"]},0.3)`;
+        divElementHeader.style.borderBottom = `2px solid rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
+        divElementHeader.style.marginBottom = `15px`;
         divElement.style.color = `#000`;
       }
       else{
-        divElement.style.background = `#999999`;
+        divElementHeader.style.borderBottom = `2px solid  #999999`;
+        divElementHeader.style.marginBottom = `15px`;
         divElement.style.color = `#fff`;
         description.style.color= "#fff"
+        divElement.style.background = `rgba(153,153,153,0.1)`;
+        divElement.style.border = `1px solid rgba(153,153,153,0.3)`;
       }      
       let deleteAlert = document.createElement("div")
       deleteAlert.innerHTML=`

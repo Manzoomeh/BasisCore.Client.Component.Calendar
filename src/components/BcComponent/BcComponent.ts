@@ -30,14 +30,25 @@ export default class BcComponent implements IComponentManager {
     this.options = eval(settingObject);
     const initFrom = await this.owner.getAttributeValueAsync("from");
     const initTo = await this.owner.getAttributeValueAsync("to");
-    if (!initFrom || !initTo) {
+    if ((!initFrom || !initTo) && this.options["culture"] == "fa") {
       const from = new Date()
         .toLocaleDateString("fa-IR")
         .replace(/([۰-۹])/g, (token) =>
           String.fromCharCode(token.charCodeAt(0) - 1728)
         );
       this.loadCalendar(from, from, this.options, this.rKey );
-    } else {
+    }
+    if ((!initFrom || !initTo) && this.options["culture"] == "en") {
+      let dateObj = new Date();
+      let month = dateObj.getUTCMonth() + 1; //months from 1-12
+      let day = dateObj.getUTCDate();
+      let year = dateObj.getUTCFullYear();
+      
+      let newdate = year + "/" + month + "/" + day;
+        
+      this.loadCalendar(newdate, newdate, this.options, this.rKey );
+    }
+     else {
       this.loadCalendar(initFrom, initTo, this.options, this.rKey);
     }
     
