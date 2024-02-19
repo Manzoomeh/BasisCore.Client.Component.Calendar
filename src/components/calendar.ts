@@ -105,19 +105,28 @@ export class DateRange {
   }
   async addTemplate(title) {
     let apiLink = this.options.baseUrl;
-    console.log("here");
     try {
-      const res = await fetch(apiLink["createholidaycategory"], {
+      console.log("mmm ", {
+        //@ts-ignore
+        id: 0,
+        typeid: this.options.lid == 2 ? 1 : 2,
+        title,
+        events: [],
+      });
+      let res = await fetch(apiLink["createholidaycategory"], {
         method: "POST",
-        body: {
+        body: JSON.stringify({
           //@ts-ignore
           id: 0,
           typeid: this.options.lid == 2 ? 1 : 2,
           title,
           events: [],
-        },
+        }),
       });
-      await this.getTemplates();
+      res = await res.json();
+      if ((res as any)?.message == "successful") {
+        await this.getTemplates();
+      }
       this.renderModalBody();
     } catch (e) {
       console.log("object :>> ", e);
