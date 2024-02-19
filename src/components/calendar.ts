@@ -105,10 +105,10 @@ export class DateRange {
   }
   async addTemplate(title) {
     let apiLink = this.options.baseUrl;
-
+    console.log("here");
     try {
       const res = await fetch(apiLink["createholidaycategory"], {
-        methos: "POST",
+        method: "POST",
         body: {
           //@ts-ignore
           id: 0,
@@ -119,7 +119,9 @@ export class DateRange {
       });
       await this.getTemplates();
       this.renderModalBody();
-    } catch {}
+    } catch (e) {
+      console.log("object :>> ", e);
+    }
   }
   renderModalBody() {
     document.querySelector("[data-sys-modal-body]").innerHTML = "";

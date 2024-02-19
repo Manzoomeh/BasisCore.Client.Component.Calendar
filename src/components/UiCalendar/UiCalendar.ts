@@ -324,13 +324,11 @@ export class UiCalendar {
     secondInput.setAttribute("data-modal-input-element", "");
     secondInput.setAttribute("data-modal-input-dates", "");
     secondInput.setAttribute("data-modal-calendar-icon", "");
-    categoriesOptions.innerHTML = [
-      { id: 0, title: "جدید" },
-      ...this.range.holidayCategories,
-    ]
+    categoriesOptions.innerHTML = [...this.range.holidayCategories]
       .map((e) => `<option value='${e.id}'>${e.title}</option>`)
       .join("");
-    categoriesOptions.value = "0";
+
+    categoriesOptions.value = this.range.holidayCategories[0]?.id;
     secondInput.disabled = true;
     const inputIcon = document.createElement("div");
     inputIcon.setAttribute("data-modal-input-icon", "");
