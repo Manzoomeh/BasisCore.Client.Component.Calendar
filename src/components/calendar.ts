@@ -77,11 +77,9 @@ export class DateRange {
     this.getCategories();
   }
   async getTemplates(): Promise<void> {
-    let data = await fetch(
+    let data = await this.sendAsyncDataGetMethod(
       `https://basispanel.ir/service/${this.rKey}/${this.options.culture}/calendartemplates`
     );
-    data = await data.json();
-    console.log("data :>> ", data);
     this.templates = data as any;
   }
   public getRKey(): string {
@@ -105,9 +103,23 @@ export class DateRange {
     this.userId = parseInt(userIdObj.userid);
     return null;
   }
-  addTemplate(title) {
-    this.templates.push({ id: 0, title });
-    this.renderModalBody();
+  async addTemplate(title) {
+    let apiLink = this.options.baseUrl;
+
+    try {
+      const res = await fetch(apiLink["createholidaycategory"], {
+        methos: "POST",
+        body: {
+          //@ts-ignore
+          id: 0,
+          typeid: this.options.lid == 2 ? 1 : 2,
+          title,
+          events: [],
+        },
+      });
+      await this.getTemplates();
+      this.renderModalBody();
+    } catch {}
   }
   renderModalBody() {
     document.querySelector("[data-sys-modal-body]").innerHTML = "";
@@ -122,7 +134,7 @@ export class DateRange {
         this.addTemplate(input.value);
       }
     });
-    this.templates.map((e) => {
+    this.templates?.map((e) => {
       const row = document.createElement("div");
       const title = document.createElement("div");
       title.innerText = e.title;
@@ -151,10 +163,8 @@ export class DateRange {
     const url = this.options.baseUrl["holidaysinrange"];
     const fromDateId = this.dateUtil.getBasisDayId(this.from);
     const toDateId = this.dateUtil.getBasisDayId(this.to);
-    console.log("catFilters :>> ", this.catFilters);
     this.holidayFilters.map(async (e) => {
       try {
-        console.log("e :>> ", e);
         const res = await fetch(url, {
           method: "POST",
           body: JSON.stringify({
@@ -164,9 +174,7 @@ export class DateRange {
             typeid: this.options.lid,
           }),
         });
-        const data = await res.json();
-        console.log("data :>> ", data);
-        this.holidays.push(data);
+        this.holidays.push(res);
         this.holidays = Array.from(new Set(this.holidays));
       } catch {}
     });
@@ -498,7 +506,7 @@ export class DateRange {
     });
     settingButton.setAttribute("data-calendar-setting-btn", "");
 
-    settingButton.innerHTML = `<svg width="36" height="36" viewBox="8 7 28 26" fill="#222" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M24.2788 10.1522C23.9085 10 23.439 10 22.5 10C21.561 10 21.0915 10 20.7212 10.1522C20.2274 10.3552 19.8351 10.7446 19.6306 11.2346C19.5372 11.4583 19.5007 11.7185 19.4864 12.098C19.4653 12.6557 19.1772 13.1719 18.6902 13.4509C18.2032 13.73 17.6086 13.7195 17.1115 13.4588C16.7732 13.2813 16.5279 13.1826 16.286 13.151C15.7561 13.0818 15.2202 13.2243 14.7962 13.5472C14.4781 13.7894 14.2434 14.1929 13.7739 14.9999C13.3044 15.807 13.0697 16.2105 13.0173 16.6049C12.9476 17.1308 13.0912 17.6627 13.4165 18.0835C13.5651 18.2756 13.7738 18.437 14.0977 18.639C14.5739 18.936 14.8803 19.4419 14.8803 20C14.8803 20.5581 14.5739 21.0639 14.0977 21.3608C13.7737 21.5629 13.565 21.7244 13.4164 21.9165C13.0911 22.3373 12.9475 22.8691 13.0172 23.395C13.0696 23.7894 13.3043 24.193 13.7738 25C14.2433 25.807 14.478 26.2106 14.7961 26.4527C15.2201 26.7756 15.756 26.9181 16.2859 26.8489C16.5278 26.8173 16.7731 26.7186 17.1113 26.5412C17.6085 26.2804 18.2031 26.27 18.6901 26.549C19.1771 26.8281 19.4653 27.3443 19.4864 27.9021C19.5007 28.2815 19.5372 28.5417 19.6306 28.7654C19.8351 29.2554 20.2274 29.6448 20.7212 29.8478C21.0915 30 21.561 30 22.5 30C23.439 30 23.9085 30 24.2788 29.8478C24.7726 29.6448 25.1649 29.2554 25.3694 28.7654C25.4628 28.5417 25.4994 28.2815 25.5137 27.902C25.5347 27.3443 25.8228 26.8281 26.3098 26.549C26.7968 26.2699 27.3914 26.2804 27.8886 26.5412C28.2269 26.7186 28.4721 26.8172 28.714 26.8488C29.2439 26.9181 29.7798 26.7756 30.2038 26.4527C30.5219 26.2105 30.7566 25.807 31.2261 24.9999C31.6956 24.1929 31.9303 23.7894 31.9827 23.395C32.0524 22.8691 31.9088 22.3372 31.5835 21.9164C31.4349 21.7243 31.2262 21.5628 30.9022 21.3608C30.4261 21.0639 30.1197 20.558 30.1197 19.9999C30.1197 19.4418 30.4261 18.9361 30.9022 18.6392C31.2263 18.4371 31.435 18.2757 31.5836 18.0835C31.9089 17.6627 32.0525 17.1309 31.9828 16.605C31.9304 16.2106 31.6957 15.807 31.2262 15C30.7567 14.193 30.522 13.7894 30.2039 13.5473C29.7799 13.2244 29.244 13.0818 28.7141 13.1511C28.4722 13.1827 28.2269 13.2814 27.8887 13.4588C27.3915 13.7196 26.7969 13.73 26.3099 13.451C25.8229 13.1719 25.5347 12.6557 25.5136 12.0979C25.4993 11.7185 25.4628 11.4583 25.3694 11.2346C25.1649 10.7446 24.7726 10.3552 24.2788 10.1522ZM22.5 23C24.1695 23 25.5228 21.6569 25.5228 20C25.5228 18.3431 24.1695 17 22.5 17C20.8305 17 19.4772 18.3431 19.4772 20C19.4772 21.6569 20.8305 23 22.5 23Z" fill="none" stroke="#222"/> </svg>`;
+    settingButton.innerHTML = `<svg width="30" height="30" viewBox="8 7 28 26" fill="#222" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M24.2788 10.1522C23.9085 10 23.439 10 22.5 10C21.561 10 21.0915 10 20.7212 10.1522C20.2274 10.3552 19.8351 10.7446 19.6306 11.2346C19.5372 11.4583 19.5007 11.7185 19.4864 12.098C19.4653 12.6557 19.1772 13.1719 18.6902 13.4509C18.2032 13.73 17.6086 13.7195 17.1115 13.4588C16.7732 13.2813 16.5279 13.1826 16.286 13.151C15.7561 13.0818 15.2202 13.2243 14.7962 13.5472C14.4781 13.7894 14.2434 14.1929 13.7739 14.9999C13.3044 15.807 13.0697 16.2105 13.0173 16.6049C12.9476 17.1308 13.0912 17.6627 13.4165 18.0835C13.5651 18.2756 13.7738 18.437 14.0977 18.639C14.5739 18.936 14.8803 19.4419 14.8803 20C14.8803 20.5581 14.5739 21.0639 14.0977 21.3608C13.7737 21.5629 13.565 21.7244 13.4164 21.9165C13.0911 22.3373 12.9475 22.8691 13.0172 23.395C13.0696 23.7894 13.3043 24.193 13.7738 25C14.2433 25.807 14.478 26.2106 14.7961 26.4527C15.2201 26.7756 15.756 26.9181 16.2859 26.8489C16.5278 26.8173 16.7731 26.7186 17.1113 26.5412C17.6085 26.2804 18.2031 26.27 18.6901 26.549C19.1771 26.8281 19.4653 27.3443 19.4864 27.9021C19.5007 28.2815 19.5372 28.5417 19.6306 28.7654C19.8351 29.2554 20.2274 29.6448 20.7212 29.8478C21.0915 30 21.561 30 22.5 30C23.439 30 23.9085 30 24.2788 29.8478C24.7726 29.6448 25.1649 29.2554 25.3694 28.7654C25.4628 28.5417 25.4994 28.2815 25.5137 27.902C25.5347 27.3443 25.8228 26.8281 26.3098 26.549C26.7968 26.2699 27.3914 26.2804 27.8886 26.5412C28.2269 26.7186 28.4721 26.8172 28.714 26.8488C29.2439 26.9181 29.7798 26.7756 30.2038 26.4527C30.5219 26.2105 30.7566 25.807 31.2261 24.9999C31.6956 24.1929 31.9303 23.7894 31.9827 23.395C32.0524 22.8691 31.9088 22.3372 31.5835 21.9164C31.4349 21.7243 31.2262 21.5628 30.9022 21.3608C30.4261 21.0639 30.1197 20.558 30.1197 19.9999C30.1197 19.4418 30.4261 18.9361 30.9022 18.6392C31.2263 18.4371 31.435 18.2757 31.5836 18.0835C31.9089 17.6627 32.0525 17.1309 31.9828 16.605C31.9304 16.2106 31.6957 15.807 31.2262 15C30.7567 14.193 30.522 13.7894 30.2039 13.5473C29.7799 13.2244 29.244 13.0818 28.7141 13.1511C28.4722 13.1827 28.2269 13.2814 27.8887 13.4588C27.3915 13.7196 26.7969 13.73 26.3099 13.451C25.8229 13.1719 25.5347 12.6557 25.5136 12.0979C25.4993 11.7185 25.4628 11.4583 25.3694 11.2346C25.1649 10.7446 24.7726 10.3552 24.2788 10.1522ZM22.5 23C24.1695 23 25.5228 21.6569 25.5228 20C25.5228 18.3431 24.1695 17 22.5 17C20.8305 17 19.4772 18.3431 19.4772 20C19.4772 21.6569 20.8305 23 22.5 23Z" fill="none" stroke="#222"/> </svg>`;
     todayButton.addEventListener("click", (e) => {
       this.goToday();
     });
@@ -767,8 +775,62 @@ export class DateRange {
     }
     return weekNameWrapper;
   }
+  closeModal(): void {
+    document.querySelector("[data-sys-modal]").setAttribute("style", "");
+  }
+
   protected createMountBody(): Node {
     const monthsContainer = document.createElement("div");
+    const modal = document.createElement("div");
+    const modalBG = document.createElement("div");
+    const modalheader = document.createElement("div");
+    const modalheaderRow = document.createElement("div");
+    const modalTitle = document.createElement("h2");
+    const modalCloseIcon = document.createElement("div");
+    const modalBody = document.createElement("div");
+    const modalSubmitBtn = document.createElement("button");
+    const modalFooter = document.createElement("div");
+    modalTitle.innerText = "تنظیمات";
+    modal.setAttribute("data-sys-modal", "");
+    modalBG.setAttribute("data-sys-modal-bg", "");
+    modalheader.setAttribute("data-sys-modal-header", "");
+    modalheaderRow.setAttribute("data-sys-modal-header-row", "");
+    modalTitle.setAttribute("data-sys-modal-header-title", "");
+    modalCloseIcon.setAttribute("data-sys-modal-header-close", "");
+    modalFooter.setAttribute("data-sys-modal-footer", "");
+    modalSubmitBtn.setAttribute("data-sys-button", "");
+    modalBody.setAttribute("data-sys-modal-body", "");
+    modalCloseIcon.innerHTML = ` <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="15"
+    style="cursor: pointer"
+    viewBox="0 0 14 15"
+    fill="none"
+  >
+    <path
+      opacity="0.8"
+      d="M8.05223 7.49989L13.3519 13.3409C13.6968 13.7208 13.6968 14.3351 13.3519 14.7151C13.0072 15.095 12.4498 15.095 12.1051 14.7151L6.80521 8.87405L1.50552 14.7151C1.16063 15.095 0.603404 15.095 0.258671 14.7151C-0.0862237 14.3351 -0.0862237 13.7208 0.258671 13.3409L5.55836 7.49989L0.258671 1.65889C-0.0862237 1.27896 -0.0862237 0.66466 0.258671 0.284728C0.430473 0.0952063 0.656366 0 0.882097 0C1.10783 0 1.33356 0.0952063 1.50552 0.284728L6.80521 6.12572L12.1051 0.284728C12.277 0.0952063 12.5028 0 12.7285 0C12.9542 0 13.18 0.0952063 13.3519 0.284728C13.6968 0.66466 13.6968 1.27896 13.3519 1.65889L8.05223 7.49989Z"
+      fill="#222222"
+    />
+  </svg>`;
+    modalheader.addEventListener("click", () => {
+      this.closeModal();
+    });
+    modalCloseIcon.addEventListener("click", () => {
+      this.closeModal();
+    });
+    modalheaderRow.appendChild(modalTitle);
+    modalheader.appendChild(modalheaderRow);
+    modalheader.appendChild(modalCloseIcon);
+    modalFooter.appendChild(modalSubmitBtn);
+    modal.appendChild(modalBG);
+    modal.appendChild(modalheader);
+    modal.appendChild(modalBody);
+    modal.appendChild(modalFooter);
+    modalSubmitBtn.innerText = "ثبت";
+    modalSubmitBtn.setAttribute("data-calendar-today-btn", "");
+    modalSubmitBtn.addEventListener("click", (e) => this.closeModal());
     monthsContainer.setAttribute("data-calendar-month-container", "");
     const bodyElement = document.createElement("div");
     const mainElement = document.createElement("div");
@@ -817,13 +879,11 @@ export class DateRange {
     <path d="M1 0.782366L4 4.21094L7 0.782366" stroke="#767676" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>`;
     const onCheck = (id: number, title: string) => {
-      console.log("hereee");
       if (this.catFilters.filter((e) => e.id === id).length > 0) {
         this.catFilters = this.catFilters.filter((i) => i.id !== id);
       } else {
         this.catFilters = [...this.catFilters, { id, title }];
       }
-      console.log("this.catFilterssss :>> ", this.catFilters);
       this.runAsync();
     };
     const onHolidayCheck = async ({
@@ -1038,6 +1098,8 @@ export class DateRange {
 
     monthsContainer.appendChild(bodyElement);
     bodyElement.append(mainElement);
+    bodyElement.append(modal);
+
     return monthsContainer;
   }
   protected createMountFooter(): Node {
