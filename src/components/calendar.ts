@@ -29,6 +29,8 @@ export class DateRange {
   public catFilters: catFilter[] = [];
   public userId: number = 0;
   public holidayCategories = [];
+  public templates: any;
+
   public holidays = [];
 
   public holidayFilters = [];
@@ -71,7 +73,16 @@ export class DateRange {
     this.monthValues.map((x) => this.months.push(new Month(this, x)));
     this.syncHolidayCategories();
     this.getHolidays();
+    this.getTemplates();
     this.getCategories();
+  }
+  async getTemplates(): Promise<void> {
+    let data = await fetch(
+      `https://basispanel.ir/service/${this.rKey}/${this.options.culture}/calendartemplates`
+    );
+    data = await data.json();
+    console.log("data :>> ", data);
+    this.templates = data as any;
   }
   public getRKey(): string {
     if (!this.rKey) {
@@ -93,6 +104,48 @@ export class DateRange {
     let userIdObj = await this.sendAsyncDataGetMethod(apiLink["userid"]);
     this.userId = parseInt(userIdObj.userid);
     return null;
+  }
+  addTemplate(title) {
+    this.templates.push({ id: 0, title });
+    this.renderModalBody();
+  }
+  renderModalBody() {
+    document.querySelector("[data-sys-modal-body]").innerHTML = "";
+    const input = document.createElement("input");
+    document.querySelector("[data-sys-modal-body]").appendChild(input);
+    input.addEventListener("keypress", (e) => {
+      //@ts-ignore
+      if (event.key === "Enter") {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        this.addTemplate(input.value);
+      }
+    });
+    this.templates.map((e) => {
+      const row = document.createElement("div");
+      const title = document.createElement("div");
+      title.innerText = e.title;
+      row.setAttribute("data-sys-modal-row", "");
+      const icon = document.createElement("div");
+      icon.innerHTML = `<svg  width="12" height="15" viewBox="0 0 12 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0.833333 13.3333C0.833333 14.25 1.58333 15 2.5 15H9.16667C10.0833 15 10.8333 14.25 10.8333 13.3333V3.33333H0.833333V13.3333ZM2.88333 7.4L4.05833 6.225L5.83333 7.99167L7.6 6.225L8.775 7.4L7.00833 9.16667L8.775 10.9333L7.6 12.1083L5.83333 10.3417L4.06667 12.1083L2.89167 10.9333L4.65833 9.16667L2.88333 7.4ZM8.75 0.833333L7.91667 0H3.75L2.91667 0.833333H0V2.5H11.6667V0.833333H8.75Z" fill="#B40020"></path>
+      </svg>`;
+      icon.addEventListener("click", () => this.removeTemplate(e.id));
+      row.appendChild(title);
+      row.appendChild(icon);
+      document.querySelector("[data-sys-modal-body]").appendChild(row);
+    });
+  }
+  openModal(): void {
+    document
+      .querySelector("[data-sys-modal]")
+      .setAttribute("style", "display:flex");
+    this.renderModalBody();
+  }
+  removeTemplate(id) {
+    this.templates = this.templates.filter((e) => e.id != id);
+    this.renderModalBody();
   }
   public async getHolidays(): Promise<void> {
     const url = this.options.baseUrl["holidaysinrange"];
@@ -439,7 +492,13 @@ export class DateRange {
     secondMonthName.textContent = this.months[this.activeIndex].secondMonthName;
     //monthNameElement.appendChild(secondMonthName);
     const todayButton = document.createElement("button");
-    const todayWrapper = document.createElement("div");
+    const settingButton = document.createElement("button");
+    settingButton.addEventListener("click", (e) => {
+      this.openModal();
+    });
+    settingButton.setAttribute("data-calendar-setting-btn", "");
+
+    settingButton.innerHTML = `<svg width="36" height="36" viewBox="8 7 28 26" fill="#222" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M24.2788 10.1522C23.9085 10 23.439 10 22.5 10C21.561 10 21.0915 10 20.7212 10.1522C20.2274 10.3552 19.8351 10.7446 19.6306 11.2346C19.5372 11.4583 19.5007 11.7185 19.4864 12.098C19.4653 12.6557 19.1772 13.1719 18.6902 13.4509C18.2032 13.73 17.6086 13.7195 17.1115 13.4588C16.7732 13.2813 16.5279 13.1826 16.286 13.151C15.7561 13.0818 15.2202 13.2243 14.7962 13.5472C14.4781 13.7894 14.2434 14.1929 13.7739 14.9999C13.3044 15.807 13.0697 16.2105 13.0173 16.6049C12.9476 17.1308 13.0912 17.6627 13.4165 18.0835C13.5651 18.2756 13.7738 18.437 14.0977 18.639C14.5739 18.936 14.8803 19.4419 14.8803 20C14.8803 20.5581 14.5739 21.0639 14.0977 21.3608C13.7737 21.5629 13.565 21.7244 13.4164 21.9165C13.0911 22.3373 12.9475 22.8691 13.0172 23.395C13.0696 23.7894 13.3043 24.193 13.7738 25C14.2433 25.807 14.478 26.2106 14.7961 26.4527C15.2201 26.7756 15.756 26.9181 16.2859 26.8489C16.5278 26.8173 16.7731 26.7186 17.1113 26.5412C17.6085 26.2804 18.2031 26.27 18.6901 26.549C19.1771 26.8281 19.4653 27.3443 19.4864 27.9021C19.5007 28.2815 19.5372 28.5417 19.6306 28.7654C19.8351 29.2554 20.2274 29.6448 20.7212 29.8478C21.0915 30 21.561 30 22.5 30C23.439 30 23.9085 30 24.2788 29.8478C24.7726 29.6448 25.1649 29.2554 25.3694 28.7654C25.4628 28.5417 25.4994 28.2815 25.5137 27.902C25.5347 27.3443 25.8228 26.8281 26.3098 26.549C26.7968 26.2699 27.3914 26.2804 27.8886 26.5412C28.2269 26.7186 28.4721 26.8172 28.714 26.8488C29.2439 26.9181 29.7798 26.7756 30.2038 26.4527C30.5219 26.2105 30.7566 25.807 31.2261 24.9999C31.6956 24.1929 31.9303 23.7894 31.9827 23.395C32.0524 22.8691 31.9088 22.3372 31.5835 21.9164C31.4349 21.7243 31.2262 21.5628 30.9022 21.3608C30.4261 21.0639 30.1197 20.558 30.1197 19.9999C30.1197 19.4418 30.4261 18.9361 30.9022 18.6392C31.2263 18.4371 31.435 18.2757 31.5836 18.0835C31.9089 17.6627 32.0525 17.1309 31.9828 16.605C31.9304 16.2106 31.6957 15.807 31.2262 15C30.7567 14.193 30.522 13.7894 30.2039 13.5473C29.7799 13.2244 29.244 13.0818 28.7141 13.1511C28.4722 13.1827 28.2269 13.2814 27.8887 13.4588C27.3915 13.7196 26.7969 13.73 26.3099 13.451C25.8229 13.1719 25.5347 12.6557 25.5136 12.0979C25.4993 11.7185 25.4628 11.4583 25.3694 11.2346C25.1649 10.7446 24.7726 10.3552 24.2788 10.1522ZM22.5 23C24.1695 23 25.5228 21.6569 25.5228 20C25.5228 18.3431 24.1695 17 22.5 17C20.8305 17 19.4772 18.3431 19.4772 20C19.4772 21.6569 20.8305 23 22.5 23Z" fill="none" stroke="#222"/> </svg>`;
     todayButton.addEventListener("click", (e) => {
       this.goToday();
     });
@@ -457,7 +516,6 @@ export class DateRange {
       todayButton.setAttribute("data-calendar-today-btn-mobile", "");
       todayButton.innerHTML = todayIcon;
     }
-    todayWrapper.appendChild(todayButton);
     if (this.monthValues.length == 1) {
       const nextButton = document.createElement("button");
       const prevButton = document.createElement("button");
@@ -562,6 +620,7 @@ export class DateRange {
     calendarHeader.appendChild(controlElement);
     const rightSideBtns = document.createElement("div");
     rightSideBtns.setAttribute("data-calendar-right-btns", "");
+
     rightSideBtns.appendChild(todayButton);
     rightSideBtns.appendChild(yearBtn);
     const container = document.createElement("div");
@@ -652,6 +711,8 @@ export class DateRange {
     });
 
     headerElement.appendChild(filterBtn);
+    headerElement.appendChild(settingButton);
+
     headerElement.appendChild(rightSideBtns);
     headerElement.appendChild(container);
     const picker = new DatePicker(

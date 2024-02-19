@@ -1274,7 +1274,117 @@ select {
 [data-calendar-tools] {
   float: left;
 }
-
+[data-sys-modal-body] {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  height: 370px;
+  direction: rtl;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+}
+[data-sys-modal-body]::-webkit-scrollbar {
+  width: 6px;
+  margin-inline: 2px;
+  border-radius: 4px;
+}
+[data-sys-modal] {
+  display: none;
+  width: 409px;
+  height: 319px;
+  position: absolute;
+  top: 30%;
+  padding: 0px 18px 18px 18px;
+  align-items: center;
+  right: 30%;
+  flex-shrink: 0;
+  flex-direction: column;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: -14px 30px 20px 0px rgba(0, 0, 0, 0.05);
+}
+[data-sys-modal-footer] {
+  display: flex;
+  justify-content: end;
+  gap: 20px;
+  align-items: center;
+  width: 100%;
+  flex-direction: row-reverse;
+}
+[data-sys-modal-header-title] {
+  width: 113px;
+  height: 22px;
+  flex-shrink: 0;
+  color: #030229;
+  margin-right: 8px;
+  text-align: right;
+  font-size: 20px;
+  font-weight: 700;
+}
+[data-sys-modal-background] {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  cursor: default;
+  background-color: transparent;
+}
+[data-sys-modal-header] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row-reverse;
+  font-size: 24px;
+  height: 22px;
+  width: 100%;
+  margin-top: 26px;
+  direction: ltr;
+}
+[data-sys-modal-body] {
+  display: flex;
+  /* width: 100%; */
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  height: 370px;
+  direction: rtl;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+}
+[data-calendar-setting-btn] {
+  float: right;
+  font-size: 14px;
+  display: flex;
+  width: 40px;
+  height: 42px;
+  margin-right: auto;
+  margin-left: 10px;
+  padding: 0px;
+  background-color: #e8e8e8;
+  border-radius: 5px;
+  color: #222;
+  border: none;
+  justify-content: center;
+  align-items: center;
+}
+[data-calendar-setting-btn] :hover {
+  background-color: #bbbbbb;
+}
+[data-sys-modal-row] {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-block: 10px;
+}
+[data-calendar-setting-btn] svg {
+  border-radius: 5px;
+  width: 40px;
+  height: 42px;
+}
 [data-calendar-today-btn] {
   display: flex;
   padding: 10px;

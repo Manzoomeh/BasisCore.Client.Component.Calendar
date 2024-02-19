@@ -1,179 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       
- <script src="https://cdn.basiscore.net/_js/basiscore-2.11.min.js?v=7"></script>
-        <title>Print Command - Simple</title>
-        <style>
-            .date-picker-input {
-                border: none;
-                background: none;
-            }
-            input:focus,
-            select:focus,
-            textarea:focus,
-            button:focus {
-                outline: none;
-            }
-            .date-picker-wrapper {
-                background: rgba(0, 0, 0, 0.04);
-                border-radius: 4px 4px 0 0;
-                padding: 0 5px;
-                width: 200px;
-                display: flex;
-                border-bottom: 1px solid #000;
-                direction: ltr;
-                height: 50px;
-                margin-left: 15px;
-            }
+    <script src="https://cdn.basiscore.net/_js/basiscore-2.11.min.js?v=7"></script>
+    <title>Print Command - Simple</title>
+    <style>
+      .date-picker-input {
+        border: none;
+        background: none;
+      }
+      input:focus,
+      select:focus,
+      textarea:focus,
+      button:focus {
+        outline: none;
+      }
+      .date-picker-wrapper {
+        background: rgba(0, 0, 0, 0.04);
+        border-radius: 4px 4px 0 0;
+        padding: 0 5px;
+        width: 200px;
+        display: flex;
+        border-bottom: 1px solid #000;
+        direction: ltr;
+        height: 50px;
+        margin-left: 15px;
+      }
 
-            .date-picker-wrapper button {
-                background: none;
-                border: none;
-            }
-            .date-picker-wrapper span {
-                font-size: 12px;
-            }
-            .date-picker-input-wrapper {
-                direction: rtl;
-                text-align: right;
-            }
-            .form-inside {
-                direction: rtl;
-                display: flex;
-                margin-bottom: 15px;
-                align-items: end;
-            }
-            .filter-submit {
-                background: #4d576e;
-                color: #fff;
-                border: none;
-                font-family: inherit;
-                border-radius: 4px;
-                height: 30px;
-                padding: 5px 10px;
-                cursor: pointer;
-            }
-            [data-calendar-tools] {
-                width: auto;
-                position: absolute;
-                left: 0;
-                top: 20px;
-            }
-            [data-months-tools] {
-                width: auto;
-                position: absolute;
-                right: 0;
-                top: 20px;
-            }
-            .clr{
-                clear: both;
-            }
-        </style>
+      .date-picker-wrapper button {
+        background: none;
+        border: none;
+      }
+      .date-picker-wrapper span {
+        font-size: 12px;
+      }
+      .date-picker-input-wrapper {
+        direction: rtl;
+        text-align: right;
+      }
+      .form-inside {
+        direction: rtl;
+        display: flex;
+        margin-bottom: 15px;
+        align-items: end;
+      }
+      .filter-submit {
+        background: #4d576e;
+        color: #fff;
+        border: none;
+        font-family: inherit;
+        border-radius: 4px;
+        height: 30px;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      [data-calendar-tools] {
+        width: auto;
+        position: absolute;
+        left: 0;
+        top: 20px;
+      }
+      [data-months-tools] {
+        width: auto;
+        position: absolute;
+        right: 0;
+        top: 20px;
+      }
+      .clr {
+        clear: both;
+      }
+    </style>
 
-        <script>
-            const host = {
-                repositories: {
-                    "calendar.calendar": "/basiscore.calendar.component.js",
-                    "calendar.datepicker": "/basiscore.calendar.component.js"
-                }
+    <script>
+      const host = {
+        repositories: {
+          "calendar.calendar": "/basiscore.calendar.component.js",
+          "calendar.datepicker": "/basiscore.calendar.component.js",
+        },
+      };
+    </script>
+  </head>
 
-            }
-        </script>
-    </head>
-
-    <body>
-        <form name='db.form' bc-triggers="submit">
-            <div class="form-inside">
-                <div class="from">
-                    <div class="date-picker-wrapper">
-                        <button>
-                            <svg viewbox="0 0 24 24" width="24px" height="24px" fill="currentColor" focusable="false" class="mat-datepicker-toggle-default-icon ng-star-inserted">
-                                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"></path>
-                            </svg>
-                        </button>
-                        <div class="date-picker-input-wrapper">
-                            <span>از تاریخ
-                            </span>
-                            <basis core="component.calendar.datepicker"  name="from" run="atclient" options="mySetting" ></basis>
-                        </div>
-
-                    </div>
-                </div>             
-
-                <button class="filter-submit"  onclick="setDates(this,event)" >انتخاب</button>
+  <body>
+    <form name="db.form" bc-triggers="submit">
+      <div class="form-inside">
+        <div class="from">
+          <div class="date-picker-wrapper">
+            <button>
+              <svg
+                viewbox="0 0 24 24"
+                width="24px"
+                height="24px"
+                fill="currentColor"
+                focusable="false"
+                class="mat-datepicker-toggle-default-icon ng-star-inserted"
+              >
+                <path
+                  d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"
+                ></path>
+              </svg>
+            </button>
+            <div class="date-picker-input-wrapper">
+              <span>از تاریخ </span>
+              <basis
+                core="component.calendar.datepicker"
+                name="from"
+                run="atclient"
+                options="mySetting"
+              ></basis>
             </div>
-        </form>
-        <div class="clr"></div>
-        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="" to="" options="mySetting1" rkey="F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8"></Basis>
+          </div>
+        </div>
 
-        <script>
-            var mySetting = {
-            dateProvider: "basisCalendar",
-            displayNote: true,
-            culture: "fa",
-            secondCulture: "en",
-            style: "../css/datepicker-style.css",
-            mode:"desktop" , 
-            lid: 1,
-            yearsList: false,
-            monthList: false,
-            rangeDates: true,
-            switchType: true,
-            theme: "basic",
-            sourceid: "db.form"
-        
-            }
-            function setDates(el , event){
-		event.preventDefault()
-		const input = document.querySelectorAll(['[class="date-picker-input"]'])[0]
-		const fromDate = input.getAttribute("data-datepicker-sstring");
-		const toDate = input.getAttribute("data-datepicker-to-sstring");
-		$bc.setSource("db.form" , [{"from": fromDate, "to" : toDate }] )
-	}
-            var mySetting1 = {
-                dateProvider: "basisCalendar",
-                culture: "fa",
-                secondCulture: "en",
-                lid: 1,
-                todayButton: false,
-                dmnid : 6,
-                mode:"desktop" , 
-                style: "../css/calendar-style.css",
-                baseUrl: {
-                    "userid" : "https://trust-login.com/api/userid",
-                    "viewnote" :"https://basispanel.ir/user/fa/F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8/viewcalendarnote",
-                    "usernotes" :"https://basispanel.ir/user/F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8/calendarnotes",
-                    "removenote":"http://basispanel.ir/user/F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8/removenote",
-                    "addnote":"https://basispanel.ir/user/F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8/addcalendarnote",
-                    "reminder" : "http://basispanel.ir/user/F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8/editnotereminder",
-                    "catlist":"https://basispanel.ir/user/F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8/fa/notecatlist",
-                    "sharing" :"https://basispanel.ir/user/F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8/sharing",
-                    "removesharing":"https://basispanel.ir/user/F0625EDE-9CB3-4CDC-971B-612F3EB4A6F8/removesharing"
-                },
-                labels: {
-                    todayTitle : "امروز",
-                    titrTitle:"عنوان",
-                    categoryTitle : "دسته بندی",
-                    noteTitle : "یادداشت",
-                    submitKeyTitle : "ثبت",
-                    timeTitle : "زمان با فرمت 18:45 وارد شود",
-                    emptyNoteList : "هیچ یادداشتی در این روز وجود ندارد.",
-                    editMenuTitle :"ویرایش",
-                    deleteMenuTitle:"حذف",
-                    shareMenuTitle:"اشتراک‌گذاری",
-                    deleteTextTitle : "آیا از حذف این یادداشت مطمئن هستید ؟ ",
-                    cancelKeyTitle : "انصراف",
-                    shareTextTitle : "برای به اشتراک‌گذاری ایمیل را وارد کنید",
-                    deleteKeyTitle: "حذف",
-                    shareBoxTitle : "به اشتراک‌گذاری"
-                }
-            }
-        </script>
-    </body>
+        <button class="filter-submit" onclick="setDates(this,event)">
+          انتخاب
+        </button>
+      </div>
+    </form>
+    <div class="clr"></div>
+    <Basis
+      core="component.calendar.calendar"
+      run="atclient"
+      sourceid="db.form"
+      from=""
+      to=""
+      options="mySetting1"
+      rkey="10A402B8-F877-4E59-816A-06C85A028594"
+    ></Basis>
 
+    <script>
+      var mySetting = {
+        dateProvider: "basisCalendar",
+        displayNote: true,
+        culture: "fa",
+        secondCulture: "en",
+        style: "../css/datepicker-style.css",
+        mode: "desktop",
+        lid: 1,
+        yearsList: false,
+        monthList: false,
+        rangeDates: true,
+        switchType: true,
+        theme: "basic",
+        sourceid: "db.form",
+      };
+      function setDates(el, event) {
+        event.preventDefault();
+        const input = document.querySelectorAll([
+          '[class="date-picker-input"]',
+        ])[0];
+        const fromDate = input.getAttribute("data-datepicker-sstring");
+        const toDate = input.getAttribute("data-datepicker-to-sstring");
+        $bc.setSource("db.form", [{ from: fromDate, to: toDate }]);
+      }
+      var mySetting1 = {
+        dateProvider: "basisCalendar",
+        culture: "fa",
+        secondCulture: "en",
+        lid: 1,
+        todayButton: false,
+        dmnid: 6,
+        mode: "desktop",
+        style: "../css/calendar-style.css",
+        baseUrl: {
+          userid: "https://trust-login.com/api/userid",
+          viewnote:
+            "https://basispanel.ir/user/fa/10A402B8-F877-4E59-816A-06C85A028594/viewcalendarnote",
+          usernotes:
+            "https://basispanel.ir/user/10A402B8-F877-4E59-816A-06C85A028594/calendarnotes",
+          removenote:
+            "http://basispanel.ir/user/10A402B8-F877-4E59-816A-06C85A028594/removenote",
+          addnote:
+            "https://basispanel.ir/user/10A402B8-F877-4E59-816A-06C85A028594/addcalendarnote",
+          reminder:
+            "http://basispanel.ir/user/10A402B8-F877-4E59-816A-06C85A028594/editnotereminder",
+          catlist:
+            "https://basispanel.ir/user/10A402B8-F877-4E59-816A-06C85A028594/fa/notecatlist",
+          sharing:
+            "https://basispanel.ir/user/10A402B8-F877-4E59-816A-06C85A028594/sharing",
+          removesharing:
+            "https://basispanel.ir/user/10A402B8-F877-4E59-816A-06C85A028594/removesharing",
+        },
+        labels: {
+          todayTitle: "امروز",
+          titrTitle: "عنوان",
+          categoryTitle: "دسته بندی",
+          noteTitle: "یادداشت",
+          submitKeyTitle: "ثبت",
+          timeTitle: "زمان با فرمت 18:45 وارد شود",
+          emptyNoteList: "هیچ یادداشتی در این روز وجود ندارد.",
+          editMenuTitle: "ویرایش",
+          deleteMenuTitle: "حذف",
+          shareMenuTitle: "اشتراک‌گذاری",
+          deleteTextTitle: "آیا از حذف این یادداشت مطمئن هستید ؟ ",
+          cancelKeyTitle: "انصراف",
+          shareTextTitle: "برای به اشتراک‌گذاری ایمیل را وارد کنید",
+          deleteKeyTitle: "حذف",
+          shareBoxTitle: "به اشتراک‌گذاری",
+        },
+      };
+    </script>
+  </body>
 </html>

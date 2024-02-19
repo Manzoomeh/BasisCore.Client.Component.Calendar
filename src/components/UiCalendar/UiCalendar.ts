@@ -216,7 +216,9 @@ export class UiCalendar {
             let liElement = document.createElement("li");
             liElement.style.height = `100%`;
 
-            liElement.textContent = filters.find((e) => e.id === x.catid).title;
+            liElement.textContent = filters.find(
+              (e) => e.id === x.catid
+            )?.title;
             const color: object =
               this.hexToRgb(`${x.color}`) ||
               this.hexToRgb(categories.find((i) => i.id === x.catid)?.color) ||
