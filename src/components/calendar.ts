@@ -106,13 +106,6 @@ export class DateRange {
   async addTemplate(title) {
     let apiLink = this.options.baseUrl;
     try {
-      console.log("mmm ", {
-        //@ts-ignore
-        id: 0,
-        typeid: this.options.lid == 2 ? 1 : 2,
-        title,
-        events: [],
-      });
       let res = await fetch(apiLink["createholidaycategory"], {
         method: "POST",
         body: JSON.stringify({
@@ -128,9 +121,7 @@ export class DateRange {
         await this.getTemplates();
       }
       this.renderModalBody();
-    } catch (e) {
-      console.log("object :>> ", e);
-    }
+    } catch (e) {}
   }
   renderModalBody() {
     document.querySelector("[data-sys-modal-body]").innerHTML = "";
@@ -904,7 +895,6 @@ export class DateRange {
       title: string;
       id: string;
     }) => {
-      console.log("value :>> ", id);
       if (this.holidayFilters.filter((e) => e.id === id).length > 0) {
         this.holidayFilters = this.holidayFilters.filter((i) => i.id !== id);
       } else {
@@ -926,7 +916,6 @@ export class DateRange {
       if (this.holidayFilters.find((i) => i.id === e.id)) {
         input.setAttribute("checked", "true");
       }
-      console.log("e :>> ", e);
       input.addEventListener("click", () => {
         onHolidayCheck(e);
       });
@@ -1079,12 +1068,6 @@ export class DateRange {
     }
     this.months[this.activeIndex].days.map((x) => {
       if (this.options.mode == "desktop") {
-        console.log(
-          "holidayFilters :>> ",
-          this.holidays.filter((i) =>
-            this.holidayFilters.find((e) => e.id == i.temID)
-          )
-        );
         const dayElement = new UiCalendar(this, x).generateDaysUi(
           this.catFilters,
           this.holidays.filter((i) =>
@@ -1132,7 +1115,6 @@ export class DateRange {
         this.runAsync();
       });
       submittedFilters.appendChild(filterRemoveButton);
-      console.log("this.catFilterss :>> ", this.catFilters);
     });
     this.holidayFilters.map((e) => {
       const filterRemoveButton = document.createElement("div");
@@ -1165,8 +1147,6 @@ export class DateRange {
   }
 
   public async runAsync(): Promise<void> {
-    console.log("this.catFilters :>> ", this.catFilters);
-    console.log("run", this.options.culture);
     this.wrapper.innerHTML = "";
     this.wrapper.setAttribute("id", "basis-calendar");
     const headerPart = this.createMountHeader();
