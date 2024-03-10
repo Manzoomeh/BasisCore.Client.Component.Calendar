@@ -106,12 +106,12 @@ export class DateRange {
   async addTemplate(title) {
     let apiLink = this.options.baseUrl;
     try {
-      let res = await fetch(apiLink["createholidaycategory"], {
+      let res = await fetch(apiLink["editcalendartemplates"], {
         method: "POST",
         body: JSON.stringify({
           //@ts-ignore
           id: 0,
-          typeid: this.options.lid == 2 ? 1 : 2,
+          typeid: 1,
           title,
           events: [],
         }),
@@ -162,27 +162,37 @@ export class DateRange {
     this.renderModalBody();
   }
   public async getHolidays(): Promise<void> {
-    const url = this.options.baseUrl["holidaysinrange"];
+    const url =
+      this.options.level == "service"
+        ? this.options.baseUrl["calendareventsservice"]
+        : this.options.baseUrl["calendareventsuser"];
     const fromDateId = this.dateUtil.getBasisDayId(this.from);
     const toDateId = this.dateUtil.getBasisDayId(this.to);
     this.holidayFilters.map(async (e) => {
       try {
-        const res = await fetch(url, {
+        let res = await fetch(url, {
           method: "POST",
           body: JSON.stringify({
             from: fromDateId,
             to: toDateId,
-            tempid: e.id,
-            typeid: this.options.lid,
+            temid: e.id,
           }),
         });
-        this.holidays.push(res);
-        this.holidays = Array.from(new Set(this.holidays));
+        res = await res.json();
+        //@ts-ignore
+        res.map((e) => {
+          if (
+            !this.holidays.find(
+              (i) => i.eventID == e.eventID && e.dateID == i.dateID
+            )
+          ) {
+            this.holidays.push(e);
+          }
+        });
       } catch {}
     });
   }
   public async getCategories() {
-    // this.Owner.addTrigger("")
     if (this.options.displayNote == true) {
       let apiLink = this.options.baseUrl["catlist"];
       const data = await this.sendAsyncDataGetMethod(apiLink);
@@ -1068,10 +1078,27 @@ export class DateRange {
     }
     this.months[this.activeIndex].days.map((x) => {
       if (this.options.mode == "desktop") {
+        console.log(
+          ` this.holidays.filter((i) =>
+            this.holidayFilters.find((e) => {
+              console.log("e", e, "i", i);
+              return e.id == i.temID;
+            })
+          ), :>> `,
+          this.holidays.filter((i) =>
+            this.holidayFilters.find((e) => {
+              console.log("e", e, "i", i);
+              return e.id == i.temID;
+            })
+          )
+        );
         const dayElement = new UiCalendar(this, x).generateDaysUi(
           this.catFilters,
           this.holidays.filter((i) =>
-            this.holidayFilters.find((e) => e.id == i.temID)
+            this.holidayFilters.find((e) => {
+              console.log("e", e, "i", i);
+              return e.id == i.temID;
+            })
           ),
           this.categories
         );

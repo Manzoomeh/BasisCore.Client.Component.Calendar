@@ -53,7 +53,7 @@ export class UiCalendar {
     }
   }
   async createHolidayCategory(title) {
-    const url = this.range.options.baseUrl["createholidaycategory"];
+    const url = this.range.options.baseUrl["editcalendarevents"];
 
     // const body = {
     //   id: 0,
@@ -62,15 +62,12 @@ export class UiCalendar {
     //   events: [{ id: 2, title: "a", dateids: this.picker.datesIds }],
     // };
     const body = {
-      id: (
+      temid: (
         document.querySelector(
           "[data-modal-select-category]"
         ) as HTMLSelectElement
       ).value,
       typeid: 1,
-      title: (
-        document.querySelector("[data-modal-title-input]") as HTMLInputElement
-      ).value,
       events: [
         {
           id: "0",
@@ -97,6 +94,7 @@ export class UiCalendar {
     }
   }
   generateDaysUi(filters, holidays, categories): Node {
+    console.log("holidays :>> ", holidays);
     let dayElement = document.createElement("div");
     let spanElement = document.createElement("span");
     let secondCulture = document.createElement("span");
