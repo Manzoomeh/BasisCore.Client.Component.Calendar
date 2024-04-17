@@ -173,6 +173,7 @@ select {
   margin-top: 10px;
   padding: 10px 0;
   width: 100%;
+  min-height: 72px;
 }
 [data-disable] {
   background: #ccc;

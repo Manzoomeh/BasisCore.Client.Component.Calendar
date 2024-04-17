@@ -230,12 +230,15 @@ export class DateRange {
     monthNameElement.setAttribute("data-calendar-title", "");
     monthNameElement.setAttribute("data-sys-text","")
     controlElement.setAttribute("data-calendar-tools", "");
-    secondMonthName.setAttribute("data-calendar-second-culture","")
     currentYear.setAttribute("data-calendar-year","")
     currentYear.textContent = " " + this.months[this.activeIndex].value.year;
     monthNameElement.textContent =
-      this.months[this.activeIndex].monthName + " " + this.months[this.activeIndex].currentYear
-    secondMonthName.textContent= this.months[this.activeIndex].secondMonthName 
+    this.months[this.activeIndex].monthName + " " + this.months[this.activeIndex].currentYear
+    if(this.options.culture == "fa"){
+      secondMonthName.setAttribute("data-calendar-second-culture","")
+      secondMonthName.textContent= this.months[this.activeIndex].secondMonthName 
+    }
+    
     monthNameElement.appendChild(secondMonthName)
     const todayButton = document.createElement("button");
     const todayWrapper = document.createElement("div")

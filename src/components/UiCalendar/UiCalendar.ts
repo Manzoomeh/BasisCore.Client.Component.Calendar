@@ -63,7 +63,7 @@ export class UiCalendar {
     dateWrapper.appendChild(spanElement);
     dateWrapper.appendChild(secondCulture);
     dayElement.appendChild(dateWrapper);
-    if(this.day.isHoliday){
+    if(this.day.isHoliday && this.range.options.culture == "fa"){
       dayElement.setAttribute("data-calendar-holiday" ,"")
       dayElement.setAttribute("data-sys-text-secondary" ,"")      
     }
