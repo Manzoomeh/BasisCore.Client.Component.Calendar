@@ -1,6 +1,6 @@
 
 import { Month } from "./Month/Month";
-import { DayValue, MonthNumber, MonthValue } from "./type-alias";
+import { Culture, DayValue, MonthNumber, MonthValue } from "./type-alias";
 import { IDatePickerOptions } from "./Interface/Interface";
 import { IDateUtil } from "./IDateUtil/IDateUtil";
 import { BasisCoreDateUtil } from "./BasisCoreDateUtil/BasisCoreDateUtil";
@@ -100,11 +100,12 @@ export class DatePicker {
     this.months[this.activeIndex] = new Month(this, nextMonthValues);
     this.renderAsync();
   }
-  goToday(): void {
+  goToday(culture? : Culture): void {
     let todayMonthValues: MonthValue = {
       year: this.months[this.activeIndex].currentDate.year,
       month: this.months[this.activeIndex].currentDate.month,
     };
+    console.log("aaaaa",this.months[this.activeIndex].currentDate.year,this.months[this.activeIndex].currentDate.month)
     this.months[this.activeIndex] = new Month(this, todayMonthValues);
 
     this.renderAsync();

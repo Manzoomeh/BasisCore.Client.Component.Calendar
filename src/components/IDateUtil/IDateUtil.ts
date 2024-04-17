@@ -21,7 +21,7 @@ export interface IDateUtil {
   getDayNames(lid: Lid , culture : Culture): string[];
   getDayShortNames(lid: Lid , culture:Culture): string[];
   getMonthValueList(from: DayValue, to: DayValue): MonthValue[];
-  getCurrentDate(): DayValue;
+  getCurrentDate(culture : Culture): DayValue;
   getIsToday(day: DayValue): boolean;
   nextMonth(month: Month, culture: Culture): MonthValue;
   nextYear(month: Month, culture: Culture): MonthValue;

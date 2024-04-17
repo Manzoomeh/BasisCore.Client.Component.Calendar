@@ -21,6 +21,8 @@ export class Month {
   readonly lastDayInMonth: number;
   readonly currentDate: DayValue;
   readonly currentYear : number;
+  readonly currentMonth : number;
+  readonly currentmDate: DayValue;
   
   public constructor(owner: DateRange | DatePicker, value: MonthValue) {
  
@@ -63,7 +65,9 @@ export class Month {
     this.currentYear = this.range.dateUtil.getCurrentYear( firstDay , this.range.options.culture)
 
 
-    this.currentDate = this.range.dateUtil.getCurrentDate();
+
+    this.currentDate = this.range.dateUtil.getCurrentDate("fa");
+    this.currentmDate = this.range.dateUtil.getCurrentDate("en");
     if (this.firstDayInMonth == 7) {
       this.firstDayInMonth = 0;
     }

@@ -5,6 +5,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://basispanel.ir/asset/css/light.css?v=5"  rel="stylesheet" />
+        <link href="https://basispanel.ir/asset/css/styles-1.css"  rel="stylesheet" />
+        
         <script src="/bclib.js"></script>
         <title>Calendar</title>
         <style>
@@ -33,6 +35,9 @@
 [data-sys-button-disable] path {
   fill: #fff !important;
 }
+body{
+    margin: 50px;
+}
         </style>
         <script>
             const host = {
@@ -44,7 +49,7 @@
         </script>
     </head>
     <body>
-        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="1402/07/01" to="1402/07/30" options="mySetting" rkey="7BCCE056-57EB-43DA-8D4D-89D261DA81D3"></Basis>
+        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="1403/01/01" to="1403/01/30" options="mySetting" rkey="7BCCE056-57EB-43DA-8D4D-89D261DA81D3"></Basis>
         <script>   
                 var mySetting = {
                 dateProvider: "basisCalendar",
@@ -54,21 +59,21 @@
                 dmnid : 6,
                 style: "../css/calendar-style.css",
                 baseUrl: {                   
-                    "userid" : "https://basispanel.ir/trustservice/checkrkey/8F9C7B34-9C5E-4876-944F-D03A5522DF8F",
-                    "viewnote" :"https://basispanel.ir/service/fa/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/viewcalendarnote",
-                    "usernotes" :"https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/calendarnotes",
-                    "removenote":"http://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/removenote",
-                    "addnote":"https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/addcalendarnote",
-                    "reminder" : "https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/notereminder",
-                    "catlist":"http://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/fa/notecatlist",
-                    "sharing" :"https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/sharing",
-                    "removesharing":"https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/calendarnote/removesharing",
-                    "sender":"https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/fa/usercategories",
-                    "reciver":"https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/fa/usercategoryrelations/${catid}",
-                    "sharingService" : "https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/sharing",
-                    "removeReminder" : "https://basispanel.ir/service/8F9C7B34-9C5E-4876-944F-D03A5522DF8F/removereminder/${usedforid}"
+                    "userid" : "https://basispanel.ir/trustservice/checkrkey/F3253C8F-BF6B-46A6-AC0A-075E5AFC8105",
+                    "viewnote" :"https://basispanel.ir/user/fa/F3253C8F-BF6B-46A6-AC0A-075E5AFC8105/viewcalendarnote",
+                    "usernotes" :"https://basispanel.ir/user/F3253C8F-BF6B-46A6-AC0A-075E5AFC8105/calendarnotes",
+                    "removenote":"http://basispanel.ir/user/F3253C8F-BF6B-46A6-AC0A-075E5AFC8105/removenote",
+                    "addnote":"https://basispanel.ir/user/F3253C8F-BF6B-46A6-AC0A-075E5AFC8105/addcalendarnote",
+                    "reminder" : "https://basispanel.ir/user/F3253C8F-BF6B-46A6-AC0A-075E5AFC8105/notereminder",
+                    "catlist":"http://basispanel.ir/user/F3253C8F-BF6B-46A6-AC0A-075E5AFC8105/fa/notecatlist",
+                    "sharing" :"https://basispanel.ir/user/F3253C8F-BF6B-46A6-AC0A-075E5AFC8105/sharing",
+                    "removesharing":"https://basispanel.ir/user/F3253C8F-BF6B-46A6-AC0A-075E5AFC8105/calendarnote/removesharing",
+                    "sender":"https://basispanel.ir/user/F3253C8F-BF6B-46A6-AC0A-075E5AFC8105/fa/usercategories",
+                    "reciver":"https://basispanel.ir/user/F3253C8F-BF6B-46A6-AC0A-075E5AFC8105/fa/usercategoryrelations/${catid}",
+                    "sharingService" : "https://basispanel.ir/user/F3253C8F-BF6B-46A6-AC0A-075E5AFC8105/sharing",
+                    "removeReminder" : "https://basispanel.ir/user/F3253C8F-BF6B-46A6-AC0A-075E5AFC8105/removereminder/${usedforid}"
                 },
-                level : "service" , 
+                level : "user" , 
                 labels: {
                     todayTitle : "امروز",
                     titrTitle:"عنوان",
@@ -122,6 +127,11 @@
                     for: "برای",
                     me: "خودمfor me",
                     all: "همه",
+                    previousLabel : "قبلی",
+                    nextLabel : "بعدی",
+                    nextYear: "سال بعد",
+                    previousYear: " سال قبلی"
+
                 }
 
             }

@@ -6,11 +6,15 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="/bclib.js"></script>
+        <link href="https://basispanel.ir/asset/css/styles-1.css"  rel="stylesheet" />
         <title>Calendar</title>
         <style>
   
         #basis-calendar,input , button,[data-modal-form]{
             font-family: Arial, Helvetica, sans-serif;
+        }
+        body{
+            margin: 30px;
         }
         </style>
 
@@ -26,26 +30,26 @@
 
     <body>
      
-        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" options="mySetting" rkey="1D30F8CF-E7A6-408C-AF5C-F2E29B44FFDA"></Basis>
+        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" options="mySetting" rkey="68965852-749E-4E93-90FC-9B74B0CB7608"></Basis>
 
         <script>   
                 var mySetting = {
                 dateProvider: "basisCalendar",
-                culture: "fa",
+                culture: "en",
                 lid:2,
                 todayButton: false,
                 dmnid : 6,
                 style: "../css/calendar-style-lid2.css",
                 baseUrl: {                   
                     "userid" : "https://trust-login.com/api/userid",
-                    "viewnote" :"https://basispanel.ir/user/fa/1D30F8CF-E7A6-408C-AF5C-F2E29B44FFDA/viewcalendarnote",
-                    "usernotes" :"https://basispanel.ir/user/1D30F8CF-E7A6-408C-AF5C-F2E29B44FFDA/calendarnotes",
-                    "removenote":"http://basispanel.ir/user/1D30F8CF-E7A6-408C-AF5C-F2E29B44FFDA/removenote",
-                    "addnote":"https://basispanel.ir/user/1D30F8CF-E7A6-408C-AF5C-F2E29B44FFDA/addcalendarnote",
-                    "reminder" : "http://basispanel.ir/user/1D30F8CF-E7A6-408C-AF5C-F2E29B44FFDA/editnotereminder",
-                    "catlist":"https://basispanel.ir/user/1D30F8CF-E7A6-408C-AF5C-F2E29B44FFDA/fa/notecatlist",
-                    "sharing" :"https://basispanel.ir/user/1D30F8CF-E7A6-408C-AF5C-F2E29B44FFDA/sharing",
-                    "removesharing":"https://basispanel.ir/user/1D30F8CF-E7A6-408C-AF5C-F2E29B44FFDA/removesharing"
+                    "viewnote" :"https://basispanel.ir/user/fa/68965852-749E-4E93-90FC-9B74B0CB7608/viewcalendarnote",
+                    "usernotes" :"https://basispanel.ir/user/68965852-749E-4E93-90FC-9B74B0CB7608/calendarnotes",
+                    "removenote":"http://basispanel.ir/user/68965852-749E-4E93-90FC-9B74B0CB7608/removenote",
+                    "addnote":"https://basispanel.ir/user/68965852-749E-4E93-90FC-9B74B0CB7608/addcalendarnote",
+                    "reminder" : "http://basispanel.ir/user/68965852-749E-4E93-90FC-9B74B0CB7608/editnotereminder",
+                    "catlist":"https://basispanel.ir/user/68965852-749E-4E93-90FC-9B74B0CB7608/fa/notecatlist",
+                    "sharing" :"https://basispanel.ir/user/68965852-749E-4E93-90FC-9B74B0CB7608/sharing",
+                    "removesharing":"https://basispanel.ir/user/68965852-749E-4E93-90FC-9B74B0CB7608/removesharing"
                 },
                 labels: {
                     todayTitle : "Today",
@@ -62,7 +66,11 @@
                     cancelKeyTitle : "Close",
                     shareTextTitle : "Enter email to share",
                     deleteKeyTitle: "Delete",
-                    shareBoxTitle : "Sharing"
+                    shareBoxTitle : "Sharing",
+                    previousLabel : "Pervious",
+                    nextLabel : "Next",
+                    nextYear: "Next Year",
+                    previousYear: "Pervious Year"
                 }
 
             }

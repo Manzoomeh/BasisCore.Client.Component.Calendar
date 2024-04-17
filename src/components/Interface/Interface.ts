@@ -83,7 +83,11 @@ export interface ILabels{
   for: string,
   me: string,
   all: string,
-  SharingBy : string
+  SharingBy : string,
+  previousLabel : string,
+  nextLabel : string
+  nextYear: string,
+  previousYear: string
 
 }
 

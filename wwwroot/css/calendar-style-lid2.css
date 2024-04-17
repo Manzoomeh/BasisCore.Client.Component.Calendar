@@ -1050,13 +1050,17 @@ align-items: center;
   margin-top: 7px;
 
 }
+[data-calendar-next-year],
+[data-calendar-prev-year] {
+  width: 25px !important;
+}
 
 [data-calendar-next], [data-calendar-prev],[data-calendar-next-year] , [data-calendar-prev-year]{
   border: none;
   background: none;
 }
 [data-calendar-next-year] {
-  transform: scale(1.7);
+  /* transform: scale(1.7); */
   margin-left: 10px;
 }
 [data-calendar-next] {
@@ -1067,7 +1071,7 @@ align-items: center;
 }
 [data-calendar-prev-year] {
   margin-right: 10px;
-  transform: rotate(180deg) scale(1.7);
+  /* transform: rotate(180deg) scale(1.7); */
 }
 [bc-calendar-note-operation] li {
     border-radius: 5px;

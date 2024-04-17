@@ -1,6 +1,7 @@
 
 import { Month } from "./Month/Month";
 import {
+  Culture,
   DayValue,
   MonthValue,
   ReminderType,
@@ -207,11 +208,21 @@ export class DateRange {
     }
     this.runAsync();
   }
-  async goToday(): Promise<void> {
-    let todayMonthValues: MonthValue = {
-      year: this.months[this.activeIndex].currentDate.year,
-      month: this.months[this.activeIndex].currentDate.month,
-    };
+  async goToday(culture: Culture): Promise<void> {
+    if(this.options.culture == "fa"){
+      var todayMonthValues: MonthValue = {
+        year: this.months[this.activeIndex].currentDate.year,
+        month: this.months[this.activeIndex].currentDate.month,
+      };
+    }
+    else{
+      var todayMonthValues: MonthValue = {
+        year: this.months[this.activeIndex].currentmDate.year,
+        month: this.months[this.activeIndex].currentmDate.month,
+      };
+    }
+   
+    
     this.months[this.activeIndex] = new Month(this, todayMonthValues);
     if (this.options.displayNote) {
       //load notes from server;
@@ -243,7 +254,7 @@ export class DateRange {
     const todayButton = document.createElement("button");
     const todayWrapper = document.createElement("div")
     todayButton.addEventListener("click", (e) => {
-      this.goToday();
+      this.goToday(this.options.culture);
     });
     const todayIcon = `<svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M6 9H4V11H6V9ZM10 9H8V11H10V9ZM14 9H12V11H14V9ZM16 2H15V0H13V2H5V0H3V2H2C0.89 2 0.00999999 2.9 0.00999999 4L0 18C0 19.1 0.89 20 2 20H16C17.1 20 18 19.1 18 18V4C18 2.9 17.1 2 16 2ZM16 18H2V7H16V18Z" fill="white"/>
@@ -278,44 +289,56 @@ export class DateRange {
       });
       nextYear.addEventListener("click", (e) => {
         this.nextYear();
+       
       });
       prevYear.addEventListener("click", (e) => {
+       
         this.prevYear();
       });
-      nextButton.innerHTML = `<svg width="11"  height="20" viewBox="0 0 11 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path data-sys-text=""  d="M0.37999 19.01C0.86999 19.5 1.65999 19.5 2.14999 19.01L10.46 10.7C10.85 10.31 10.85 9.68005 10.46 9.29005L2.14999 0.980049C1.65999 0.490049 0.86999 0.490049 0.37999 0.980049C-0.11001 1.47005 -0.11001 2.26005 0.37999 2.75005L7.61999 10L0.36999 17.25C-0.11001 17.73 -0.11001 18.5301 0.37999 19.01Z" fill="#767676"/>
+      nextButton.innerHTML = `
+      <svg width="8" height="16" viewBox="0 0 8 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M0.51192 0.430571C0.826414 0.161005 1.29989 0.197426 1.56946 0.51192L7.56946 7.51192C7.8102 7.79279 7.8102 8.20724 7.56946 8.48811L1.56946 15.4881C1.29989 15.8026 0.826414 15.839 0.51192 15.5695C0.197426 15.2999 0.161005 14.8264 0.430571 14.5119L6.01221 8.00001L0.430571 1.48811C0.161005 1.17361 0.197426 0.700138 0.51192 0.430571Z" fill="#1C274C"/>
       </svg>
+      
       `;
-      prevButton.innerHTML = `<svg width="11" height="20" viewBox="0 0 11 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path data-sys-text=""  d="M10.6201 0.990059C10.1301 0.500059 9.34006 0.500059 8.85006 0.990059L0.540059 9.30006C0.150059 9.69006 0.150059 10.3201 0.540059 10.7101L8.85006 19.0201C9.34006 19.5101 10.1301 19.5101 10.6201 19.0201C11.1101 18.5301 11.1101 17.7401 10.6201 17.2501L3.38006 10.0001L10.6301 2.75006C11.1101 2.27006 11.1101 1.47006 10.6201 0.990059Z" fill="#767676"/>
+      prevButton.innerHTML = `
+      <svg width="8" height="16" viewBox="0 0 8 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M7.48809 0.430571C7.80259 0.700138 7.83901 1.17361 7.56944 1.48811L1.98781 8.00001L7.56944 14.5119C7.83901 14.8264 7.80259 15.2999 7.48809 15.5695C7.1736 15.839 6.70012 15.8026 6.43056 15.4881L0.430558 8.48811C0.189814 8.20724 0.189814 7.79279 0.430558 7.51192L6.43056 0.51192C6.70012 0.197426 7.1736 0.161005 7.48809 0.430571Z" fill="#1C274C"/>
       </svg>
+      
       `;
-      nextYear.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="20" height="20" viewBox="0 0 256 256" xml:space="preserve">
-
-      <defs>
-      </defs>
-      <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)" >
-        <path d="M 7.161 90 c -1.792 0 -3.583 -0.684 -4.95 -2.05 c -2.734 -2.734 -2.734 -7.166 0 -9.9 L 35.262 45 L 2.211 11.95 c -2.734 -2.733 -2.734 -7.166 0 -9.899 c 2.733 -2.733 7.166 -2.733 9.899 0 l 38 38 c 2.733 2.733 2.733 7.166 0 9.9 l -38 38 C 10.744 89.316 8.953 90 7.161 90 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill:#767676; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-        <path d="M 44.839 90 c -1.792 0 -3.583 -0.684 -4.95 -2.05 c -2.734 -2.734 -2.734 -7.166 0 -9.9 L 72.939 45 l -33.05 -33.05 c -2.734 -2.733 -2.734 -7.166 0 -9.899 c 2.733 -2.732 7.166 -2.733 9.9 0 l 38 38 c 2.733 2.733 2.733 7.166 0 9.9 l -38 38 C 48.422 89.316 46.63 90 44.839 90 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: #767676; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-      </g>
-      </svg>`
-      prevYear.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="20" height="20" viewBox="0 0 256 256" xml:space="preserve">
-
-      <defs>
-      </defs>
-      <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)" >
-        <path d="M 7.161 90 c -1.792 0 -3.583 -0.684 -4.95 -2.05 c -2.734 -2.734 -2.734 -7.166 0 -9.9 L 35.262 45 L 2.211 11.95 c -2.734 -2.733 -2.734 -7.166 0 -9.899 c 2.733 -2.733 7.166 -2.733 9.899 0 l 38 38 c 2.733 2.733 2.733 7.166 0 9.9 l -38 38 C 10.744 89.316 8.953 90 7.161 90 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill:#767676; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-        <path d="M 44.839 90 c -1.792 0 -3.583 -0.684 -4.95 -2.05 c -2.734 -2.734 -2.734 -7.166 0 -9.9 L 72.939 45 l -33.05 -33.05 c -2.734 -2.733 -2.734 -7.166 0 -9.899 c 2.733 -2.732 7.166 -2.733 9.9 0 l 38 38 c 2.733 2.733 2.733 7.166 0 9.9 l -38 38 C 48.422 89.316 46.63 90 44.839 90 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: #767676; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-      </g>
-      </svg>`
+      nextYear.innerHTML = `
+     
+      <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M0.51192 0.430571C0.826414 0.161005 1.29989 0.197426 1.56946 0.51192L7.56946 7.51192C7.8102 7.79279 7.8102 8.20724 7.56946 8.48811L1.56946 15.4881C1.29989 15.8026 0.826414 15.839 0.51192 15.5695C0.197426 15.2999 0.161005 14.8264 0.430571 14.5119L6.01221 8.00001L0.430571 1.48811C0.161005 1.17361 0.197426 0.700138 0.51192 0.430571ZM4.51212 0.430675C4.82661 0.161108 5.30008 0.19753 5.56965 0.512024L11.5697 7.51202C11.8104 7.79289 11.8104 8.20734 11.5697 8.48821L5.56965 15.4882C5.30008 15.8027 4.82661 15.8391 4.51212 15.5696C4.19762 15.3 4.1612 14.8265 4.43077 14.512L10.0124 8.00012L4.43077 1.48821C4.1612 1.17372 4.19762 0.700242 4.51212 0.430675Z" fill="#1C274C"/>
+      </svg>
+      `
+      prevYear.innerHTML = `
+      <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M11.488 0.430571C11.8025 0.700138 11.8389 1.17361 11.5693 1.48811L5.98771 8.00001L11.5693 14.5119C11.8389 14.8264 11.8025 15.2999 11.488 15.5695C11.1735 15.839 10.7 15.8026 10.4305 15.4881L4.43046 8.48811C4.18972 8.20724 4.18972 7.79279 4.43046 7.51192L10.4305 0.51192C10.7 0.197426 11.1735 0.161005 11.488 0.430571ZM7.48809 0.430674C7.80259 0.70024 7.83901 1.17372 7.56944 1.48821L1.98781 8.00012L7.56944 14.512C7.83901 14.8265 7.80259 15.3 7.48809 15.5696C7.1736 15.8391 6.70012 15.8027 6.43056 15.4882L0.430558 8.48821C0.189814 8.20734 0.189814 7.79289 0.430558 7.51202L6.43056 0.512023C6.70012 0.197528 7.1736 0.161107 7.48809 0.430674Z" fill="#1C274C"/>
+      </svg>
+      `
       nextButton.setAttribute("data-calendar-next", "");
+      nextButton.setAttribute("type","button")
       prevButton.setAttribute("data-calendar-prev", "");
+      prevButton.setAttribute("type","button")
       nextYear.setAttribute("data-calendar-next-year","")
+      nextYear.setAttribute("type","button")
       prevYear.setAttribute("data-calendar-prev-year","")
+      prevYear.setAttribute("type","button")
+      prevButton.setAttribute("data-tree-tooltip","")
+      prevButton.setAttribute("data-tree-tooltip",this.options.labels.previousLabel)
+      nextButton.setAttribute("data-tree-tooltip","")
+      nextButton.setAttribute("data-tree-tooltip",this.options.labels.nextLabel)
+      nextYear.setAttribute("data-tree-tooltip","")
+      nextYear.setAttribute("data-tree-tooltip",this.options.labels.nextYear)
+      prevYear.setAttribute("data-tree-tooltip","")
+      prevYear.setAttribute("data-tree-tooltip",this.options.labels.previousYear)
       controlElement.appendChild(nextYear)
       controlElement.appendChild(nextButton);
       controlElement.appendChild(monthNameElement)
-      controlElement.appendChild(prevButton);
+      controlElement.appendChild(prevButton);      
+     
       controlElement.appendChild(prevYear);
      
     } else {

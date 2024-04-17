@@ -695,8 +695,8 @@ export class UiCalendar {
       else{
         divElementHeader.style.borderBottom = `2px solid  #999999`;
         divElementHeader.style.marginBottom = `15px`;
-        divElement.style.color = `#fff`;
-        description.style.color= "#fff"
+        divElement.style.color = `#212121`;
+        description.style.color= "#212121"
         divElement.style.background = `rgba(153,153,153,0.1)`;
         divElement.style.border = `1px solid rgba(153,153,153,0.3)`;
       }      

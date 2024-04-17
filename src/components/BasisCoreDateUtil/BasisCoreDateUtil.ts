@@ -223,18 +223,28 @@ export class BasisCoreDateUtil implements IDateUtil {
     }
     return months;
   }
-  getCurrentDate(): DayValue {
+  getCurrentDate(culture: Culture): DayValue {
     var date = new Date();
     var today = this.getObj(
       date.getFullYear(),
       (date.getMonth() + 1) as MonthNumber,
       date.getDate() as DayNumber
     );
-    var basisCoreObjToday: DayValue = {
-      year: today.syear,
-      month: today.smonth,
-      day: today.sdate,
-    };
+    if(culture == "fa"){
+      var basisCoreObjToday: DayValue = {
+        year: today.syear,
+        month: today.smonth,
+        day: today.sdate,
+      };
+    }
+    else{
+      var basisCoreObjToday: DayValue = {
+        year: today.nyear,
+        month: today.mmonth,
+        day: today.mdate,
+      };
+    }
+    
     return basisCoreObjToday;
   }
   getDayNames(lid: Lid): string[] {
@@ -361,7 +371,7 @@ export class BasisCoreDateUtil implements IDateUtil {
   }
   nextYear(month: Month, culture: Culture): MonthValue{
     let retVal: MonthValue;
-    let nextMonth: MonthNumber = (month.value.month + 1) as MonthNumber;
+    let nextMonth: MonthNumber = (month.value.month ) as MonthNumber;
     let currentYear: number = month.value.year + 1 ;
     if (nextMonth > 12) {
       currentYear++;
@@ -381,7 +391,7 @@ export class BasisCoreDateUtil implements IDateUtil {
   }
   prevYear(month: Month, culture: Culture): MonthValue{
     let retVal: MonthValue;
-    let nextMonth: MonthNumber = (month.value.month + 1) as MonthNumber;
+    let nextMonth: MonthNumber = (month.value.month ) as MonthNumber;
     let currentYear: number = month.value.year - 1 ;
     if (nextMonth > 12) {
       currentYear++;
