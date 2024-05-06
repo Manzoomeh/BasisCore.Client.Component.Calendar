@@ -101,14 +101,25 @@ export class DatePicker {
     this.renderAsync();
   }
   goToday(culture? : Culture): void {
-    let todayMonthValues: MonthValue = {
-      year: this.months[this.activeIndex].currentDate.year,
-      month: this.months[this.activeIndex].currentDate.month,
-    };
-    console.log("aaaaa",this.months[this.activeIndex].currentDate.year,this.months[this.activeIndex].currentDate.month)
+    if(this.options.culture == "fa"){
+      var todayMonthValues: MonthValue = {
+        year: this.months[this.activeIndex].currentDate.year,
+        month: this.months[this.activeIndex].currentDate.month,
+      };
+    }
+    else{
+      var todayMonthValues: MonthValue = {
+        year: this.months[this.activeIndex].currentmDate.year,
+        month: this.months[this.activeIndex].currentmDate.month,
+      };
+    }
+    
     this.months[this.activeIndex] = new Month(this, todayMonthValues);
 
     this.renderAsync();
+
+
+    
   }
   protected createMountHeader(): Node {
     this.headerElement = document.createElement("div");
@@ -159,6 +170,8 @@ export class DatePicker {
     prevButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon__svg"><path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"></path></svg>`;
     nextButton.setAttribute("data-datepicker-next", "");
     prevButton.setAttribute("data-datepicker-prev", "");
+    prevButton.setAttribute("type","button")
+    nextButton.setAttribute("type","button")
     nextButton.setAttribute("data-sys-inherit","")
     prevButton.setAttribute("data-sys-inherit","")
     nextButton.setAttribute("data-sys-text","")
