@@ -46,4 +46,5 @@ export class Modal {
     this.cover.remove();
     
   }
+  
 }

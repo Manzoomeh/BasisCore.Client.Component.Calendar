@@ -1,7 +1,11 @@
 const path = require("path");
-const trustHttpServer = require("./server/trust-login");
+const trustHttpServer = require("./server/server");
 const ticketingHttpServer = require("./server/ticketing");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
+const crypto = require("crypto");
+const crypto_orig_createHash = crypto.createHash;
+crypto.createHash = algorithm => crypto_orig_createHash(algorithm == "md4" ? "sha256" : algorithm);
+
 
 module.exports = {
   entry: {
@@ -30,15 +34,6 @@ module.exports = {
     filename: "[name].js",
   },
   devServer: {
-    static: path.resolve(__dirname, "wwwroot"),
-    onBeforeSetupMiddleware: function (server) {      
-      server.app.use("/trustlogin", trustHttpServer);
-      server.app.use("/ticketing", ticketingHttpServer);
-    },
-    open: true,
-    port: 3001,
-  },
-  devServer: {
     static: [
       {
         directory: path.resolve(__dirname, "wwwroot"),
@@ -51,8 +46,7 @@ module.exports = {
       },
     ],
     onBeforeSetupMiddleware: function (server) {      
-      server.app.use("/trustlogin", trustHttpServer);
-      server.app.use("/ticketing", ticketingHttpServer);
+      server.app.use("/", trustHttpServer);
     },
     open: true,
     port: 3001,

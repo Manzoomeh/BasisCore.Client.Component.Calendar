@@ -13,6 +13,7 @@
   "dependencies": {
     "bclib": "^2.9.4",
     "circular-dependency-plugin": "^5.2.2",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "ignore-loader": "^0.1.2",
     "luxon": "^2.0.1",

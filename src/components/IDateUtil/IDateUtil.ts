@@ -5,7 +5,8 @@ import {
   DayNumber,
   YearValue,
   Culture,
-  Status
+  Status,
+  DayValueAndMonthName
 } from "../type-alias";
 import { Month } from "../Month/Month";
 import { Day } from "../Day/Day";
@@ -28,6 +29,7 @@ export interface IDateUtil {
   prevMonth(month: Month, culture: Culture): MonthValue;
   prevYear(month: Month, culture: Culture): MonthValue;
   convertToGregorian(day : MonthValue ) : DayValue
+  convertStringToDayValue(date: string): DayValue;
   convertToJalali(day : MonthValue ) : DayValue
   getGregorianDaysNumber(day : DayValue ) : DayNumber
   getGregorianMonthsName(month : MonthValue): string
@@ -37,4 +39,6 @@ export interface IDateUtil {
   getCurrentYear(day:DayValue ,  culture : Culture) : number
   convertToGregorianFullDate(day : DayValue ) : DayValue
   getBasisToDayId (day : DayValue): number
+  convertDateToJalali(day: DayValue): DayValueAndMonthName;
+  convertDateToGregorian(day: DayValue): DayValueAndMonthName;
 }
