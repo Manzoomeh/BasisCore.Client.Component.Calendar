@@ -1,11 +1,10 @@
-
 import { Month } from "./Month/Month";
 import {
   Culture,
   DayValue,
   MonthValue,
   ReminderType,
-  catFilter
+  catFilter,
 } from "./type-alias";
 import { ICalenderOptions, INote, ICatNote } from "./Interface/Interface";
 import { IDateUtil } from "./IDateUtil/IDateUtil";
@@ -26,7 +25,7 @@ export class DateRange {
   public wrapper: HTMLElement;
   public activeIndex: number;
   public catFilters: catFilter[] = [];
-  public userId : number =0;
+  public userId: number = 0;
   public holidayCategories = [];
   public templates: any;
   public holidays = [];
@@ -34,28 +33,27 @@ export class DateRange {
   public from: DayValue;
   public to: DayValue;
   public isFilterOpen = false;
-  public todayId : number=0
-  public readonly Owner?:IUserDefineComponent;
-  private runHeader : boolean = false
-  public categories : Array<ICatNote> = new Array<ICatNote>();
+  public todayId: number = 0;
+  public readonly Owner?: IUserDefineComponent;
+  private runHeader: boolean = false;
+  public categories: Array<ICatNote> = new Array<ICatNote>();
   private static readonly defaultCalenderOptions: Partial<ICalenderOptions> = {
     dateProvider: "basisCalendar",
     displayNote: true,
     culture: "fa",
     secondCulture: "en",
     lid: 1,
-    theme : "basic",
-    mode:"desktop",
-    level:"user"
-
+    theme: "basic",
+    mode: "desktop",
+    level: "user",
   };
 
-  public  constructor(
+  public constructor(
     from: DayValue,
     to: DayValue,
     options?: ICalenderOptions,
     rkey?: string,
-    owner?:IUserDefineComponent
+    owner?: IUserDefineComponent
   ) {
     this.activeIndex = 0;
     this.options = { ...DateRange.defaultCalenderOptions, ...(options as any) };
@@ -66,16 +64,15 @@ export class DateRange {
     this.dateUtil =
       this.options.dateProvider == "basisCalendar"
         ? new BasisCoreDateUtil()
-        : new PersianDateUtil();    
+        : new PersianDateUtil();
     this.note = new Array<INote>();
-   
+
     this.monthValues = this.dateUtil.getMonthValueList(from, to);
     this.monthValues.map((x) => this.months.push(new Month(this, x)));
     this.syncHolidayCategories();
-    
-    this.getCategories() ; 
+
+    this.getCategories();
     this.getTemplates();
-  
   }
   async getTemplates(): Promise<void> {
     let data = await this.sendAsyncDataGetMethod(
@@ -83,7 +80,7 @@ export class DateRange {
     );
     this.templates = data as any;
   }
-  
+
   public async getCategories() {
     if (this.options.displayNote == true) {
       let apiLink = this.options.baseUrl["catlist"];
@@ -99,7 +96,7 @@ export class DateRange {
       );
     }
   }
-  public  getRKey(): string {
+  public getRKey(): string {
     if (!this.rKey) {
       let cookie = {};
       document.cookie.split(";").forEach(function (el) {
@@ -111,23 +108,21 @@ export class DateRange {
     return this.rKey;
   }
 
-
-  public async getHolidays(id?:number): Promise<void> {
+  public async getHolidays(id?: number): Promise<void> {
     const url =
       this.options.level == "service"
         ? this.options.baseUrl["calendareventsservice"]
         : this.options.baseUrl["calendareventsuser"];
     const fromDateId = this.dateUtil.getBasisDayId(this.from);
     const toDateId = this.dateUtil.getBasisDayId(this.to);
-    this.holidayCategories.map( async (e) => {
-      
+    this.holidayCategories.map(async (e) => {
       try {
         let res = await fetch(url, {
           method: "POST",
           body: JSON.stringify({
             from: fromDateId,
             to: toDateId,
-            temid:  e.id,
+            temid: e.id,
           }),
         });
         res = await res.json();
@@ -142,23 +137,21 @@ export class DateRange {
           }
         });
       } catch {}
-    })
-    
+    });
   }
 
-   public async getUserId(): Promise<void> {
+  public async getUserId(): Promise<void> {
     this.getRKey();
     const form = new FormData();
     form.append("rkey", this.rKey);
     form.append("dmnid", "30");
-    let apiLink = this.options.baseUrl
-    let userIdObj = await this.sendAsyncDataGetMethod( apiLink["userid"] );    
-    this.userId =parseInt(userIdObj.userid) 
+    let apiLink = this.options.baseUrl;
+    let userIdObj = await this.sendAsyncDataGetMethod(apiLink["userid"]);
+    this.userId = parseInt(userIdObj.userid);
     return null;
   }
 
   public async refreshNotesAsync(): Promise<void> {
-    
     if (this.months.length > 0) {
       const firstDay = this.months[0].days[0];
       const lastMonth = this.months[this.months.length - 1];
@@ -173,7 +166,7 @@ export class DateRange {
         month: lastDay.month.value.month,
         day: lastDay.value,
       };
-      
+
       await this.syncNotesAsync(from, to);
     }
   }
@@ -190,22 +183,19 @@ export class DateRange {
   }
   protected async syncNotesAsync(from: DayValue, to: DayValue): Promise<void> {
     //fetch push new data to server and fetch all data from server
-    
+
     const fromDateId = this.dateUtil.getBasisDayId(from);
     const toDateId = this.dateUtil.getBasisDayId(to);
     const form = new FormData();
-    const useridd  =await this.getUserId()
+    const useridd = await this.getUserId();
     form.append("shared", "0");
     // form.append("catid", "");
     form.append("from", `${fromDateId}`);
     form.append("to", `${toDateId}`);
-    let apiLink = this.options.baseUrl["usernotes"]
-    apiLink = apiLink.toString().replace("${rkey}" , this.rKey)
+    let apiLink = this.options.baseUrl["usernotes"];
+    apiLink = apiLink.toString().replace("${rkey}", this.rKey);
 
-    const data = await this.sendAsyncData(
-      form,
-      apiLink
-    );
+    const data = await this.sendAsyncData(form, apiLink);
     this.note = [];
     data.map((x: INote) =>
       this.note.push({
@@ -218,10 +208,10 @@ export class DateRange {
         isNew: false,
         hasReminder: false,
         reminderType: ReminderType.none,
-        catid : x.catid,
-        creator : x.creator,
-        creatoruser : x.creatoruser,
-        sharinginfo : x.sharinginfo
+        catid: x.catid,
+        creator: x.creator,
+        creatoruser: x.creatoruser,
+        sharinginfo: x.sharinginfo,
       })
     );
   }
@@ -282,20 +272,18 @@ export class DateRange {
     this.runAsync();
   }
   async goToday(culture: Culture): Promise<void> {
-    if(this.options.culture == "fa"){
+    if (this.options.culture == "fa") {
       var todayMonthValues: MonthValue = {
         year: this.months[this.activeIndex].currentDate.year,
         month: this.months[this.activeIndex].currentDate.month,
       };
-    }
-    else{
+    } else {
       var todayMonthValues: MonthValue = {
         year: this.months[this.activeIndex].currentmDate.year,
         month: this.months[this.activeIndex].currentmDate.month,
       };
     }
-   
-    
+
     this.months[this.activeIndex] = new Month(this, todayMonthValues);
     if (this.options.displayNote) {
       //load notes from server;
@@ -303,7 +291,7 @@ export class DateRange {
     }
     this.runAsync();
   }
-  
+
   protected createMountHeader(): Node {
     const headerElement = document.createElement("div");
     const monthNameElement = document.createElement("div");
@@ -334,22 +322,16 @@ export class DateRange {
         this.months[this.activeIndex].days[0]
       );
 
-      UImanager.modal.openModal(
-        UImanager.renderModalBody()
-        
-      );
-      
+      UImanager.modal.openModal(UImanager.renderModalBody());
     });
-    if(this.options.level == "service"){
+    if (this.options.level == "service") {
       settingButton.setAttribute("data-calendar-setting-btn", "");
       settingButton.innerHTML = `<svg width="30" height="30" viewBox="8 7 28 26" fill="#222" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M24.2788 10.1522C23.9085 10 23.439 10 22.5 10C21.561 10 21.0915 10 20.7212 10.1522C20.2274 10.3552 19.8351 10.7446 19.6306 11.2346C19.5372 11.4583 19.5007 11.7185 19.4864 12.098C19.4653 12.6557 19.1772 13.1719 18.6902 13.4509C18.2032 13.73 17.6086 13.7195 17.1115 13.4588C16.7732 13.2813 16.5279 13.1826 16.286 13.151C15.7561 13.0818 15.2202 13.2243 14.7962 13.5472C14.4781 13.7894 14.2434 14.1929 13.7739 14.9999C13.3044 15.807 13.0697 16.2105 13.0173 16.6049C12.9476 17.1308 13.0912 17.6627 13.4165 18.0835C13.5651 18.2756 13.7738 18.437 14.0977 18.639C14.5739 18.936 14.8803 19.4419 14.8803 20C14.8803 20.5581 14.5739 21.0639 14.0977 21.3608C13.7737 21.5629 13.565 21.7244 13.4164 21.9165C13.0911 22.3373 12.9475 22.8691 13.0172 23.395C13.0696 23.7894 13.3043 24.193 13.7738 25C14.2433 25.807 14.478 26.2106 14.7961 26.4527C15.2201 26.7756 15.756 26.9181 16.2859 26.8489C16.5278 26.8173 16.7731 26.7186 17.1113 26.5412C17.6085 26.2804 18.2031 26.27 18.6901 26.549C19.1771 26.8281 19.4653 27.3443 19.4864 27.9021C19.5007 28.2815 19.5372 28.5417 19.6306 28.7654C19.8351 29.2554 20.2274 29.6448 20.7212 29.8478C21.0915 30 21.561 30 22.5 30C23.439 30 23.9085 30 24.2788 29.8478C24.7726 29.6448 25.1649 29.2554 25.3694 28.7654C25.4628 28.5417 25.4994 28.2815 25.5137 27.902C25.5347 27.3443 25.8228 26.8281 26.3098 26.549C26.7968 26.2699 27.3914 26.2804 27.8886 26.5412C28.2269 26.7186 28.4721 26.8172 28.714 26.8488C29.2439 26.9181 29.7798 26.7756 30.2038 26.4527C30.5219 26.2105 30.7566 25.807 31.2261 24.9999C31.6956 24.1929 31.9303 23.7894 31.9827 23.395C32.0524 22.8691 31.9088 22.3372 31.5835 21.9164C31.4349 21.7243 31.2262 21.5628 30.9022 21.3608C30.4261 21.0639 30.1197 20.558 30.1197 19.9999C30.1197 19.4418 30.4261 18.9361 30.9022 18.6392C31.2263 18.4371 31.435 18.2757 31.5836 18.0835C31.9089 17.6627 32.0525 17.1309 31.9828 16.605C31.9304 16.2106 31.6957 15.807 31.2262 15C30.7567 14.193 30.522 13.7894 30.2039 13.5473C29.7799 13.2244 29.244 13.0818 28.7141 13.1511C28.4722 13.1827 28.2269 13.2814 27.8887 13.4588C27.3915 13.7196 26.7969 13.73 26.3099 13.451C25.8229 13.1719 25.5347 12.6557 25.5136 12.0979C25.4993 11.7185 25.4628 11.4583 25.3694 11.2346C25.1649 10.7446 24.7726 10.3552 24.2788 10.1522ZM22.5 23C24.1695 23 25.5228 21.6569 25.5228 20C25.5228 18.3431 24.1695 17 22.5 17C20.8305 17 19.4772 18.3431 19.4772 20C19.4772 21.6569 20.8305 23 22.5 23Z" fill="none" stroke="#222"/> </svg>`;
-  
     }
     todayButton.addEventListener("click", (e) => {
       this.goToday(this.options.culture);
     });
 
-    
     const todayIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="17" viewBox="0 0 18 17"  >
     <path fill-rule="evenodd"  clip-rule="evenodd" d="M4.65476 0C4.99008 0 5.26191 0.271827 5.26191 0.607143V1.22458C5.79783 1.21427 6.38828 1.21428 7.03766 1.21429H10.3671C11.0165 1.21428 11.6069 1.21427 12.1429 1.22458V0.607143C12.1429 0.271827 12.4147 0 12.75 0C13.0853 0 13.3571 0.271827 13.3571 0.607143V1.27669C13.5676 1.29273 13.7668 1.3129 13.9554 1.33825C14.9045 1.46586 15.6727 1.73471 16.2785 2.34053C16.8843 2.94635 17.1532 3.71454 17.2808 4.66365C17.3216 4.96697 17.3489 5.298 17.3673 5.65863C17.3915 5.72419 17.4048 5.79507 17.4048 5.86905C17.4048 5.92517 17.3971 5.9795 17.3829 6.03109C17.4048 6.6803 17.4048 7.41746 17.4048 8.25195V9.96233C17.4048 11.45 17.4048 12.6284 17.2808 13.5506C17.1532 14.4997 16.8843 15.2679 16.2785 15.8738C15.6727 16.4796 14.9045 16.7484 13.9554 16.876C13.0332 17 11.8548 17 10.3671 17H7.03767C5.54996 17 4.37158 17 3.44936 16.876C2.50026 16.7484 1.73206 16.4796 1.12624 15.8738C0.520427 15.2679 0.25157 14.4997 0.123967 13.5506C-2.27988e-05 12.6284 -1.25745e-05 11.45 2.60355e-07 9.96234V8.25195C-6.9291e-06 7.41746 -1.32978e-05 6.68031 0.0218644 6.03109C0.00761404 5.9795 5.49864e-07 5.92517 5.49864e-07 5.86905C5.49864e-07 5.79507 0.0132313 5.72418 0.0374556 5.65862C0.0558201 5.29799 0.0831865 4.96697 0.123967 4.66365C0.25157 3.71454 0.520427 2.94635 1.12624 2.34053C1.73206 1.73471 2.50026 1.46586 3.44936 1.33825C3.63792 1.3129 3.83719 1.29273 4.04762 1.27669V0.607143C4.04762 0.271827 4.31945 0 4.65476 0ZM1.22488 6.47619C1.21454 7.00459 1.21429 7.60627 1.21429 8.29762V9.91667C1.21429 11.4603 1.21558 12.5569 1.32742 13.3888C1.43692 14.2033 1.64228 14.6725 1.98487 15.0151C2.32747 15.3577 2.79671 15.5631 3.61116 15.6726C4.44308 15.7844 5.53972 15.7857 7.08333 15.7857H10.3214C11.865 15.7857 12.9617 15.7844 13.7936 15.6726C14.6081 15.5631 15.0773 15.3577 15.4199 15.0151C15.7625 14.6725 15.9678 14.2033 16.0773 13.3888C16.1892 12.5569 16.1905 11.4603 16.1905 9.91667V8.29762C16.1905 7.60627 16.1902 7.00459 16.1799 6.47619H1.22488ZM16.1244 5.2619H1.28041C1.29337 5.10859 1.30888 4.96338 1.32742 4.82545C1.43692 4.011 1.64228 3.54176 1.98487 3.19916C2.32747 2.85656 2.79671 2.65121 3.61116 2.54171C4.44308 2.42986 5.53972 2.42857 7.08333 2.42857H10.3214C11.865 2.42857 12.9617 2.42986 13.7936 2.54171C14.6081 2.65121 15.0773 2.85656 15.4199 3.19916C15.7625 3.54176 15.9678 4.011 16.0773 4.82545C16.0959 4.96338 16.1114 5.10859 16.1244 5.2619ZM12.3452 11.3333C12.0099 11.3333 11.7381 11.6052 11.7381 11.9405C11.7381 12.2758 12.0099 12.5476 12.3452 12.5476C12.6806 12.5476 12.9524 12.2758 12.9524 11.9405C12.9524 11.6052 12.6806 11.3333 12.3452 11.3333ZM10.5238 11.9405C10.5238 10.9345 11.3393 10.119 12.3452 10.119C13.3512 10.119 14.1667 10.9345 14.1667 11.9405C14.1667 12.9464 13.3512 13.7619 12.3452 13.7619C11.3393 13.7619 10.5238 12.9464 10.5238 11.9405Z" fill="#222222"/>
     </svg>
@@ -363,7 +345,7 @@ export class DateRange {
       todayButton.removeAttribute("data-calendar-today-btn");
       todayButton.setAttribute("data-calendar-today-btn-mobile", "");
       todayButton.innerHTML = todayIcon;
-    } 
+    }
     const nextButton = document.createElement("button");
     const prevButton = document.createElement("button");
     const nextYear = document.createElement("button");
@@ -409,16 +391,16 @@ export class DateRange {
     </g>
     </svg>`;
     nextButton.setAttribute("data-calendar-next", "");
-    nextButton.setAttribute("data-tree-tooltip" , "ماه بعد")
+    nextButton.setAttribute("data-tree-tooltip", "ماه بعد");
     prevButton.setAttribute("data-calendar-prev", "");
-    nextButton.setAttribute("data-tree-tooltip" , "ماه قبل")
+    nextButton.setAttribute("data-tree-tooltip", "ماه قبل");
     nextYear.setAttribute("data-calendar-next-year", "");
     prevYear.setAttribute("data-calendar-prev-year", "");
-    titleWrapper.setAttribute("data-bc-title-wrapper","")
+    titleWrapper.setAttribute("data-bc-title-wrapper", "");
     calendarHeader.setAttribute("bc-calendar-calendar-header", "");
     calendarHeader.appendChild(controlElement);
     const rightSideBtns = document.createElement("div");
-    rightSideBtns.setAttribute("data-calendar-right-btns", "");  
+    rightSideBtns.setAttribute("data-calendar-right-btns", "");
     const container = document.createElement("div");
     const nextYearIcon = document.createElement("div");
     const prevYearIcon = document.createElement("div");
@@ -443,13 +425,13 @@ export class DateRange {
     const empt = document.createElement("div");
     container.setAttribute("data-calendar-date-modal", "");
     container.appendChild(empt);
-    
-    titleWrapper.appendChild(nextButton)
-    titleWrapper.appendChild(yearBtn)
-    titleWrapper.appendChild(prevButton)
+
+    titleWrapper.appendChild(nextButton);
+    titleWrapper.appendChild(yearBtn);
+    titleWrapper.appendChild(prevButton);
     rightSideBtns.appendChild(todayButton);
     rightSideBtns.appendChild(titleWrapper);
-    yearBtn.innerHTML =monthNameElement.outerHTML 
+    yearBtn.innerHTML = monthNameElement.outerHTML;
     //headerElement.appendChild(calendarHeader);
     yearBtn.addEventListener("click", (e) => {
       if (yearBtn.hasAttribute("data-calendar-year-btn")) {
@@ -510,15 +492,14 @@ export class DateRange {
         yearsList: true,
         monthList: true,
         switchType: false,
-        rangeDates : false,
+        rangeDates: false,
         theme: "basic",
         isFilter: true,
         mode: "desktop",
         style: "../css/datepicker-style.css",
         sourceid: "db.form",
-        type:"load",
-        pickerType : "action",
-        
+        type: "load",
+        pickerType: "action",
       },
       this
     );
@@ -526,28 +507,31 @@ export class DateRange {
     return headerElement;
   }
   protected generateDaysName(): Node {
-    const daysName = this.dateUtil.getDayNames(this.options.lid , this.options.culture);
+    const daysName = this.dateUtil.getDayNames(
+      this.options.lid,
+      this.options.culture
+    );
     const secondDayName = this.dateUtil.getDayNames(2, "en");
     const weekNameWrapper: Element = document.createElement("div");
-    weekNameWrapper.setAttribute("data-calendar-day-names", "");   
+    weekNameWrapper.setAttribute("data-calendar-day-names", "");
     for (const index in daysName) {
-      let enIndex = parseInt(index) - 1
-      if(enIndex == -1){
-        enIndex= 6
+      let enIndex = parseInt(index) - 1;
+      if (enIndex == -1) {
+        enIndex = 6;
       }
       const dayWrapper: Element = document.createElement("div");
       const faSpan: Element = document.createElement("span");
-      const enSpan: Element = document.createElement("span")
+      const enSpan: Element = document.createElement("span");
       dayWrapper.setAttribute("data-calendar-day-name", "");
       dayWrapper.setAttribute("data-sys-text", "");
-      dayWrapper.setAttribute("data-sys-bg","")
-      enSpan.setAttribute("data-calendar-second-day-name" , "")
-      enSpan.setAttribute("data-sys-text","")
-      faSpan.setAttribute("data-calendar-first-day-name" , "")
+      dayWrapper.setAttribute("data-sys-bg", "");
+      enSpan.setAttribute("data-calendar-second-day-name", "");
+      enSpan.setAttribute("data-sys-text", "");
+      faSpan.setAttribute("data-calendar-first-day-name", "");
       faSpan.textContent = daysName[index];
-      enSpan.textContent= secondDayName[enIndex]
+      enSpan.textContent = secondDayName[enIndex];
       dayWrapper.appendChild(faSpan);
-      dayWrapper.appendChild(enSpan)
+      dayWrapper.appendChild(enSpan);
       weekNameWrapper.appendChild(dayWrapper);
     }
     return weekNameWrapper;
@@ -666,12 +650,10 @@ export class DateRange {
       title: string;
       id: string;
     }) => {
-      
       if (this.holidayFilters.filter((e) => e.id === id).length > 0) {
         this.holidayFilters = this.holidayFilters.filter((i) => i.id !== id);
       } else {
         this.holidayFilters = [...this.holidayFilters, { title, id }];
-        
       }
       this.runAsync();
     };
@@ -724,8 +706,7 @@ export class DateRange {
             input.setAttribute("checked", "true");
           }
           input.addEventListener("click", () => {
-            
-            onHolidayCheck(e)
+            onHolidayCheck(e);
             // this.getHolidays(e.id);
           });
           filterRow.appendChild(input);
@@ -745,7 +726,7 @@ export class DateRange {
                 this,
                 this.months[this.activeIndex].days[0]
               );
-             
+
               UImanager.modal.openModal(
                 UImanager.generatePersonalHolidayForm()
               );
@@ -846,12 +827,10 @@ export class DateRange {
     }
     this.months[this.activeIndex].days.map((x) => {
       if (this.options.mode == "desktop") {
-       
         const dayElement = new UiCalendar(this, x).generateDaysUi(
           this.catFilters,
           this.holidays.filter((i) =>
             this.holidayFilters.find((e) => {
-              
               return e.id == i.temID;
             })
           ),
@@ -881,7 +860,7 @@ export class DateRange {
   protected createMountFooter(): Node {
     //create related element
     var footerElement = document.createElement("div");
-    this.runHeader = true
+    this.runHeader = true;
     return footerElement;
   }
   protected createMountFilters(): Node {
@@ -906,9 +885,7 @@ export class DateRange {
       <path opacity="0.8" d="M3.7577 3.49995L6.23089 6.22575C6.39184 6.40305 6.39184 6.68972 6.23089 6.86702C6.07002 7.04433 5.8099 7.04433 5.64903 6.86702L3.17577 4.14122L0.702578 6.86702C0.541627 7.04433 0.281589 7.04433 0.120713 6.86702C-0.0402377 6.68972 -0.0402377 6.40305 0.120713 6.22575L2.5939 3.49995L0.120713 0.774149C-0.0402377 0.596848 -0.0402377 0.310175 0.120713 0.132873C0.200887 0.0444298 0.306304 0 0.411645 0C0.516987 0 0.622328 0.0444298 0.702578 0.132873L3.17577 2.85867L5.64903 0.132873C5.72928 0.0444298 5.83462 0 5.93996 0C6.0453 0 6.15064 0.0444298 6.23089 0.132873C6.39184 0.310175 6.39184 0.596848 6.23089 0.774149L3.7577 3.49995Z" fill="#767676"/>
       </svg>${e.title}`;
       filterRemoveButton.addEventListener("click", () => {
-        this.holidayFilters = this.holidayFilters.filter(
-          (i) => i.value != e.value
-        );
+        this.holidayFilters = this.holidayFilters.filter((i) => i.id != e.id);
         this.runAsync();
       });
       submittedFilters.appendChild(filterRemoveButton);
@@ -929,77 +906,72 @@ export class DateRange {
     return submittedFilters;
   }
 
-  
   async runAsync(): Promise<void> {
-    
     this.wrapper.innerHTML = "";
     this.wrapper.setAttribute("id", "basis-calendar");
     const headerPart = this.createMountHeader();
     const bodyPart = this.createMountBody();
     const footerPart = this.createMountFooter();
     //Extra process..
-  
+
     this.wrapper.appendChild(headerPart);
     this.wrapper.appendChild(bodyPart);
     this.wrapper.appendChild(footerPart);
-    
-    // this.wrapper.style.display = "block"  
 
+    // this.wrapper.style.display = "block"
   }
   public async createUIAsync(container: HTMLElement): Promise<void> {
-    const style=  document.createElement("link")
-    style.setAttribute("href" , this.options.style)
-    style.setAttribute("rel" , "stylesheet")
-    style.setAttribute("type" , "text/css")
-    await document.querySelector("head").appendChild(style)
-    this.wrapper = container;   
+    const style = document.createElement("link");
+    style.setAttribute("href", this.options.style);
+    style.setAttribute("rel", "stylesheet");
+    style.setAttribute("type", "text/css");
+    await document.querySelector("head").appendChild(style);
+    this.wrapper = container;
     // this.wrapper.style.display = "none"
     if (this.options.displayNote) {
       await this.refreshNotesAsync();
       this.runAsync();
-    }
-    else{
+    } else {
       this.runAsync();
     }
-   
   }
   closeModal(): void {
     document.querySelector("[data-sys-modal]").setAttribute("style", "");
   }
-  async sendAsyncData(form: FormData, url: string ) {
+  async sendAsyncData(form: FormData, url: string) {
     var data = new URLSearchParams();
     for (var p of form) {
       let name = p[0];
       let value = p[1];
-      data.append(name, value.toString());  }
+      data.append(name, value.toString());
+    }
     const response = await fetch(url, {
       method: "POST",
       body: data,
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        "Content-Type": "application/x-www-form-urlencoded",
       },
     });
     return response.json();
   }
-  async sendAsyncDataGetMethod(url: string ) {
+  async sendAsyncDataGetMethod(url: string) {
     const response = await fetch(url, {
       method: "Get",
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        "Content-Type": "application/x-www-form-urlencoded",
       },
     });
     return response.json();
   }
-  async sendAsyncDataPostJson(json: object, url: string ) {
+  async sendAsyncDataPostJson(json: object, url: string) {
     const response = await fetch(url, {
       method: "POST",
       body: JSON.stringify(json),
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
     return response.json();
   }
-
 }

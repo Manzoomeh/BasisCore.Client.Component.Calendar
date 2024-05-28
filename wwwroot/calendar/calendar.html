@@ -1,146 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="http://basispanel.ir/asset/css/light.css?v=5"  rel="stylesheet" />
-        <link href="http://basispanel.ir/asset/css/styles-1.css"  rel="stylesheet" />
-        
-        <script src="/bclib.js"></script>
-        <title>Calendar</title>
-        <style>
-            @font-face {
-            font-family: IRANSans1;
-            font-style: normal;
-            font-weight: normal;
-            src: url('../fonts/IRANSansWeb.eot');
-            src: url('../fonts/IRANSansWeb.ttf') format('embedded-opentype'),
-                /* IE6-8 */
-            url('../fonts/IRANSansWeb.woff') format('woff'),
-                /* FF39+,Chrome36+, Opera24+*/
-            url('../fonts/IRANSansWeb.woff2') format('woff2');
-        }
-        #basis-calendar , input , button,[data-modal-form]{
-            font-family: IRANSans1;
-        }
-        [data-sys-button-disable] {
-  background: #ccc !important;
-  border-color: #ccc !important;
-  color: #fff !important;
-  opacity: 1 !important;
-}
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="http://basispanel.ir/asset/css/light.css?v=5"
+      rel="stylesheet"
+    />
+    <link href="http://basispanel.ir/asset/css/styles-1.css" rel="stylesheet" />
 
-[data-sys-button-disable] svg,
-[data-sys-button-disable] path {
-  fill: #fff !important;
-}
-body{
-    margin: 50px;
-}
-        </style>
-        <script>
-            const host = {
-                repositories: {
-                    "calendar.calendar": "/basiscore.calendar.component.js",
-                    "calendar.datepicker": "/basiscore.calendar.component.js"
-                }
-            }
-        </script>
-    </head>
-    <body>
-        <Basis core="component.calendar.calendar" run="atclient" sourceid="db.form" from="1403/02/01" to="1403/02/30" 
-        options="mySetting" rkey="7BCCE056-57EB-43DA-8D4D-89D261DA81D3"></Basis>
-        <script>   
-                var mySetting = {
-                dateProvider: "basisCalendar",
-                culture: "fa",
-                lid:1,
-                todayButton: false,
-                dmnid : 6,
-                style: "../css/calendar-style.css",
-                baseUrl: {                   
-                    "userid" : "http://basispanel.ir/trustservice/checkrkey/E70FD88D-DB2A-4E8B-A827-6E66EEBC9F5C",
-                    "viewnote" :"https://basispanel.ir/service/fa/E70FD88D-DB2A-4E8B-A827-6E66EEBC9F5C/viewcalendarnote",
-                    "usernotes" :"https://basispanel.ir/service/E70FD88D-DB2A-4E8B-A827-6E66EEBC9F5C/calendarnotes",
-                    "removenote":"http://basispanel.ir/service/E70FD88D-DB2A-4E8B-A827-6E66EEBC9F5C/removenote",
-                    "addnote":"http://basispanel.ir/service/E70FD88D-DB2A-4E8B-A827-6E66EEBC9F5C/addcalendarnote",
-                    "reminder" : "http://basispanel.ir/service/E70FD88D-DB2A-4E8B-A827-6E66EEBC9F5C/notereminder",
-                    "catlist":"https://basispanel.ir/service/E70FD88D-DB2A-4E8B-A827-6E66EEBC9F5C/fa/notecatlist",
-                    "sharing" :"https://basispanel.ir/service/E70FD88D-DB2A-4E8B-A827-6E66EEBC9F5C/sharing",
-                    "removesharing":"http://basispanel.ir/service/E70FD88D-DB2A-4E8B-A827-6E66EEBC9F5C/calendarnote/removesharing",
-                    "sender":"http://basispanel.ir/service/E70FD88D-DB2A-4E8B-A827-6E66EEBC9F5C/fa/usercategories",
-                    "reciver":"http://basispanel.ir/service/E70FD88D-DB2A-4E8B-A827-6E66EEBC9F5C/fa/usercategoryrelations/${catid}",
-                    "sharingService" : "http://basispanel.ir/service/E70FD88D-DB2A-4E8B-A827-6E66EEBC9F5C/sharing",
-                    "removeReminder" : "http://basispanel.ir/service/E70FD88D-DB2A-4E8B-A827-6E66EEBC9F5C/removereminder/${usedforid}",
-                    "calendartemplates" : "http://basispanel.ir/service/E70FD88D-DB2A-4E8B-A827-6E66EEBC9F5C/fa/calendartemplates",
-                    "serviceholiday" : "http://basispanel.ir/service/E70FD88D-DB2A-4E8B-A827-6E66EEBC9F5C/fa/calendartemplates",
-                    "calendareventsservice" : "http://basispanel.ir/service/E70FD88D-DB2A-4E8B-A827-6E66EEBC9F5C/fa/calendarevents",
-                    
-                },
-                level : "service" , 
-                labels: {
-                    todayTitle : "امروز",
-                    titrTitle:"عنوان",
-                    categoryTitle : "دسته بندی",
-                    noteTitle : "یادداشت",
-                    submitKeyTitle : "ثبت",
-                    timeTitle : "زمان با فرمت 18:45 وارد شود",
-                    emptyNoteList : "هیچ یادداشتی در این روز وجود ندارد.",
-                    editMenuTitle :"ویرایش",
-                    deleteMenuTitle:"حذف",
-                    shareMenuTitle:"اشتراک‌گذاری",
-                    deleteTextTitle : "آیا از حذف این یادداشت مطمئن هستید ؟ ",
-                    cancelKeyTitle : "انصراف",
-                    shareTextTitle : "برای به اشتراک‌گذاری ایمیل را وارد کنید",
-                    deleteKeyTitle: "حذف",
-                    shareBoxTitle : "به اشتراک‌گذاری",
-                    viewMenuTitle: "نمایش",
-                    reminderMenuTitle: "یادآوری",
-                    dateViewNote: "تاریخ",
+    <script src="/bclib.js"></script>
+    <title>Calendar</title>
+    <style>
+      @font-face {
+        font-family: IRANSans1;
+        font-style: normal;
+        font-weight: normal;
+        src: url("../fonts/IRANSansWeb.eot");
+        src: url("../fonts/IRANSansWeb.ttf") format("embedded-opentype"),
+          /* IE6-8 */ url("../fonts/IRANSansWeb.woff") format("woff"),
+          /* FF39+,Chrome36+, Opera24+*/ url("../fonts/IRANSansWeb.woff2")
+            format("woff2");
+      }
+      #basis-calendar,
+      input,
+      button,
+      [data-modal-form] {
+        font-family: IRANSans1;
+      }
+      [data-sys-button-disable] {
+        background: #ccc !important;
+        border-color: #ccc !important;
+        color: #fff !important;
+        opacity: 1 !important;
+      }
 
-                    sharingViewNote: "اشتراک‌گذاری",
-                    timeViewNote: "ساعت",
-                    categoryViewNote: "دسته‌بندی",
-                    reminderViewNote: "یادآوری",
-                    reminderErrorForLastDays:
-                    "امکان ثبت Reminder برای روزهای گذشته وجود ندارد. 1",
-                    reminderCount: "تعداد",
-                    reminderTitle: " به شما یادآوری کنیم ؟ ",
-                    forme: "برای خودم",
-                    forall: "برای همه اعضای گروه",
-                    email: "ایمیل",
-                    sms: "موبایل",
-                    day: "روز",
-                    hour: "ساعت",
-                    minute: "دقیقه",
-                    sharingSuccessMessage: "اشتراک‌گذاری با موفقیت انجام شد",
-                    sharingrepeatMessage:
-                    "اشتراک‌گذاری برای این گروه کاربری، قبلا انجام شده است.  ",
-                    setTimeForReminderMessage: "لطفا برای یادداشت خود یک زمان تعیین کنید.",
-                    errorMessage: "عملیات با خطا روبرو شد",
-                    successMessage: "عملیات با موفقیت انجام شد",
-                    noGrouoForReciver: "هیچ گروه کاربری برای گروه فرستنده تعریف نشده است",
-                    amLabel: "ق.ظ",
-                    pmLabel: "ب.ظ",
-                    noCategoryError: "از ویجت دسته‌بندی‌ها، یک دسته‌بندی جدید ایجاد کنید.",
-                    repeatUser: "کاربر تکراری است ",
-                    sharingErrorWithOwner:
-                    "امکان به اشتراک‌گذاری با مالک یادداشت وجود ندارد.",
-                    wrongUser: "نام کاربری اشتباه است ",
-                    before: "قبل",
-                    for: "برای",
-                    me: "خودمfor me",
-                    all: "همه",
-                    previousLabel : "قبلی",
-                    nextLabel : "بعدی",
-                    nextYear: "سال بعد",
-                    previousYear: " سال قبلی"
+      [data-sys-button-disable] svg,
+      [data-sys-button-disable] path {
+        fill: #fff !important;
+      }
+      body {
+        margin: 50px;
+      }
+    </style>
+    <script>
+      const host = {
+        repositories: {
+          "calendar.calendar": "/basiscore.calendar.component.js",
+          "calendar.datepicker": "/basiscore.calendar.component.js",
+        },
+      };
+    </script>
+  </head>
+  <body>
+    <Basis
+      core="component.calendar.calendar"
+      run="atclient"
+      sourceid="db.form"
+      from="1403/02/01"
+      to="1403/02/30"
+      options="mySetting"
+      rkey="7BCCE056-57EB-43DA-8D4D-89D261DA81D3"
+    ></Basis>
+    <script>
+      var mySetting = {
+        dateProvider: "basisCalendar",
+        culture: "fa",
+        lid: 1,
+        todayButton: false,
+        dmnid: 6,
+        style: "../css/calendar-style.css",
+        baseUrl: {
+          userid:
+            "http://basispanel.ir/trustservice/checkrkey/5B507FD7-C82C-4CFA-8949-FA8D048BB7C5",
+          viewnote:
+            "https://basispanel.ir/service/fa/5B507FD7-C82C-4CFA-8949-FA8D048BB7C5/viewcalendarnote",
+          usernotes:
+            "https://basispanel.ir/service/5B507FD7-C82C-4CFA-8949-FA8D048BB7C5/calendarnotes",
+          removenote:
+            "http://basispanel.ir/service/5B507FD7-C82C-4CFA-8949-FA8D048BB7C5/removenote",
+          addnote:
+            "http://basispanel.ir/service/5B507FD7-C82C-4CFA-8949-FA8D048BB7C5/addcalendarnote",
+          reminder:
+            "http://basispanel.ir/service/5B507FD7-C82C-4CFA-8949-FA8D048BB7C5/notereminder",
+          catlist:
+            "https://basispanel.ir/service/5B507FD7-C82C-4CFA-8949-FA8D048BB7C5/fa/notecatlist",
+          sharing:
+            "https://basispanel.ir/service/5B507FD7-C82C-4CFA-8949-FA8D048BB7C5/sharing",
+          removesharing:
+            "http://basispanel.ir/service/5B507FD7-C82C-4CFA-8949-FA8D048BB7C5/calendarnote/removesharing",
+          sender:
+            "http://basispanel.ir/service/5B507FD7-C82C-4CFA-8949-FA8D048BB7C5/fa/usercategories",
+          reciver:
+            "http://basispanel.ir/service/5B507FD7-C82C-4CFA-8949-FA8D048BB7C5/fa/usercategoryrelations/${catid}",
+          sharingService:
+            "http://basispanel.ir/service/5B507FD7-C82C-4CFA-8949-FA8D048BB7C5/sharing",
+          removeReminder:
+            "http://basispanel.ir/service/5B507FD7-C82C-4CFA-8949-FA8D048BB7C5/removereminder/${usedforid}",
+          calendartemplates:
+            "http://basispanel.ir/service/5B507FD7-C82C-4CFA-8949-FA8D048BB7C5/fa/calendartemplates",
+          serviceholiday:
+            "http://basispanel.ir/service/5B507FD7-C82C-4CFA-8949-FA8D048BB7C5/fa/calendartemplates",
+          calendareventsservice:
+            "http://basispanel.ir/service/5B507FD7-C82C-4CFA-8949-FA8D048BB7C5/fa/calendarevents",
+        },
+        level: "service",
+        labels: {
+          todayTitle: "امروز",
+          titrTitle: "عنوان",
+          categoryTitle: "دسته بندی",
+          noteTitle: "یادداشت",
+          submitKeyTitle: "ثبت",
+          timeTitle: "زمان با فرمت 18:45 وارد شود",
+          emptyNoteList: "هیچ یادداشتی در این روز وجود ندارد.",
+          editMenuTitle: "ویرایش",
+          deleteMenuTitle: "حذف",
+          shareMenuTitle: "اشتراک‌گذاری",
+          deleteTextTitle: "آیا از حذف این یادداشت مطمئن هستید ؟ ",
+          cancelKeyTitle: "انصراف",
+          shareTextTitle: "برای به اشتراک‌گذاری ایمیل را وارد کنید",
+          deleteKeyTitle: "حذف",
+          shareBoxTitle: "به اشتراک‌گذاری",
+          viewMenuTitle: "نمایش",
+          reminderMenuTitle: "یادآوری",
+          dateViewNote: "تاریخ",
 
-                }
-
-            }
-        </script>
-    </body>
-
+          sharingViewNote: "اشتراک‌گذاری",
+          timeViewNote: "ساعت",
+          categoryViewNote: "دسته‌بندی",
+          reminderViewNote: "یادآوری",
+          reminderErrorForLastDays:
+            "امکان ثبت Reminder برای روزهای گذشته وجود ندارد. 1",
+          reminderCount: "تعداد",
+          reminderTitle: " به شما یادآوری کنیم ؟ ",
+          forme: "برای خودم",
+          forall: "برای همه اعضای گروه",
+          email: "ایمیل",
+          sms: "موبایل",
+          day: "روز",
+          hour: "ساعت",
+          minute: "دقیقه",
+          sharingSuccessMessage: "اشتراک‌گذاری با موفقیت انجام شد",
+          sharingrepeatMessage:
+            "اشتراک‌گذاری برای این گروه کاربری، قبلا انجام شده است.  ",
+          setTimeForReminderMessage:
+            "لطفا برای یادداشت خود یک زمان تعیین کنید.",
+          errorMessage: "عملیات با خطا روبرو شد",
+          successMessage: "عملیات با موفقیت انجام شد",
+          noGrouoForReciver: "هیچ گروه کاربری برای گروه فرستنده تعریف نشده است",
+          amLabel: "ق.ظ",
+          pmLabel: "ب.ظ",
+          noCategoryError:
+            "از ویجت دسته‌بندی‌ها، یک دسته‌بندی جدید ایجاد کنید.",
+          repeatUser: "کاربر تکراری است ",
+          sharingErrorWithOwner:
+            "امکان به اشتراک‌گذاری با مالک یادداشت وجود ندارد.",
+          wrongUser: "نام کاربری اشتباه است ",
+          before: "قبل",
+          for: "برای",
+          me: "خودمfor me",
+          all: "همه",
+          previousLabel: "قبلی",
+          nextLabel: "بعدی",
+          nextYear: "سال بعد",
+          previousYear: " سال قبلی",
+        },
+      };
+    </script>
+  </body>
 </html>

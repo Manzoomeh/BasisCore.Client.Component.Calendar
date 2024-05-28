@@ -214,8 +214,8 @@ export class DatePicker {
       prevButton.setAttribute("data-sys-inherit", "");
       nextButton.setAttribute("data-sys-text", "");
       prevButton.setAttribute("data-sys-text", "");
-      prevButton.setAttribute("type","button")
-      nextButton.setAttribute("type","button")
+      prevButton.setAttribute("type", "button");
+      nextButton.setAttribute("type", "button");
     } else {
       const monthsBtnWrapper = document.createElement("div");
       this.monthValues.map((x, index) => {
@@ -236,7 +236,7 @@ export class DatePicker {
 
     const headerTitle = document.createElement("div");
     headerTitle.setAttribute("data-datepicker-header-title", "");
-    
+
     headerTitle.appendChild(nextButton);
     headerTitle.appendChild(headerTitles);
     headerTitle.appendChild(prevButton);
@@ -274,11 +274,7 @@ export class DatePicker {
           convertDate,
           convertDate
         );
-        console.log(
-          "this.dateUtil.getMonthValueList(convertDate,convertDate); :>> ",
-          this.dateUtil.getMonthValueList(convertDate, convertDate),
-          convertDate
-        );
+
         this.range.months = [];
         this.range.monthValues.map((x) =>
           this.range.months.push(new Month(this, x))
@@ -310,10 +306,8 @@ export class DatePicker {
     const lastOldData: string = this.bodyElement.innerHTML;
     this.bodyElement.innerHTML = "";
     this.bodyElement.setAttribute("data-datepicker-body-years-list", "");
-  
 
-    this.headerElement
-      .querySelector("[data-datepicker-title]")
+    this.headerElement.querySelector("[data-datepicker-title]");
 
     const yearList = document.createElement("ul");
     yearList.setAttribute("data-datepicker-years-list", "");
@@ -343,10 +337,8 @@ export class DatePicker {
     const lastOldData: string = this.bodyElement.innerHTML;
     this.bodyElement.innerHTML = "";
     this.bodyElement.setAttribute("data-datepicker-body-years-list", "");
- 
-   
-    this.headerElement
-      .querySelector("[data-datepicker-title]")
+
+    this.headerElement.querySelector("[data-datepicker-title]");
 
     const monthList = document.createElement("ul");
     monthList.setAttribute("data-datepicker-month-list", "");
@@ -371,7 +363,6 @@ export class DatePicker {
         this.options.culture,
         this.options.lid
       );
-      console.log("t :>> ", t);
       const monthListLi = document.createElement("li");
       monthListLi.textContent = t;
       monthListLi.setAttribute("month-number", i.toString());
@@ -448,13 +439,14 @@ export class DatePicker {
     }
     if (this.options.mode == "desktop") {
       this.months[this.activeIndex].days.map((x) => {
-        console.log("this.options.pickerType :>> ", this.options.pickerType);
-        if (this.options.pickerType == "range" || this.options.rangeDates == true) {
+        if (
+          this.options.pickerType == "range" ||
+          this.options.rangeDates == true
+        ) {
           new UiDatePicker(this, x).generateDaysUiWithDateRange(mainElement);
-        }
-        else if (this.options.pickerType == "action") {
+        } else if (this.options.pickerType == "action") {
           new UiDatePicker(this, x).generateDaysUi(mainElement);
-        }  else if (this.options.pickerType == "multiple") {
+        } else if (this.options.pickerType == "multiple") {
           new UiDatePicker(this, x).generateDaysUiWithMultipleChoices(
             mainElement
           );
@@ -551,11 +543,9 @@ export class DatePicker {
     if (this.options.type == "load") {
       container.parentNode.insertBefore(this.wrapper, container.nextSibling);
     } else {
- 
       container.addEventListener("click", (e) => {
         const inputElement = e.target as HTMLInputElement;
         if (this.options.rangeDates == false) {
-          
           if (inputElement.getAttribute("data-datepicker-dateid") !== null) {
             inputElement.value = "";
             inputElement.setAttribute("value", "");
