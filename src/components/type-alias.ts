@@ -57,6 +57,7 @@ export declare type DayNumber =
 export declare type Culture = "fa" | "en";
 export declare type Level = "user" | "service";
 export declare type DateUtilProvider = "basisCalendar" | "persianCalendar";
+export declare type catFilter = { title: string; id: number };
 export enum ReminderType {
   none,
   email,
@@ -66,3 +67,6 @@ export enum ReminderType {
 export declare type Type = "load" | "click";
 export declare type Mode = "desktop" | "mobile";
 export declare type Status = "before" | "after";
+export declare type DayValueAndMonthName = DayValue & {
+  monthName: string;
+};

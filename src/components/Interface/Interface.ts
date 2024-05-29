@@ -99,11 +99,13 @@ export interface ICalenderOptions {
   secondCulture?: Culture;
   lid?: Lid;
   dmnid? :number;
+  sourceid?: string;
   baseUrl? : object,
   labels? : ILabels , 
   theme? : string,
   mode?: Mode,
   style?: string,
+  datepickerStyle?: string,
   level? : Level
   
 }
@@ -113,8 +115,11 @@ export interface IDatePickerOptions {
   lid?: Lid;
   todayButton?: boolean;
   yearsList? : boolean ; 
+  isModalPicker?: boolean,
   monthList? : boolean;
   rangeDates? : boolean;
+  pickerType?: "range" | "multiple" | "action";
+  isFilter?: boolean;
   switchType?: boolean;
   secondCulture?: Culture; theme?: string,
   type?: Type ,

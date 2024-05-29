@@ -8,7 +8,8 @@ import {
   YearValue,
   Culture,
   MonthNumber,
-  Status
+  Status,
+  DayValueAndMonthName
 } from "../type-alias";
 export class BasisCoreDateUtil implements IDateUtil {
   json;
@@ -191,6 +192,7 @@ export class BasisCoreDateUtil implements IDateUtil {
     return false;
   }
   getMonthValueList(from: DayValue, to: DayValue): MonthValue[] {
+
     let months: MonthValue[] = [];
     let startYear = false
     for(var j = from.year ; j <= to.year ; j++){
@@ -436,5 +438,33 @@ export class BasisCoreDateUtil implements IDateUtil {
     }
    
   
+  }
+  convertStringToDayValue(date: string): DayValue {
+    const arr = date.split("/");
+    return {
+      year: Number(arr[0]),
+      month: Number(arr[1]) as MonthNumber,
+      day: Number(arr[2]) as MonthNumber,
+    };
+  }
+  convertDateToJalali(day: DayValue): DayValueAndMonthName {
+    const basisDate = this.getObj(day.year, day.month, day.day);
+    var jalaliDate = {
+      year: basisDate.syear,
+      month: basisDate.smonth,
+      day: basisDate.sdate,
+      monthName: this.sMonthsNameFa[basisDate.smonth],
+    };
+    return jalaliDate;
+  }
+  convertDateToGregorian(day: DayValue): DayValueAndMonthName {
+    const basisDate = this.getObj(day.year, day.month, day.day);
+    var gregorianDate = {
+      year: basisDate.nyear,
+      month: basisDate.mmonth,
+      day: basisDate.mdate,
+      monthName: this.sMonthsNameCultureEn[basisDate.mmonth],
+    };
+    return gregorianDate;
   }
 }

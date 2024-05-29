@@ -7,7 +7,8 @@ import {
   DayNumber,
   YearValue,
   Culture,
-  Status
+  Status,
+  DayValueAndMonthName
 } from "../type-alias";
 export class PersianDateUtil implements IDateUtil {
   readonly persianDate: any;
@@ -145,5 +146,14 @@ export class PersianDateUtil implements IDateUtil {
   }
   getBasisToDayId (day : DayValue): number{
     return null
+  }
+  convertStringToDayValue(date: string): DayValue {
+    return;
+  }
+  convertDateToJalali(day: DayValue): DayValueAndMonthName {
+    return;
+  }
+  convertDateToGregorian(day: DayValue): DayValueAndMonthName {
+    return;
   }
 }
