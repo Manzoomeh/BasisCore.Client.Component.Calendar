@@ -362,3 +362,7 @@ border-bottom: 1px solid #e8e8e8 !important;
     flex-direction: column;
     cursor: pointer;
   }
+
+  #basis-calendar #basis-datepicker {
+    box-shadow: 0 0 10px rgba(0, 75, 133, 0.1); 
+}

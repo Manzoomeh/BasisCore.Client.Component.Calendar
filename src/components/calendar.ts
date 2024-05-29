@@ -34,6 +34,7 @@ export class DateRange {
   public to: DayValue;
   public isFilterOpen = false;
   public todayId: number = 0;
+  private endDateEvent : DayValue;
   public readonly Owner?: IUserDefineComponent;
   private runHeader: boolean = false;
   public categories: Array<ICatNote> = new Array<ICatNote>();
@@ -114,7 +115,13 @@ export class DateRange {
         ? this.options.baseUrl["calendareventsservice"]
         : this.options.baseUrl["calendareventsuser"];
     const fromDateId = this.dateUtil.getBasisDayId(this.from);
-    const toDateId = this.dateUtil.getBasisDayId(this.to);
+    this.endDateEvent= {
+      year : this.from.year,
+      month : this.from.month,
+      day : 30
+    }
+    
+    const toDateId = this.dateUtil.getBasisDayId(this.endDateEvent)
     this.holidayCategories.map(async (e) => {
       try {
         let res = await fetch(url, {
@@ -153,6 +160,7 @@ export class DateRange {
 
   public async refreshNotesAsync(): Promise<void> {
     if (this.months.length > 0) {
+   
       const firstDay = this.months[0].days[0];
       const lastMonth = this.months[this.months.length - 1];
       const lastDay = lastMonth.days[lastMonth.dayInMonth - 1];
@@ -166,7 +174,7 @@ export class DateRange {
         month: lastDay.month.value.month,
         day: lastDay.value,
       };
-
+      
       await this.syncNotesAsync(from, to);
     }
   }
@@ -196,6 +204,7 @@ export class DateRange {
     apiLink = apiLink.toString().replace("${rkey}", this.rKey);
 
     const data = await this.sendAsyncData(form, apiLink);
+    
     this.note = [];
     data.map((x: INote) =>
       this.note.push({
@@ -393,7 +402,7 @@ export class DateRange {
     nextButton.setAttribute("data-calendar-next", "");
     nextButton.setAttribute("data-tree-tooltip", "ماه بعد");
     prevButton.setAttribute("data-calendar-prev", "");
-    nextButton.setAttribute("data-tree-tooltip", "ماه قبل");
+    prevButton.setAttribute("data-tree-tooltip", "ماه قبل");
     nextYear.setAttribute("data-calendar-next-year", "");
     prevYear.setAttribute("data-calendar-prev-year", "");
     titleWrapper.setAttribute("data-bc-title-wrapper", "");
@@ -496,7 +505,7 @@ export class DateRange {
         theme: "basic",
         isFilter: true,
         mode: "desktop",
-        style: "../css/datepicker-style.css",
+        style: this.options.datepickerStyle,
         sourceid: "db.form",
         type: "load",
         pickerType: "action",

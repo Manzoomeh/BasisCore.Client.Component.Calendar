@@ -236,8 +236,8 @@ export class DatePicker {
 
     const headerTitle = document.createElement("div");
     headerTitle.setAttribute("data-datepicker-header-title", "");
-
     headerTitle.appendChild(nextButton);
+    
     headerTitle.appendChild(headerTitles);
     headerTitle.appendChild(prevButton);
     this.headerElement.appendChild(headerTitle);
@@ -344,7 +344,7 @@ export class DatePicker {
     monthList.setAttribute("data-datepicker-month-list", "");
     for (var i = 1; i <= 12; i++) {
       const currentMonth = this.activeMonth();
-      console.log("currentMonth :>> ", currentMonth);
+  
       const currentMonthInLoop: MonthValue = {
         year: currentMonth.value.year,
         month: i as MonthNumber,
@@ -357,7 +357,7 @@ export class DatePicker {
         }).year;
       }
 
-      console.log("currentMonthInLoop :>> ", currentMonthInLoop);
+  
       const t = this.dateUtil.getMonthName(
         currentMonthInLoop,
         this.options.culture,

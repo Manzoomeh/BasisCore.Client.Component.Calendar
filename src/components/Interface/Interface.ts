@@ -105,6 +105,7 @@ export interface ICalenderOptions {
   theme? : string,
   mode?: Mode,
   style?: string,
+  datepickerStyle?: string,
   level? : Level
   
 }

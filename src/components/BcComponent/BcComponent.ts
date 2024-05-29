@@ -98,19 +98,24 @@ export default class BcComponent implements IComponentManager {
     return true;
   }
   async loadCalendar(from: string, to: string, obj: object, rKey: string) {
-    const fromParts = from.split("/");
-    const toParts = to.split("/");
-    this.from = {
-      year: parseInt(fromParts[0]),
-      month: parseInt(fromParts[1]) as MonthNumber,
-      day: parseInt(fromParts[2]) as DayNumber,
-    };
-    this.to = {
-      year: parseInt(toParts[0]),
-      month: parseInt(toParts[1]) as MonthNumber,
-      day: parseInt(toParts[2]) as DayNumber,
-    };
-    this.dateRange = new DateRange(this.from, this.to, obj, rKey,this.owner);
-    this.dateRange.createUIAsync(this.container);
+
+    if(from != null){
+      const fromParts = from.split("/");
+      const toParts = to.split("/");
+      
+      this.from = {
+        year: parseInt(fromParts[0]),
+        month: parseInt(fromParts[1]) as MonthNumber,
+        day: parseInt(fromParts[2]) as DayNumber,
+      };
+      this.to = {
+        year: parseInt(toParts[0]),
+        month: parseInt(toParts[1]) as MonthNumber,
+        day: parseInt(toParts[2]) as DayNumber,
+      };
+      this.dateRange = new DateRange(this.from, this.to, obj, rKey,this.owner);
+      this.dateRange.createUIAsync(this.container);
+    }
+    
   }
 }

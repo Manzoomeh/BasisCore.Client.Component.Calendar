@@ -152,7 +152,7 @@ export class UiCalendar {
           liElement.style.alignItems = "center";
           liElement.appendChild(liIcon);
           dayElement.style.background = `rgba(180, 0, 32, 0.05)`;
-          dayElement.style.border = `0.5px solid #B40020`;
+          // dayElement.style.border = `0.5px solid #B40020`;
           dayElement.style.color = `#B40020`;
           ulElement.appendChild(liElement);
         });
@@ -459,7 +459,16 @@ export class UiCalendar {
       };
 
       let apiLink = this.range.options.baseUrl["addnote"];
-      this.range.sendAsyncDataPostJson(newNoteObj, apiLink);
+      const result =await this.range.sendAsyncDataPostJson(newNoteObj, apiLink);
+      if (this.range?.Owner?.dc) {
+        const message =
+          this.range.Owner.dc.resolve<IMessage>("message");
+        message.NotificationMessageMethod(
+          result.errorid,
+          this.range.options.lid
+        );
+        
+      }
       if (this.range.options.displayNote) {
         await this.range.refreshNotesAsync();
       }
@@ -868,6 +877,17 @@ export class UiCalendar {
               reminderItem.id
             )
           );
+
+          if (this.range?.Owner?.dc) {
+            const message =
+              this.range.Owner.dc.resolve<IMessage>("message");
+            message.NotificationMessageMethod(
+              reciverData.errorid,
+              this.range.options.lid
+            );
+            
+          }
+
           if (reciverData.errorid == 4) {
             const currentTarget = element.target as HTMLElement;
             const currentTargetParent = currentTarget.closest(
@@ -924,13 +944,13 @@ export class UiCalendar {
 
     newBtn.addEventListener("click", async (e) => {
       await this.range.getCategories();
-
-      if (this.range?.Owner?.dc) {
-        const widgetName = this.range.Owner.dc?.resolve<IWidget>("widget");
-        if (widgetName) {
-          widgetName.title = "new";
-        }
-      }
+      
+      // if (this.range?.Owner?.dc?.resolve<IWidget>("widget")) {
+      //   const widgetName = this.range.Owner.dc?.resolve<IWidget>("widget");
+      //   if (widgetName) {
+      //     widgetName.title = "new";
+      //   }
+      // }
       const newBox: Element = document.createElement("div");
       modalBody.innerHTML = "";
       newBox.innerHTML = newForm;
@@ -1025,8 +1045,18 @@ export class UiCalendar {
         };
 
         let apiLink = this.range.options.baseUrl["addnote"];
-        this.range.sendAsyncDataPostJson(newNoteObj, apiLink);
+        const result = await this.range.sendAsyncDataPostJson(newNoteObj, apiLink);
+        if (this.range?.Owner?.dc) {
+          const message =
+            this.range.Owner.dc.resolve<IMessage>("message");
+          message.NotificationMessageMethod(
+            result.errorid,
+            this.range.options.lid
+          );
+          
+        }
         if (this.range.options.displayNote) {
+          
           await this.range.refreshNotesAsync();
         }
         // this.modal.closeModal();
@@ -1190,40 +1220,21 @@ export class UiCalendar {
               formData.append("username", JSON.stringify(users));
               let apiLink = this.range.options.baseUrl["sharing"];
               const data = await this.range.sendAsyncData(formData, apiLink);
-
-              if (data.errorid == 3) {
-                modalBody
-                  .querySelector("[data-calendar-submit]")
-                  .setAttribute("data-bc-calendar-disable-button", "");
-
-                const inputs = modalBody.querySelectorAll(
-                  "[data-calendar-share-form]"
-                );
-                data.users.forEach(async (e, i) => {
-                  // const errors = inputs[i].querySelectorAll("[data-calendar-tooltip-flag]")
-                  // errors.forEach(e => {
-                  //   e.remove()
-                  // })
-                  if (this.range?.Owner?.dc) {
-                    const message =
-                      this.range.Owner.dc.resolve<IMessage>("message");
-                    message.NotificationMessageMethod(
-                      e.errorid,
-                      this.range.options.lid
-                    );
-                    const typeid = await message.NotificationMessageMethod(
-                      "1",
-                      1
-                    );
-
-                    if (1 == 1) {
-                      // inputs[i].appendChild(error)
-                      shareListWrapper.innerHTML = "";
-                      this.getSharingList(x, modalBody, shareListWrapper);
-                    }
-                  }
-                });
-              }
+             
+                if (this.range?.Owner?.dc) {
+                  const message =
+                    this.range.Owner.dc.resolve<IMessage>("message");
+                  message.NotificationMessageMethod(
+                    data.errorid,
+                    this.range.options.lid
+                  );
+                  
+                }
+                if (data.errorid == 5) {
+                  // inputs[i].appendChild(error)
+                  shareListWrapper.innerHTML = "";
+                  this.getSharingList(x, modalBody, shareListWrapper);
+                }
 
               const errors = modalBody.querySelectorAll(
                 "[data-calendar-tooltip-flag]"
@@ -1253,49 +1264,22 @@ export class UiCalendar {
                 let apiLink = this.range.options.baseUrl["sharingService"];
                 const data = await this.range.sendAsyncData(formData, apiLink);
                 document.getElementById("errors").innerHTML = "";
-                if (data.errorid == 6) {
-                  const error = document.createElement("div");
-                  error.setAttribute("data-calendar-tooltip-flag", "");
-                  error.setAttribute("data-sys-message-success", "");
-                  error.setAttribute("data-sys-message-success-fade-in", "");
-                  error.setAttribute("style", "display: block");
-                  error.innerHTML = `  <span>
-              <i class="lni lni-checkmark"></i>
-             ${this.range.options.labels.sharingSuccessMessage}
-              
-              </span> 
-            `;
-                  modalBody
-                    .querySelector("[data-calendar-submit]")
-                    .setAttribute("data-bc-calendar-disable-button", "");
-
-                  document.getElementById("errors").appendChild(error);
-
-                  setTimeout(function () {
-                    error.setAttribute("data-sys-message-danger-fade-out", "");
-                  }, 3000);
-
-                  this.getSharingList(x, modalBody, shareListWrapper);
-                } else if (data.errorid == 7) {
-                  const error = document.createElement("div");
-                  error.setAttribute("data-calendar-tooltip-flag", "");
-                  error.setAttribute("data-sys-message-danger", "");
-                  error.setAttribute("data-sys-message-danger-fade-in", "");
-                  error.setAttribute("style", "display: block");
-
-                  error.innerHTML = `
-             <span>
-             <i class="lni lni-close"></i>
-             ${this.range.options.labels.sharingrepeatMessage}
-             </span> `;
-                  document.getElementById("errors").appendChild(error);
-                  modalBody
-                    .querySelector("[data-calendar-submit]")
-                    .setAttribute("data-bc-calendar-disable-button", "");
-                  setTimeout(function () {
-                    error.setAttribute("data-sys-message-danger-fade-out", "");
-                  }, 3000);
+                if (this.range?.Owner?.dc) {
+                  const message =
+                    this.range.Owner.dc.resolve<IMessage>("message");
+                  message.NotificationMessageMethod(
+                    data.errorid,
+                    this.range.options.lid
+                  );
+                  
                 }
+                if (data.errorid == 5) {
+                  // inputs[i].appendChild(error)
+                  shareListWrapper.innerHTML = "";
+                  this.getSharingList(x, modalBody, shareListWrapper);
+                }
+
+               
               });
           }
           const shareHeader = modalHeader.querySelector(
@@ -1326,8 +1310,16 @@ export class UiCalendar {
               noteid: x.id,
             };
             let apilink = this.range.options.baseUrl["removenote"];
-            this.range.sendAsyncDataPostJson(obj, apilink);
-
+            const result = await this.range.sendAsyncDataPostJson(obj, apilink);
+            if (this.range?.Owner?.dc) {
+              const message =
+                this.range.Owner.dc.resolve<IMessage>("message");
+              message.NotificationMessageMethod(
+                result.errorid,
+                this.range.options.lid
+              );
+              
+            }
             if (this.range.options.displayNote) {
               await this.range.refreshNotesAsync();
             }
@@ -1520,57 +1512,17 @@ export class UiCalendar {
             newNoteObj,
             apiLink
           );
-          if (data.errorid == 5) {
-            const error = document.createElement("div");
-            error.setAttribute("data-calendar-tooltip-flag", "");
-            error.setAttribute("data-sys-message-danger", "");
-            error.setAttribute("data-sys-message-danger-fade-in", "");
-            error.setAttribute("style", "display: block");
-            error.innerHTML = `  <span>
-          <i class="lni lni-close"></i>
-         ابتدا برای یادداشت خود، ساعت انتخاب کنید
-        
-          </span> 
-        `;
-            modalBody.querySelector("#errors").appendChild(error);
-            setTimeout(function () {
-              error.setAttribute("data-sys-message-danger-fade-out", "");
-            }, 3000);
-          } else if (data.errorid == 2) {
-            const error = document.createElement("div");
-            error.setAttribute("data-calendar-tooltip-flag", "");
-            error.setAttribute("data-sys-message-danger", "");
-            error.setAttribute("data-sys-message-danger-fade-in", "");
-            error.setAttribute("style", "display: block");
-            error.innerHTML = `  <span>
-          <i class="lni lni-close"></i>
-          ${this.range.options.labels.errorMessage}
-        
-          </span> 
-        `;
-            modalBody.querySelector("#errors").appendChild(error);
-            setTimeout(function () {
-              error.setAttribute("data-sys-message-danger-fade-out", "");
-            }, 3000);
-          } else if (data.errorid == 6) {
-            const error = document.createElement("div");
-            error.setAttribute("data-calendar-tooltip-flag", "");
-            error.setAttribute("data-sys-message-success", "");
-            error.setAttribute("data-sys-message-success-fade-in", "");
-            error.setAttribute("style", "display: block");
-            modalBody
-              .querySelector("[data-calendar-submit]")
-              .setAttribute("data-bc-calendar-disable-button", "");
-            error.innerHTML = `  <span>
-          <i class="lni lni-checkmark"></i>
-          ${this.range.options.labels.successMessage}
+         
           
-          </span> 
-        `;
-            modalBody.querySelector("#errors").appendChild(error);
-            setTimeout(function () {
-              error.setAttribute("data-sys-message-danger-fade-out", "");
-            }, 3000);
+          if (this.range?.Owner?.dc) {
+            const message =
+              this.range.Owner.dc.resolve<IMessage>("message");
+            message.NotificationMessageMethod(
+              data.errorid,
+              this.range.options.lid
+            );
+          }
+          if (data.errorid == 5) {
             this.createReminderList(x.id, modalBody);
             this.generateReminderRow(modalBody);
             // reminderSubmit.textContent = "ثبت شد"
@@ -1819,15 +1771,30 @@ export class UiCalendar {
       `;
       icon.addEventListener("click", () => this.removeTemplate(e.id));
       row.appendChild(title);
-      row.appendChild(icon);
+      if(e.id != 1 && e.id != 2 && e.id != 3){
+        row.appendChild(icon);
+      }
+      
+      
       modalList.appendChild(row);
     });
     templateModal.appendChild(modalList);
     return templateModal;
   }
   removeTemplate(id) {
-    this.range.templates = this.range.templates.filter((e) => e.id != id);
-    this.renderModalBody();
+   
+    // this.range.templates = this.range.templates.filter((e) => e.id != id);
+    // this.renderModalBody();
+    // let res = await fetch(apiLink["editcalendartemplates"], {
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     //@ts-ignore
+    //     id: 0,
+    //     typeid: 1,
+    //     title,
+    //     events: [],
+    //   }),
+    // });
   }
   async addTemplate(title) {
     let apiLink = this.range.options.baseUrl;
