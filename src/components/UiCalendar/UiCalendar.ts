@@ -120,12 +120,13 @@ export class UiCalendar {
       dayElement.setAttribute("data-sys-text", "");
     }
     let ulElement = document.createElement("ul");
+    let ulElement1 = document.createElement("ul");
     let noteElement = document.createElement("div");
     var todayNote = this.range.getDayNotes(this.day.dateId);
     noteElement.setAttribute("data-calendar-note-lists", "");
     var displayNotes = this.range.options.displayNote;
     noteElement.appendChild(ulElement);
-
+    
     if (holidays.length > 0) {
       const todaytHolidays = holidays.filter(
         (e) => e.dateID == this.day.dateId
@@ -138,30 +139,29 @@ export class UiCalendar {
           const liIcon = document.createElement("div");
           liIcon.style.display = "flex";
           liIcon.style.alignItems = "center";
-          liIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <path d="M6.3 9.8C6.3 9.4134 6.6134 9.1 7 9.1C7.3866 9.1 7.7 9.4134 7.7 9.8C7.7 10.1866 7.3866 10.5 7 10.5C6.6134 10.5 6.3 10.1866 6.3 9.8ZM6.3 4.2C6.3 3.8134 6.6134 3.5 7 3.5C7.3866 3.5 7.7 3.8134 7.7 4.2V7C7.7 7.3866 7.3866 7.7 7 7.7C6.6134 7.7 6.3 7.3866 6.3 7V4.2ZM6.993 0C3.129 0 0 3.136 0 7C0 10.864 3.129 14 6.993 14C10.864 14 14 10.864 14 7C14 3.136 10.864 0 6.993 0ZM7 12.6C3.906 12.6 1.4 10.094 1.4 7C1.4 3.906 3.906 1.4 7 1.4C10.094 1.4 12.6 3.906 12.6 7C12.6 10.094 10.094 12.6 7 12.6Z" fill="#B40020"/>
-          </svg>`;
-          liElement.style.borderRadius = "5px";
-          liElement.style.background = "rgba(180, 0, 32, 0.20)";
+          liIcon.innerHTML = `<svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5.01875 6.375L5.71875 5L6.41319 6.375L7.94097 7L6.41319 7.63L5.71875 9L5.01875 7.63L3.49653 7L5.01875 6.375ZM7.94097 1.75V0.75H9.05208V1.75H9.60764C9.90208 1.75 10.1854 1.855 10.391 2.045C10.6021 2.23 10.7188 2.485 10.7188 2.75V9.75C10.7188 10.015 10.6021 10.27 10.391 10.455C10.1854 10.645 9.90208 10.75 9.60764 10.75H1.82986C1.53542 10.75 1.25208 10.645 1.04653 10.455C0.835417 10.27 0.71875 10.015 0.71875 9.75V2.75C0.71875 2.485 0.835417 2.23 1.04653 2.045C1.25208 1.855 1.53542 1.75 1.82986 1.75H2.38542V0.75H3.49653V1.75H7.94097ZM1.82986 4.25V9.75H9.60764V4.25H1.82986Z" fill="#F1153D"/>
+          </svg>
+          `;
+          liElement.style.borderLeft = "2px solid #F1153D";
+          liElement.style.background = "rgba(241, 21, 61, 0.3)";
           liElement.style.height = "26px";
-          liElement.style.margin = "2px";
           liElement.style.display = "flex";
           liElement.style.lineHeight = "14px";
           liElement.style.justifyContent = "space-between";
-          liElement.style.color = "rgb(180, 0, 32)";
           liElement.style.alignItems = "center";
           liElement.appendChild(liIcon);
-          dayElement.style.background = `rgba(180, 0, 32, 0.05)`;
           // dayElement.style.border = `0.5px solid #B40020`;
-          dayElement.style.color = `#B40020`;
-          ulElement.appendChild(liElement);
+          dayElement.style.color = `#F1153D`;
+          ulElement1.appendChild(liElement);
         });
 
         dayElement.appendChild(noteElement);
       }
+      noteElement.appendChild(ulElement1);
     }
     if (displayNotes == true && todayNote != undefined) {
-      if (todayNote.length > 3) {
+      if (todayNote.length >2) {
         todayNote.map((x) => {
           if (filters.find((e) => e.id === x.catid)) {
             let liElement = document.createElement("li");
@@ -239,7 +239,7 @@ export class UiCalendar {
               liElement.style.color = `rgba(0,0,0,1)`;
             } else {
               liElement.style.background = `#ccc`;
-              liElement.style.color = `#fff`;
+              liElement.style.color = `#000`;
             }
             ulElement.appendChild(liElement);
           }
@@ -1760,6 +1760,7 @@ export class UiCalendar {
       title.innerText = e.title;
       row.setAttribute("data-sys-modal-row", "");
       const icon = document.createElement("div");
+      icon.style.cursor="pointer"
       icon.innerHTML = `<svg width="13" height="15" viewBox="0 0 13 15" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M6.24999 1.06098C5.58885 1.06098 5.02505 1.50307 4.8161 2.1219C4.72284 2.39814 4.43332 2.54292 4.16944 2.44529C3.90557 2.34765 3.76726 2.04457 3.86053 1.76834C4.20812 0.738854 5.14598 0 6.24999 0C7.354 0 8.29187 0.738854 8.63946 1.76834C8.73272 2.04457 8.59442 2.34765 8.33054 2.44529C8.06667 2.54292 7.77715 2.39814 7.68388 2.12191C7.47494 1.50307 6.91113 1.06098 6.24999 1.06098Z" fill="#B40020"/>
       <path d="M0 3.35976C0 3.06678 0.226882 2.82927 0.506754 2.82927H11.9932C12.2731 2.82927 12.5 3.06678 12.5 3.35976C12.5 3.65274 12.2731 3.89024 11.9932 3.89024H0.506754C0.226882 3.89024 0 3.65274 0 3.35976Z" fill="#B40020"/>
