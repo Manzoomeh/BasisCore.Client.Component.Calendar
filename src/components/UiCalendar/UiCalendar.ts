@@ -150,9 +150,8 @@ export class UiCalendar {
           liElement.style.lineHeight = "14px";
           liElement.style.justifyContent = "space-between";
           liElement.style.alignItems = "center";
+          liElement.style.color = "#F1153D";
           liElement.appendChild(liIcon);
-          // dayElement.style.border = `0.5px solid #B40020`;
-          dayElement.style.color = `#F1153D`;
           ulElement1.appendChild(liElement);
         });
 
@@ -177,9 +176,12 @@ export class UiCalendar {
             if (color) {
               liElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
               liElement.style.color = `rgba(0,0,0,1)`;
+          
+              
             } else {
               liElement.style.background = `#999999`;
               liElement.style.color = `#fff`;
+
             }
 
             ulElement.appendChild(liElement);
@@ -196,9 +198,14 @@ export class UiCalendar {
             if (color) {
               liElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
               liElement.style.color = `rgba(0,0,0,1)`;
+           
+          
             } else {
               liElement.style.background = `#999`;
               liElement.style.color = `#fff`;
+          
+              
+           
             }
 
             ulElement.appendChild(liElement);
@@ -218,11 +225,13 @@ export class UiCalendar {
               this.hexToRgb(categories.find((i) => i.id === x.catid)?.color) ||
               null;
             if (color) {
-              liElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
+              liElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},0.3)`;
               liElement.style.color = `rgba(0,0,0,1)`;
+              liElement.style.borderLeft = `1x solid rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
             } else {
               liElement.style.background = `#999999`;
               liElement.style.color = `#fff`;
+              liElement.style.borderLeft = `1px solid #999999`;
             }
             ulElement.appendChild(liElement);
           } else {
@@ -235,11 +244,13 @@ export class UiCalendar {
               this.hexToRgb(categories.find((i) => i.id === x.catid)?.color) ||
               null;
             if (color) {
-              liElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
+              liElement.style.background = `rgba(${color["r"]},${color["g"]},${color["b"]},0.3)`;
               liElement.style.color = `rgba(0,0,0,1)`;
+              liElement.style.borderLeft = `1px solid rgba(${color["r"]},${color["g"]},${color["b"]},1)`;
             } else {
               liElement.style.background = `#ccc`;
               liElement.style.color = `#000`;
+              liElement.style.borderLeft = `1px solid #999`
             }
             ulElement.appendChild(liElement);
           }

@@ -57,6 +57,16 @@ export class UiDatePicker {
         "data-datepicker-mstring",
         mselectDate
       );
+      if(this.range.options.sourceid){
+        $bc.setSource(this.range.options.sourceid, [
+          {
+            from: this.range.from.year + "/" + this.range.from.month + "/" + this.range.from.day,
+            to: this.range.to.year + "/" + this.range.to.month + "/" + this.range.to.day,
+            culture: this.range.options.culture,
+            lid: this.range.options.lid,
+          },
+        ]);
+      }
       
       if (this.range.options.isFilter == true) {
         this.range.range.fromdate =
@@ -206,6 +216,14 @@ export class UiDatePicker {
       const selectDate =
         selected.year + "/" + selected.month + "/" + selected.day;
 
+
+        const mselectDate =
+        this.day.mcurrentDay.year +
+        "/" +
+        this.day.mcurrentDay.month +
+        "/" +
+        this.day.mcurrentDay.day;
+
       this.range.datesArray.push(selected);
       if (this.range.datesArray.length == 1) {
         if (parentElement.querySelector("[data-datepicker-start-day]")) {
@@ -224,9 +242,15 @@ export class UiDatePicker {
           "data-datepicker-dateid",
           this.day.dateId.toString()
         );
+        
         this.range.datePickerInput.setAttribute(
           "data-datepicker-sstring",
           selectDate
+        );
+
+        this.range.datePickerInput.setAttribute(
+          "data-datepicker-from-mstring",
+          mselectDate
         );
 
         this.range.fromdate = selectDate;
@@ -246,10 +270,25 @@ export class UiDatePicker {
           "data-datepicker-to-dateid",
           this.day.dateId.toString()
         );
+       
         this.range.datePickerInput.setAttribute(
           "data-datepicker-to-sstring",
           selectDate
         );
+        this.range.datePickerInput.setAttribute(
+          "data-datepicker-to-mstring",
+          mselectDate
+        );
+        if(this.range.options.sourceid){
+        $bc.setSource(this.range.options.sourceid, [
+          {
+            from: this.range.from.year + "/" + this.range.from.month + "/" + this.range.from.day,
+            to: this.range.to.year + "/" + this.range.to.month + "/" + this.range.to.day,
+            culture: this.range.options.culture,
+            lid: this.range.options.lid,
+          },
+        ]);
+      }
         dayElement.setAttribute("data-datepicker-end-day", "");
         const spans = dayElement.querySelectorAll("span");
         spans.forEach((e) => {
@@ -268,8 +307,12 @@ export class UiDatePicker {
         }
        
       }
+  
     });
+   
     parentElement.appendChild(dayElement);
+   
+ 
   }
   private disabledDays(parentElement: HTMLElement): void {
     if (this.range.datesArray.length >= 1) {

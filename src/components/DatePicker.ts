@@ -249,6 +249,7 @@ export class DatePicker {
       <path data-sys-text="" d="M10.5299 8.37692H6.76923V12.1846H10.5299V8.37692ZM9.77778 0V1.52308H3.76068V0H2.25641V1.52308H1.50427C0.669402 1.52308 0.00752136 2.20846 0.00752136 3.04615L0 13.7077C0 14.5454 0.669402 15.2308 1.50427 15.2308H12.0342C12.8615 15.2308 13.5385 14.5454 13.5385 13.7077V3.04615C13.5385 2.20846 12.8615 1.52308 12.0342 1.52308H11.2821V0H9.77778ZM12.0342 13.7077H1.50427V5.33077H12.0342V13.7077Z" fill="#767676"/>
       </svg>
       `;
+      
 
       changeTypeButton.addEventListener("click", (e) => {
         this.goToday();
@@ -279,15 +280,8 @@ export class DatePicker {
         this.range.monthValues.map((x) =>
           this.range.months.push(new Month(this, x))
         );
-        // $bc.setSource(this.options.sourceid, [
-        //   {
-        //     from: this.from.year + "/" + this.from.month + "/" + this.from.day,
-        //     to: this.to.year + "/" + this.to.month + "/" + this.to.day,
-        //     culture: this.options.culture,
-        //     lid: this.options.lid,
-        //   },
-        // ]);
-        // this.renderAsync();
+       
+        
         this.range.runAsync();
       });
       this.headerElement.appendChild(changeTypeButton);
