@@ -313,14 +313,14 @@ border-bottom: 1px solid #e8e8e8 !important;
  [data-datepicker-today] span{ color: #fff;}
  [data-datepicker-year-number]{margin-right:5px; display: inline-block; }
  [data-datepicker-yearnumber-select],[data-datepicker-month-select]{cursor: pointer;}
- [data-datepicker-years-list],[data-datepicker-month-list]{padding: 0 10px; display: grid; margin: 0; grid-template-columns:1fr 1fr 1fr ; width: 100%; }
+ [data-datepicker-years-list],[data-datepicker-month-list]{padding: 0 10px; display: flex; flex-wrap: wrap; display: flex; margin: 0; }
  [data-datepicker-years-list] li,[data-datepicker-month-list] li{border-bottom: 1px solid #d2d2d2;border-left: 1px solid #d2d2d2;
-
+ width: 63px;height: 30px;
  display: flex;
  justify-content: center;
  align-items: center;cursor: pointer;}
  [data-datepicker-body-years-list]{height: 250px; overflow: hidden; overflow-y: scroll;display: flex; justify-content: center;}
- [data-datepicker-years-list] li:nth-child(3n), [data-datepicker-month-list] li:nth-child(3n){border-left: none;}
+ [data-datepicker-years-list] li:nth-child(4n), [data-datepicker-month-list] li:nth-child(4n){border-left: none;}
  [data-bc-close-year-list]{float: left;font: 14px;cursor: pointer;}
  [data-disabled]{color: #ccc;cursor :default;pointer-events: none}
  [data-disabled]:hover span {
@@ -348,21 +348,3 @@ border-bottom: 1px solid #e8e8e8 !important;
  }
  
 
- /* new */
- [data-datepicker-month-second] {
-    color: #767676;
-    text-align: center;
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 22px;
-  }
-  [data-datepicker-yearnumber-select],
-  [data-datepicker-month-select] {
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-  }
-
-  #basis-calendar #basis-datepicker {
-    box-shadow: 0 0 10px rgba(0, 75, 133, 0.1); 
-}

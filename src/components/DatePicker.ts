@@ -136,7 +136,10 @@ export class DatePicker {
     const monthNameSub = document.createElement("span");
     monthNameSub.setAttribute("data-datepicker-month-second", "");
     monthName.appendChild(monthNameMain);
-    monthName.appendChild(monthNameSub);
+    if(this.options.culture == "fa"){
+      monthName.appendChild(monthNameSub);
+    }
+
     const headerTitles = document.createElement("div");
     headerTitles.setAttribute("data-datepicker-button-full", "");
     const secondMonthNameElement = document.createElement("div");

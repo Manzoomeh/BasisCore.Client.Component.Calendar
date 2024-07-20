@@ -104,6 +104,15 @@ select {
   font-size: 12px;
   min-height: 32px;
   line-height: 30px;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+[data-calendar-more-note]{
+  width: 25px !important;
+  height: 25px !important;
+  border-radius: 50% !important;
 }
 [data-calendar-note-lists] {
   clear: both;
@@ -399,9 +408,7 @@ select {
   padding: 5px 10px;
   margin-bottom: 10px;
 }
-[data-today] {
-  background: #f2fbfd;
-}
+
 .calendar-animated {
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
@@ -522,6 +529,7 @@ select {
   display: flex;
   justify-content: space-between;
   padding: 10px;
+  padding-top: 0;
 }
 [data-calendar-second-culture] {
   font-size: 18px;
@@ -554,8 +562,6 @@ select {
   direction: ltr;
   position: relative;
   cursor: pointer;
-  margin-left: 5px;
-  margin-top: 10px;
   width: 20px;
   text-align: center;
   justify-content: center;
@@ -567,14 +573,12 @@ select {
 [data-calendar-year-btn] ,[data-calendar-year-btn-selected]{
   display: flex;
   padding: 10px;
-  color: #222;
-
+  color: #004B85;
   cursor: pointer;
   justify-content: center;
   align-items: center;
   gap: 10px;
   border-radius: 6px;
-  background-color: #e8e8e8;
 }
 [data-calendar-month-button] {
   display: flex;
@@ -645,31 +649,34 @@ select {
 }
 [data-calendar-filter-btn] {
   display: flex;
-  padding: 10px;
+  padding: 10px 15px;
   cursor: pointer;
   justify-content: center;
   align-items: center;
   gap: 10px;
   border-radius: 6px;
-  background-color: #e8e8e8;
+  color: #004B85;
+  background-color: #fff;
+  border: 1px solid #004B85;
 }
 [data-calendar-filter-btn]:hover {
-  background-color: #bbbbbb;
+  background-color: #fff;
 }
 [data-calendar-filter-btn-selected] {
   display: flex;
-  padding: 10px;
+  padding: 10px 15px;
   cursor: pointer;
   justify-content: center;
-  color: #fff;
+  color: #004b85;
   align-items: center;
   gap: 10px;
+  border: 1px solid #004b85;
   border-radius: 6px;
-  background-color: #004b85;
+  background-color: #fff;
   transition: background-color 0.5s ease;
 }
 [data-calendar-filter-btn-selected] path {
-  fill: #fff;
+  fill: #004b85;
 }
 [bc-calendar-calendar-header] {
   display: flex;
@@ -795,13 +802,14 @@ select {
 [new-note-new-form] textarea {
   background: #f7f7f8;
   border-radius: 5px;
-  padding: 10px 18px;
+  padding: 10px ;
   width: 100%;
   border: none;
   direction: rtl;
   text-align: right;
   box-sizing: border-box;
   font-family: inherit;
+  font-size: 14px;
 }
 [new-note-new-form] input::placeholder,
 [new-note-new-form] textarea::placeholder,
@@ -1019,7 +1027,7 @@ select {
   display: none;
 }
 [data-calendar-holiday] {
-  color: #b40020;
+  color: #F1153D;
 }
 [data-calendar-remove-sharing] {
   width: 41px;
@@ -1189,6 +1197,7 @@ select {
   justify-content: start;
   align-items: center;
   border-radius: 5px;
+  width: 100%;
 }
 [data-calendar-filters-row] {
   display: flex;
@@ -1350,16 +1359,16 @@ button[data-calendar-setting-btn] {
   margin-right: auto;
   margin-left: 10px;
   padding: 0px;
-  background-color: #e8e8e8;
+  border: 1px solid #004B85;
   border-radius: 5px;
   color: #222;
-  border: none;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  background-color:#fff;
 }
 button[data-calendar-setting-btn] :hover {
-  background-color: #bbbbbb;
+  background-color:#fff;
 }
 [data-sys-modal-row] {
   width: 100%;
@@ -1370,8 +1379,7 @@ button[data-calendar-setting-btn] :hover {
 }
 [data-calendar-setting-btn] svg {
   border-radius: 5px;
-  width: 40px;
-  height: 42px;
+
 }
 [data-calendar-today-btn] {
   display: flex;
@@ -1382,30 +1390,31 @@ button[data-calendar-setting-btn] :hover {
   font-size: 14px;
   width: 86px;
   height: 42px;
-  background-color: #e8e8e8 !important;
+  background-color: #004B85 !important;
   border-radius: 5px;
-  color: #222 !important;
-  border: 1px solid #e8e8e8;
+  color: #fff !important;
+  border: 1px solid #004B85;
 }
 [data-calendar-today-btn]:hover {
-  background-color: #bbbbbb !important;
+  background-color: #004B85 !important;
 }
 [data-calendar-day] {
   height: 132px;
 }
-[data-today] {
-  background: #f7f9ff;
+[data-today] [bc-calendar-date-wrppaer] span:not([data-calendar-second-day]){
+  background: #004B85;
+  color: #fff;
+  border-radius: 5px;
+  padding: 5px;
 }
 [data-id1]:hover {
   background: #fff;
-  border: 0.5px solid #004b85;
+  border: 1px solid #004b85 !important;
 }
 [data-today]:hover {
   background: #f7f9ff;
 }
-[data-id1]:hover span {
-  color: #00a693;
-}
+
 [data-calendar-day]:not([data-id1]) {
   background: #fff;
 }
@@ -1576,7 +1585,7 @@ button[data-calendar-setting-btn] :hover {
   padding-bottom: 1px !important;
 }
 .timepicker-ui-wrapper {
-  padding: 0 25px !important;
+  padding: 0 5px !important;
 }
 .timepicker-ui-footer {
   flex-direction: row-reverse !important;
@@ -1646,6 +1655,7 @@ button[data-calendar-setting-btn] :hover {
   opacity: 0;
   direction: ltr;
   text-align: right;
+  margin-bottom: 15px;
 }
 [data-calendar-filter-number] {
   display: flex;
@@ -1705,7 +1715,7 @@ button[data-calendar-setting-btn] :hover {
   border: none;
 
   border-radius: 5px;
-  padding: 4px;
+  padding: 10px;
   cursor: pointer;
   height: 35px;
   margin-top: 2px;
@@ -1717,7 +1727,7 @@ button[data-calendar-setting-btn] :hover {
   background-color: #f7f7f8 !important;
   /* border: 1px solid #d7d7fb !important; */
   color: var(--vdark_gray) !important;
-  border: 1px solid #c7d6db;
+  /* border: 1px solid #c7d6db; */
 }
 [new-note-new-form] textarea {
   margin-top: 5px;
@@ -1750,6 +1760,8 @@ button[data-calendar-setting-btn] :hover {
   margin: 10px !important;
   direction: ltr;
   text-align: left;
+  display: flex;
+  flex-direction: row !important;
 }
 [bc-calendar-note-time] {
   color: #898989 !important;
@@ -1953,9 +1965,10 @@ button[data-calendar-setting-btn] :hover {
   display: flex;
   align-items: center;
   border:  none ;
-  background-color: #e8e8e8;
-  border-radius: 6px;
+  background-color: #fff;
+  border-radius: 5px;
   height: 42px;
+  border: 1px solid #004B85;
 }
 [data-calendar-filter-row] [type="checkbox"]{
  
@@ -1974,3 +1987,4 @@ button[data-calendar-setting-btn] :hover {
 [data-calendar-filter-row] [data-bc-filter-title]{
   margin-right: 10px;
 }
+

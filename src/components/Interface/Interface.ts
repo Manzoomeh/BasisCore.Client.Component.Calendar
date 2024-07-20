@@ -87,8 +87,15 @@ export interface ILabels{
   previousLabel : string,
   nextLabel : string
   nextYear: string,
-  previousYear: string
-
+  previousYear: string,
+  filter: string,
+  nextMonth : string,
+  prevMonth : string,
+  holiday: string,
+  personalization : string,
+  selectCategory : string,
+  templateList : string,
+  setting: string
 }
 
 
