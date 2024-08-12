@@ -8,6 +8,7 @@ import { UiDatePicker } from "./UiDatePicker/UiDatePicker";
 import { DatePickerThemes } from "./DatePickerThemes/DatePickerThemes";
 import { UiDatePickerMobile } from "./UiDatePickerMobile/UiDatePickerMobile";
 import { DateRange } from "./calendar";
+import "../asset/datepickerstyles.css";
 declare const $bc: any;
 
 export class DatePicker {
@@ -40,6 +41,7 @@ export class DatePicker {
       switchType: false,
       theme: "basic",
       type: "load",
+      mode:"desktop",
       disabledPrevButton: false,
       rangeDatesSeparated: false,
     };
@@ -50,6 +52,7 @@ export class DatePicker {
     options?: IDatePickerOptions,
     range?: DateRange
   ) {
+
     this.from = from;
     this.to = to;
     this.range = range || "";
@@ -63,13 +66,20 @@ export class DatePicker {
         ? new BasisCoreDateUtil()
         : new PersianDateUtil();
     const style = document.createElement("link");
-    style.setAttribute("href", this.options.style);
+    if(this.options.style){
+      style.setAttribute("href", this.options.style);
+    }
+    else{
+      style.setAttribute("href", "asset/css/datepickerstyles.css");
+    }
+
     style.setAttribute("rel", "stylesheet");
     style.setAttribute("type", "text/css");
     document.querySelector("head").appendChild(style);
     this.monthValues = this.dateUtil.getMonthValueList(from, to);
     this.monthValues.map((x) => this.months.push(new Month(this, x)));
     this.bodyElement = document.createElement("div");
+    console.log("sss" )
   }
 
   nextMonth(nextButtonWrapper: HTMLElement): void {
@@ -434,6 +444,7 @@ export class DatePicker {
       dayElement.setAttribute("data-sys-text-white", "");
       mainElement.appendChild(dayElement);
     }
+
     if (this.options.mode == "desktop") {
       this.months[this.activeIndex].days.map((x) => {
         if (
@@ -473,6 +484,7 @@ export class DatePicker {
         this.goToday();
       });
       todayButton.setAttribute("data-datepicker-today-btn", "");
+   
       if (this.options.mode == "desktop") {
         todayButton.innerHTML = this.options.lid == 1 ? "امروز" : "Today";
       }
