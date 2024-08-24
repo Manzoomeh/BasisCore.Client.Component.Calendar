@@ -302,6 +302,7 @@ export class UiDatePicker {
         );
         this.range.datesArray = [];
         this.enableDays(parentElement, startDayId, lastDayId);
+        console.log("aaaa" , this.range.options.type)
         if (this.range.options.type == "click") {
           this.range.wrapper.remove();
         }

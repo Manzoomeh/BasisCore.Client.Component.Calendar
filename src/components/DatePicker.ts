@@ -40,7 +40,7 @@ export class DatePicker {
       pickerType: "action",
       switchType: false,
       theme: "basic",
-      type: "load",
+      type: "click",
       mode:"desktop",
       disabledPrevButton: false,
       rangeDatesSeparated: false,
@@ -70,7 +70,7 @@ export class DatePicker {
       style.setAttribute("href", this.options.style);
     }
     else{
-      style.setAttribute("href", "asset/css/datepickerstyles.css");
+      style.setAttribute("href", "../asset/css/datepickerstyles.css");
     }
 
     style.setAttribute("rel", "stylesheet");
@@ -79,7 +79,7 @@ export class DatePicker {
     this.monthValues = this.dateUtil.getMonthValueList(from, to);
     this.monthValues.map((x) => this.months.push(new Month(this, x)));
     this.bodyElement = document.createElement("div");
-    console.log("sss" )
+    
   }
 
   nextMonth(nextButtonWrapper: HTMLElement): void {
@@ -549,9 +549,11 @@ export class DatePicker {
   public async createUIAsync(container?: Element): Promise<void> {
     this.datePickerInput = container as HTMLInputElement;
     this.wrapper = document.createElement("div");
+    console.log("aaa" , typeof this.options.type )
     if (this.options.type == "load") {
       container.parentNode.insertBefore(this.wrapper, container.nextSibling);
     } else {
+      console.log("?")
       container.addEventListener("click", (e) => {
         const inputElement = e.target as HTMLInputElement;
         if (this.options.rangeDates == false) {

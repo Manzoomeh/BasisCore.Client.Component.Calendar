@@ -17,7 +17,7 @@ export default class BcComponent implements IComponentManager {
   private options: IDatePickerOptions = {
     culture: "fa",
     lid: 1,
-    type: "load",
+    type: "click"
   };
   constructor(owner: IUserDefineComponent) {
     this.owner = owner;
@@ -29,7 +29,9 @@ export default class BcComponent implements IComponentManager {
     this.owner.addTrigger([this.sourceId]);
     const settingObject = await this.owner.getAttributeValueAsync("options");
     settingObject ? (this.options = eval(settingObject)) : null;
-    if (this.options.type == "load" || !this.options.type) {
+    console.log("sss", this.options)
+    
+    if (this.options.type == "load" ) {
       this.container = document.createElement("div");
     } else {
       this.container = document.createElement("input");
