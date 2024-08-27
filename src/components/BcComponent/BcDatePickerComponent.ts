@@ -30,23 +30,23 @@ export default class BcComponent implements IComponentManager {
     const settingObject = await this.owner.getAttributeValueAsync("options");
     settingObject ? (this.options = eval(settingObject)) : null;
     console.log("sss", this.options)
-    
-    if (this.options.type == "load" ) {
+
+    if (this.options.type == "load") {
       this.container = document.createElement("div");
     } else {
       this.container = document.createElement("input");
     }
-    this.container.setAttribute("readonly","")
+    this.container.setAttribute("readonly", "")
     this.container.classList.add("date-picker-input");
     this.container.setAttribute("name", name);
-    
-   
+
+
     this.owner.setContent(this.container);
     const initFrom = await this.owner.getAttributeValueAsync("from");
     const initTo = await this.owner.getAttributeValueAsync("to");
-  
+
     if (!initFrom || !initTo) {
-    
+
       if (this.options.culture == "fa" || !this.options.culture) {
         this.loadDefaultFaCalendar();
       } else if (this.options.culture == "en") {
@@ -102,7 +102,7 @@ export default class BcComponent implements IComponentManager {
     return this.dateRange.datePickerInput.value;
   }
 
-  getAddedValues(): IPartValue[] {
+  getAddedValuesAsync(): IPartValue[] {
     let retVal: IPartValue[] = null;
     const value = this.dateRange.datePickerInput.value;
     if (value?.length > 0) {
@@ -112,7 +112,7 @@ export default class BcComponent implements IComponentManager {
     return retVal;
   }
 
-  getEditedValues(baseValues: IPartValue[]): IPartValue[] {
+  getEditedValuesAsync(baseValues: IPartValue[]): IPartValue[] {
     let retVal: IPartValue[] = null;
     const baseValue = baseValues[0].value;
     const baseId = baseValues[0].id;
@@ -124,7 +124,7 @@ export default class BcComponent implements IComponentManager {
     return retVal;
   }
 
-  getDeletedValues(baseValues: IPartValue[]): IPartValue[] {
+  getDeletedValuesAsync(baseValues: IPartValue[]): IPartValue[] {
     let retVal: IPartValue[] = null;
     const value = this.dateRange.datePickerInput.value;
     if (value?.length == 0) {
@@ -132,5 +132,5 @@ export default class BcComponent implements IComponentManager {
     }
     return retVal;
   }
- 
+
 }
