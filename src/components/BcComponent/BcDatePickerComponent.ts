@@ -17,7 +17,7 @@ export default class BcComponent implements IComponentManager {
   private options: IDatePickerOptions = {
     culture: "fa",
     lid: 1,
-    type: "click"
+    type: "click",
   };
   constructor(owner: IUserDefineComponent) {
     this.owner = owner;
@@ -29,24 +29,21 @@ export default class BcComponent implements IComponentManager {
     this.owner.addTrigger([this.sourceId]);
     const settingObject = await this.owner.getAttributeValueAsync("options");
     settingObject ? (this.options = eval(settingObject)) : null;
-    console.log("sss", this.options)
 
     if (this.options.type == "load") {
       this.container = document.createElement("div");
     } else {
       this.container = document.createElement("input");
     }
-    this.container.setAttribute("readonly", "")
+    this.container.setAttribute("readonly", "");
     this.container.classList.add("date-picker-input");
     this.container.setAttribute("name", name);
-
 
     this.owner.setContent(this.container);
     const initFrom = await this.owner.getAttributeValueAsync("from");
     const initTo = await this.owner.getAttributeValueAsync("to");
 
     if (!initFrom || !initTo) {
-
       if (this.options.culture == "fa" || !this.options.culture) {
         this.loadDefaultFaCalendar();
       } else if (this.options.culture == "en") {
@@ -73,6 +70,7 @@ export default class BcComponent implements IComponentManager {
       day: parseInt(toParts[2]) as DayNumber,
     };
     this.dateRange = new DatePicker(this.from, this.to, obj);
+    await this.dateRange.getDataAsync(this.container);
     this.dateRange.createUIAsync(this.container);
   }
   loadDefaultFaCalendar() {
@@ -105,10 +103,18 @@ export default class BcComponent implements IComponentManager {
   getAddedValuesAsync(): IPartValue[] {
     let retVal: IPartValue[] = null;
     const value = this.dateRange.datePickerInput.value;
-    if (value?.length > 0) {
-      retVal = new Array<IPartValue>();
-      retVal.push({ value: value });
+    if (this.dateRange.data) {
+      if (value?.length > 0) {
+        retVal = new Array<IPartValue>();
+        retVal.push({ value: this.dateRange.data });
+      }
+    } else {
+      if (value?.length > 0) {
+        retVal = new Array<IPartValue>();
+        retVal.push({ value: value });
+      }
     }
+
     return retVal;
   }
 
@@ -117,9 +123,16 @@ export default class BcComponent implements IComponentManager {
     const baseValue = baseValues[0].value;
     const baseId = baseValues[0].id;
     const value = this.dateRange.datePickerInput.value;
-    if (value?.length > 0 && value != baseValue) {
-      retVal = new Array<IPartValue>();
-      retVal.push({ id: baseId, value: value });
+    if (this.dateRange.data) {
+      if (value?.length > 0) {
+        retVal = new Array<IPartValue>();
+        retVal.push({ id: baseId, value: this.dateRange.data });
+      }
+    } else {
+      if (value?.length > 0 && value != baseValue) {
+        retVal = new Array<IPartValue>();
+        retVal.push({ id: baseId, value: value });
+      }
     }
     return retVal;
   }
@@ -132,5 +145,4 @@ export default class BcComponent implements IComponentManager {
     }
     return retVal;
   }
-
 }
