@@ -549,11 +549,9 @@ export class DatePicker {
   public async createUIAsync(container?: Element): Promise<void> {
     this.datePickerInput = container as HTMLInputElement;
     this.wrapper = document.createElement("div");
-    console.log("aaa" , typeof this.options.type )
     if (this.options.type == "load") {
       container.parentNode.insertBefore(this.wrapper, container.nextSibling);
     } else {
-      console.log("?")
       container.addEventListener("click", (e) => {
         const inputElement = e.target as HTMLInputElement;
         if (this.options.rangeDates == false) {
