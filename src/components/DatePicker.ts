@@ -22,6 +22,7 @@ export class DatePicker {
   public datePickerInput: HTMLInputElement;
   public activeIndex: number;
   public todayId: number = 0;
+  public data 
   public from;
   public to;
   public range;
@@ -41,7 +42,7 @@ export class DatePicker {
       switchType: false,
       theme: "basic",
       type: "click",
-      mode:"desktop",
+      mode: "desktop",
       disabledPrevButton: false,
       rangeDatesSeparated: false,
     };
@@ -52,7 +53,6 @@ export class DatePicker {
     options?: IDatePickerOptions,
     range?: DateRange
   ) {
-
     this.from = from;
     this.to = to;
     this.range = range || "";
@@ -66,10 +66,9 @@ export class DatePicker {
         ? new BasisCoreDateUtil()
         : new PersianDateUtil();
     const style = document.createElement("link");
-    if(this.options.style){
+    if (this.options.style) {
       style.setAttribute("href", this.options.style);
-    }
-    else{
+    } else {
       style.setAttribute("href", "../asset/css/datepickerstyles.css");
     }
 
@@ -79,7 +78,6 @@ export class DatePicker {
     this.monthValues = this.dateUtil.getMonthValueList(from, to);
     this.monthValues.map((x) => this.months.push(new Month(this, x)));
     this.bodyElement = document.createElement("div");
-    
   }
 
   nextMonth(nextButtonWrapper: HTMLElement): void {
@@ -146,7 +144,7 @@ export class DatePicker {
     const monthNameSub = document.createElement("span");
     monthNameSub.setAttribute("data-datepicker-month-second", "");
     monthName.appendChild(monthNameMain);
-    if(this.options.culture == "fa"){
+    if (this.options.culture == "fa") {
       monthName.appendChild(monthNameSub);
     }
 
@@ -250,7 +248,7 @@ export class DatePicker {
     const headerTitle = document.createElement("div");
     headerTitle.setAttribute("data-datepicker-header-title", "");
     headerTitle.appendChild(nextButton);
-    
+
     headerTitle.appendChild(headerTitles);
     headerTitle.appendChild(prevButton);
     this.headerElement.appendChild(headerTitle);
@@ -262,7 +260,6 @@ export class DatePicker {
       <path data-sys-text="" d="M10.5299 8.37692H6.76923V12.1846H10.5299V8.37692ZM9.77778 0V1.52308H3.76068V0H2.25641V1.52308H1.50427C0.669402 1.52308 0.00752136 2.20846 0.00752136 3.04615L0 13.7077C0 14.5454 0.669402 15.2308 1.50427 15.2308H12.0342C12.8615 15.2308 13.5385 14.5454 13.5385 13.7077V3.04615C13.5385 2.20846 12.8615 1.52308 12.0342 1.52308H11.2821V0H9.77778ZM12.0342 13.7077H1.50427V5.33077H12.0342V13.7077Z" fill="#767676"/>
       </svg>
       `;
-      
 
       changeTypeButton.addEventListener("click", (e) => {
         this.goToday();
@@ -293,8 +290,7 @@ export class DatePicker {
         this.range.monthValues.map((x) =>
           this.range.months.push(new Month(this, x))
         );
-       
-        
+
         this.range.runAsync();
       });
       this.headerElement.appendChild(changeTypeButton);
@@ -351,7 +347,7 @@ export class DatePicker {
     monthList.setAttribute("data-datepicker-month-list", "");
     for (var i = 1; i <= 12; i++) {
       const currentMonth = this.activeMonth();
-  
+
       const currentMonthInLoop: MonthValue = {
         year: currentMonth.value.year,
         month: i as MonthNumber,
@@ -364,7 +360,6 @@ export class DatePicker {
         }).year;
       }
 
-  
       const t = this.dateUtil.getMonthName(
         currentMonthInLoop,
         this.options.culture,
@@ -453,7 +448,7 @@ export class DatePicker {
         ) {
           new UiDatePicker(this, x).generateDaysUiWithDateRange(mainElement);
         } else if (this.options.pickerType == "action") {
-          new UiDatePicker(this, x).generateDaysUi(mainElement);
+          this.data = new UiDatePicker(this, x).generateDaysUi(mainElement);
         } else if (this.options.pickerType == "multiple") {
           new UiDatePicker(this, x).generateDaysUiWithMultipleChoices(
             mainElement
@@ -484,7 +479,7 @@ export class DatePicker {
         this.goToday();
       });
       todayButton.setAttribute("data-datepicker-today-btn", "");
-   
+
       if (this.options.mode == "desktop") {
         todayButton.innerHTML = this.options.lid == 1 ? "امروز" : "Today";
       }
@@ -545,6 +540,12 @@ export class DatePicker {
 
     styles.innerHTML = themeStyle;
     this.wrapper.appendChild(styles);
+  }
+  async getDataAsync(container?: Element) {
+    container.addEventListener("click", (e) => {
+      const inputElement = e.target as HTMLInputElement;
+    })
+    // const dateId = 
   }
   public async createUIAsync(container?: Element): Promise<void> {
     this.datePickerInput = container as HTMLInputElement;
