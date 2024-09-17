@@ -129,8 +129,8 @@ export class UiCalendar {
     noteElement.setAttribute("data-calendar-note-lists", "");
     var displayNotes = this.range.options.displayNote;
     noteElement.appendChild(ulElement);
-    
     if (holidays.length > 0) {
+      
       const todaytHolidays = holidays.filter(
         (e) => e.dateID == this.day.dateId
       );

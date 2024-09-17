@@ -14,12 +14,14 @@ import { UiCalendar } from "./UiCalendar/UiCalendar";
 import { UiMbobile } from "./mobile/UiMobile";
 import IUserDefineComponent from "../basiscore/IUserDefineComponent";
 import { DatePicker } from "./DatePicker";
+import { Day } from "./Day/Day";
 declare const $bc: any;
 export class DateRange {
   public readonly dateUtil: IDateUtil;
   public readonly months: Array<Month> = new Array<Month>();
   public readonly options: ICalenderOptions;
   private readonly monthValues: MonthValue[];
+  private eventsCheck:boolean = false
   public note: INote[];
   public rKey: string;
   public wrapper: HTMLElement;
@@ -109,20 +111,30 @@ export class DateRange {
     return this.rKey;
   }
 
-  public async getHolidays(id?: number): Promise<void> {
+  public async getHolidays(fromDay? :DayValue, toDay? : DayValue,id?: number ): Promise<void> {
+    
+
     const url =
       this.options.level == "service"
         ? this.options.baseUrl["calendareventsservice"]
         : this.options.baseUrl["calendareventsuser"];
-    const fromDateId = this.dateUtil.getBasisDayId(this.from);
+    
+    this.from.day = 1
+    let fromDateId = this.dateUtil.getBasisDayId(this.from);
+    if(fromDay){
+      fromDateId = this.dateUtil.getBasisDayId(fromDay);
+    }
     this.endDateEvent= {
       year : this.from.year,
       month : this.from.month,
       day : 30
     }
-    
-    const toDateId = this.dateUtil.getBasisDayId(this.endDateEvent)
-    this.holidayCategories.map(async (e) => {
+    let toDateId = this.dateUtil.getBasisDayId(this.endDateEvent)
+    if(toDay){
+      toDateId = this.dateUtil.getBasisDayId(toDay)
+    }
+    await this.holidayCategories.map(async (e,mapIndex,array) => {
+     
       try {
         let res = await fetch(url, {
           method: "POST",
@@ -134,17 +146,24 @@ export class DateRange {
         });
         res = await res.json();
         //@ts-ignore
-        res.map((e) => {
+        await res.map((e) => {
           if (
             !this.holidays.find(
               (i) => i.eventID == e.eventID && e.dateID == i.dateID
             )
           ) {
             this.holidays.push(e);
+           
+            
           }
         });
+      
       } catch {}
+      if( mapIndex === array.length -1  ){
+        this.runAsync()
+      }
     });
+    
   }
 
   public async getUserId(): Promise<void> {
@@ -178,7 +197,7 @@ export class DateRange {
       await this.syncNotesAsync(from, to);
     }
   }
-  public async syncHolidayCategories(): Promise<void> {
+  public async syncHolidayCategories(fromDay?:DayValue,toDay?: DayValue): Promise<void> {
     const url =
       this.options.level === "service"
         ? this.options.baseUrl["serviceholiday"]
@@ -187,7 +206,8 @@ export class DateRange {
     const res = await fetch(url);
     const data = await res.json();
     this.holidayCategories = data.message ? [] : data;
-    this.getHolidays();
+    this.eventsCheck = true
+    await this.getHolidays(fromDay , toDay);
   }
   protected async syncNotesAsync(from: DayValue, to: DayValue): Promise<void> {
     //fetch push new data to server and fetch all data from server
@@ -230,6 +250,7 @@ export class DateRange {
   }
   async nextMonth(): Promise<void> {
     let nextMonthValues: MonthValue;
+    this.holidays =[]
     nextMonthValues = this.dateUtil.nextMonth(
       this.months[this.activeIndex],
       this.options.culture
@@ -239,7 +260,28 @@ export class DateRange {
       //load notes from server;
       await this.refreshNotesAsync();
     }
+    const fromDayHoliday : DayValue = {
+      year :  nextMonthValues.year,
+      month : nextMonthValues.month,
+      day : 1
+    }
+    const toDayHoliday : DayValue = {
+      year :  nextMonthValues.year,
+      month : nextMonthValues.month,
+      day : 30
+    }
+    
+    const checkBoxHoliday  = document.querySelectorAll("[data-holidaycheckbox]") 
+    checkBoxHoliday.forEach(e => {
+      if(e.getAttribute("checked") == "true"){
+        const args = { id : e.getAttribute("data-id") ,title: e.getAttribute("data-title")  }
+          this.onHolidayCheck(args, true) 
+      }
+    })
+    await this.syncHolidayCategories(fromDayHoliday,toDayHoliday);
     this.runAsync();
+    
+  
   }
   async prevMonth(): Promise<void> {
     let nextMonthValues: MonthValue;
@@ -252,6 +294,24 @@ export class DateRange {
       //load notes from server;
       await this.refreshNotesAsync();
     }
+    const fromDayHoliday : DayValue = {
+      year :  nextMonthValues.year,
+      month : nextMonthValues.month,
+      day : 1
+    }
+    const toDayHoliday : DayValue = {
+      year :  nextMonthValues.year,
+      month : nextMonthValues.month,
+      day : 30
+    }
+    const checkBoxHoliday  = document.querySelectorAll("[data-holidaycheckbox]") 
+    checkBoxHoliday.forEach(e => {
+      if(e.getAttribute("checked") == "true"){
+        const args = { id : e.getAttribute("data-id") ,title: e.getAttribute("data-title")  }
+          this.onHolidayCheck(args, true) 
+      }
+    })
+    await this.syncHolidayCategories(fromDayHoliday,toDayHoliday);
     this.runAsync();
   }
   async prevYear(): Promise<void> {
@@ -265,6 +325,7 @@ export class DateRange {
       //load notes from server;
       await this.refreshNotesAsync();
     }
+    
     this.runAsync();
   }
   async nextYear(): Promise<void> {
@@ -363,8 +424,8 @@ export class DateRange {
     const nextYear = document.createElement("button");
     const prevYear = document.createElement("button");
     const titleWrapper = document.createElement("div");
-    nextButton.addEventListener("click", (e) => {
-      this.nextMonth();
+    nextButton.addEventListener("click",async (e) => {
+      await this.nextMonth();
     });
     prevButton.addEventListener("click", (e) => {
       this.prevMonth();
@@ -651,20 +712,7 @@ export class DateRange {
       }
       this.runAsync();
     };
-    const onHolidayCheck = async ({
-      title,
-      id,
-    }: {
-      title: string;
-      id: string;
-    }) => {
-      if (this.holidayFilters.filter((e) => e.id === id).length > 0) {
-        this.holidayFilters = this.holidayFilters.filter((i) => i.id !== id);
-      } else {
-        this.holidayFilters = [...this.holidayFilters, { title, id }];
-      }
-      this.runAsync();
-    };
+
     const holidayFilters = document.createElement("div");
     holidayFilters.style.display = "none";
     holidayFilters.setAttribute("data-calendar-holiday-filters", "");
@@ -676,11 +724,15 @@ export class DateRange {
       title.innerHTML = `${e.title}`;
       title.setAttribute("data-bc-filter-title", "");
       input.setAttribute("type", "checkbox");
+      input.setAttribute("data-id", e.id)
+      input.setAttribute("data-title", e.title)
+      input.setAttribute("data-holidaycheckbox", e.title)
+      input.setAttribute("data-holidaycheckbox", e.title)
       if (this.holidayFilters.find((i) => i.id === e.id)) {
         input.setAttribute("checked", "true");
       }
       input.addEventListener("click", () => {
-        onHolidayCheck(e);
+        this.onHolidayCheck(e);
       });
       filterRow.appendChild(input);
       filterRow.appendChild(title);
@@ -709,13 +761,13 @@ export class DateRange {
           title.innerHTML = `${e.title}`;
           input.setAttribute("type", "checkbox");
           title.setAttribute("data-bc-filter-title", "");
-
+          input.setAttribute("data-id", e.id)
+          input.setAttribute("data-title", e.title)
           if (this.holidayFilters.find((i) => i.title === e.title)) {
             input.setAttribute("checked", "true");
           }
           input.addEventListener("click", () => {
-            onHolidayCheck(e);
-            // this.getHolidays(e.id);
+            this.onHolidayCheck(e);
           });
           filterRow.appendChild(input);
           filterRow.appendChild(title);
@@ -835,6 +887,8 @@ export class DateRange {
     }
     this.months[this.activeIndex].days.map((x) => {
       if (this.options.mode == "desktop") {
+       
+  
         const dayElement = new UiCalendar(this, x).generateDaysUi(
           this.catFilters,
           this.holidays.filter((i) =>
@@ -865,6 +919,25 @@ export class DateRange {
 
     return monthsContainer;
   }
+  async onHolidayCheck({title ,id } , changeMonth:boolean = false)  {
+   if(changeMonth == true){
+    
+    while(this.holidayFilters.length){
+      this.holidayFilters.pop();
+    }   
+   }
+
+    if (this.holidayFilters.filter((e) => e.id === id).length > 0) {
+      this.holidayFilters = this.holidayFilters.filter((i) => i.id !== id);
+    } else {
+      this.holidayFilters = [...this.holidayFilters, { title, id }];
+    }
+    
+    if(changeMonth == false){
+    this.runAsync();
+    }
+   
+  };
   protected createMountFooter(): Node {
     //create related element
     var footerElement = document.createElement("div");
@@ -886,6 +959,7 @@ export class DateRange {
       });
       submittedFilters.appendChild(filterRemoveButton);
     });
+ 
     this.holidayFilters.map((e) => {
       const filterRemoveButton = document.createElement("div");
       filterRemoveButton.setAttribute("data-calendar-remove-button", "");

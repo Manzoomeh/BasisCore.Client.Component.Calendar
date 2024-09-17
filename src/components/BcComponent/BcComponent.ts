@@ -36,16 +36,15 @@ export default class BcComponent implements IComponentManager {
         .replace(/([۰-۹])/g, (token) =>
           String.fromCharCode(token.charCodeAt(0) - 1728)
         );
+       
       this.loadCalendar(from, from, this.options, this.rKey );
     }
-    if ((!initFrom || !initTo) && this.options["culture"] == "en") {
+    else if ((!initFrom || !initTo) && this.options["culture"] == "en") {
       let dateObj = new Date();
       let month = dateObj.getUTCMonth() + 1; //months from 1-12
       let day = dateObj.getUTCDate();
       let year = dateObj.getUTCFullYear();
-      
       let newdate = year + "/" + month + "/" + day;
-        
       this.loadCalendar(newdate, newdate, this.options, this.rKey );
     }
      else {
@@ -65,7 +64,10 @@ export default class BcComponent implements IComponentManager {
   private async displayDataIfExistsAsync(): Promise<void> {
     if (this.sourceId) {
       const source = this.owner.tryToGetSource(this.sourceId);
-      await this.initializeAsync()
+      if(this.sourceId){
+        await this.initializeAsync()
+      }
+      
     }
   }
 
@@ -113,6 +115,7 @@ export default class BcComponent implements IComponentManager {
         month: parseInt(toParts[1]) as MonthNumber,
         day: parseInt(toParts[2]) as DayNumber,
       };
+      
       this.dateRange = new DateRange(this.from, this.to, obj, rKey,this.owner);
       this.dateRange.createUIAsync(this.container);
     }

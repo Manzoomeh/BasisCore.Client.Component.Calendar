@@ -54,6 +54,7 @@
     </script>
   </head>
   <body>
+    <div onclick="refresh()">refresh</div>
     <Basis
       core="component.calendar.calendar"
       run="atclient"
@@ -62,6 +63,8 @@
       to=""
       options="mySetting"
       rkey="7BCCE056-57EB-43DA-8D4D-89D261DA81D3"
+      resetSourceId="db.refresh"
+      triggers="db.refresh"
     ></Basis>
     <script>
       var mySetting = {
@@ -69,45 +72,46 @@
         culture: "fa",
         lid: 1,
         todayButton: false,
+        rangedates : true,
         dmnid: 6,
         style: "../css/calendar-style-1.0.0.css",
         datepickerStyle: "../css/datepicker-style-1.0.0.css",
         displayNote : true,
         baseUrl: {
           userid:
-            "http://basispanel.ir/trustservice/checkrkey/13213AF5-4486-4DE6-B33A-1D92620148C8",
+            "http://basispanel.ir/trustservice/checkrkey/4E4A1814-77E9-4157-A56B-5E804C901C79",
           viewnote:
-            "https://basispanel.ir/service/fa/13213AF5-4486-4DE6-B33A-1D92620148C8/viewcalendarnote",
+            "https://basispanel.ir/service/fa/4E4A1814-77E9-4157-A56B-5E804C901C79/viewcalendarnote",
           usernotes:
-            "https://basispanel.ir/service/13213AF5-4486-4DE6-B33A-1D92620148C8/calendarnotes",
+            "https://basispanel.ir/service/4E4A1814-77E9-4157-A56B-5E804C901C79/calendarnotes",
           removenote:
-            "http://basispanel.ir/service/13213AF5-4486-4DE6-B33A-1D92620148C8/removenote",
+            "http://basispanel.ir/service/4E4A1814-77E9-4157-A56B-5E804C901C79/removenote",
           addnote:
-            "http://basispanel.ir/service/13213AF5-4486-4DE6-B33A-1D92620148C8/addcalendarnote",
+            "http://basispanel.ir/service/4E4A1814-77E9-4157-A56B-5E804C901C79/addcalendarnote",
           reminder:
-            "http://basispanel.ir/service/13213AF5-4486-4DE6-B33A-1D92620148C8/notereminder",
+            "http://basispanel.ir/service/4E4A1814-77E9-4157-A56B-5E804C901C79/notereminder",
           catlist:
-            "https://basispanel.ir/service/13213AF5-4486-4DE6-B33A-1D92620148C8/fa/notecatlist",
+            "https://basispanel.ir/service/4E4A1814-77E9-4157-A56B-5E804C901C79/fa/notecatlist",
           sharing:
-            "https://basispanel.ir/service/13213AF5-4486-4DE6-B33A-1D92620148C8/sharing",
+            "https://basispanel.ir/service/4E4A1814-77E9-4157-A56B-5E804C901C79/sharing",
           removesharing:
-            "http://basispanel.ir/service/13213AF5-4486-4DE6-B33A-1D92620148C8/calendarnote/removesharing",
+            "http://basispanel.ir/service/4E4A1814-77E9-4157-A56B-5E804C901C79/calendarnote/removesharing",
           sender:
-            "http://basispanel.ir/service/13213AF5-4486-4DE6-B33A-1D92620148C8/fa/usercategories",
+            "http://basispanel.ir/service/4E4A1814-77E9-4157-A56B-5E804C901C79/fa/usercategories",
           reciver:
-            "http://basispanel.ir/service/13213AF5-4486-4DE6-B33A-1D92620148C8/fa/usercategoryrelations/${catid}",
+            "http://basispanel.ir/service/4E4A1814-77E9-4157-A56B-5E804C901C79/fa/usercategoryrelations/${catid}",
           sharingService:
-            "http://basispanel.ir/service/13213AF5-4486-4DE6-B33A-1D92620148C8/sharing",
+            "http://basispanel.ir/service/4E4A1814-77E9-4157-A56B-5E804C901C79/sharing",
           removeReminder:
-            "http://basispanel.ir/service/13213AF5-4486-4DE6-B33A-1D92620148C8/removereminder/${usedforid}",
+            "http://basispanel.ir/service/4E4A1814-77E9-4157-A56B-5E804C901C79/removereminder/${usedforid}",
           calendartemplates:
-            "http://basispanel.ir/service/13213AF5-4486-4DE6-B33A-1D92620148C8/fa/calendartemplates",
+            "http://basispanel.ir/service/4E4A1814-77E9-4157-A56B-5E804C901C79/fa/calendartemplates",
           serviceholiday:
-            "http://basispanel.ir/service/13213AF5-4486-4DE6-B33A-1D92620148C8/fa/calendartemplates",
+            "http://basispanel.ir/service/4E4A1814-77E9-4157-A56B-5E804C901C79/fa/calendartemplates",
           calendareventsservice:
-            "http://basispanel.ir/service/13213AF5-4486-4DE6-B33A-1D92620148C8/fa/calendarevents",
-            editcalendartemplates:"http://basispanel.ir/service/13213AF5-4486-4DE6-B33A-1D92620148C8/fa/editcalendartemplates",
-            editcalendarevents:"http://basispanel.ir/service/13213AF5-4486-4DE6-B33A-1D92620148C8/fa/editcalendarevents"
+            "http://basispanel.ir/service/4E4A1814-77E9-4157-A56B-5E804C901C79/fa/calendarevents",
+            editcalendartemplates:"http://basispanel.ir/service/4E4A1814-77E9-4157-A56B-5E804C901C79/fa/editcalendartemplates",
+            editcalendarevents:"http://basispanel.ir/service/4E4A1814-77E9-4157-A56B-5E804C901C79/fa/editcalendarevents"
         },
         level: "service",
         labels: {
@@ -179,6 +183,9 @@
           setting : "تنظیمات"
         },
       };
+      function refresh(){
+        $bc.setSource("db.refresh",true)
+      }
     </script>
   </body>
 </html>

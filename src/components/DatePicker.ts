@@ -550,7 +550,6 @@ export class DatePicker {
   public async createUIAsync(container?: Element): Promise<void> {
     this.datePickerInput = container as HTMLInputElement;
     this.wrapper = document.createElement("div");
-
     if (this.options.type == "load") {
       container.parentNode.insertBefore(this.wrapper, container.nextSibling);
     } else {
