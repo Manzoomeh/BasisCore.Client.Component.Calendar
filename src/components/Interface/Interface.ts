@@ -136,5 +136,7 @@ export interface IDatePickerOptions {
   action?: IActionCallback;
   disabledPrevButton?: boolean;
   rangeDatesSeparated?: boolean;
+  seperator ?: string,
+  rangeDatesSeperator? : string
 }
 export type IActionCallback = (element: HTMLElement) => any;
