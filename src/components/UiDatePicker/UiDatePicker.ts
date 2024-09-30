@@ -26,28 +26,38 @@ export class UiDatePicker {
     if (this.day.isToday == true) {
       dayElement.setAttribute("data-datepicker-today", "");
     }
-    const selectDate =
+    const selectDate = this.range.options.seperator && this.range.options.seperator.length > 0 ? this.day.currentDay.year +
+      this.range.options.seperator +
+      this.day.currentDay.month +
+      this.range.options.seperator +
+      this.day.currentDay.day :
       this.day.currentDay.year +
       "/" +
       this.day.currentDay.month +
       "/" +
       this.day.currentDay.day;
 
-    const mselectDate =
+    const mselectDate = this.range.options.seperator && this.range.options.seperator.length > 0 ?
+      this.day.mcurrentDay.year +
+      this.range.options.seperator +
+      this.day.mcurrentDay.month +
+      this.range.options.seperator +
+      this.day.mcurrentDay.day :
       this.day.mcurrentDay.year +
       "/" +
       this.day.mcurrentDay.month +
       "/" +
       this.day.mcurrentDay.day;
 
-    this.range.datePickerInput.value =
-      this.range.options.culture === "fa" ? selectDate : mselectDate;
-     let obj = {
-        dateid: this.day.dateId.toString(),
-        sstring: selectDate,
-        mstring: mselectDate,
-      };
+
+    let obj = {
+      dateid: this.day.dateId.toString(),
+      sstring: selectDate,
+      mstring: mselectDate,
+    };
     dayElement.addEventListener("click", async (e) => {
+      this.range.datePickerInput.value =
+        this.range.options.culture === "en" ? mselectDate : selectDate;
       this.range.datePickerInput.setAttribute(
         "data-datepicker-dateid",
         this.day.dateId.toString()
@@ -65,12 +75,23 @@ export class UiDatePicker {
         $bc.setSource(this.range.options.sourceid, [
           {
             from:
-              this.range.from.year +
-              "/" +
-              this.range.from.month +
-              "/" +
-              this.range.from.day,
-            to:
+              this.range.options.seperator && this.range.options.seperator.length > 0 ?
+                this.range.from.year +
+                this.range.options.seperator +
+                this.range.from.month +
+                this.range.options.seperator +
+                this.range.from.day :
+                this.range.from.year +
+                "/" +
+                this.range.from.month +
+                "/" +
+                this.range.from.day,
+            to: this.range.options.seperator && this.range.options.seperator.length > 0 ?
+              this.range.to.year +
+              this.range.options.seperator +
+              this.range.to.month +
+              this.range.options.seperator +
+              this.range.to.day :
               this.range.to.year +
               "/" +
               this.range.to.month +
@@ -148,7 +169,8 @@ export class UiDatePicker {
         this.range.options.culture === "fa"
           ? this.day.currentDay
           : this.day.mcurrentDay;
-      const selectDate =
+      const selectDate = this.range.options.seperator && this.range.options.seperator.length > 0 ?
+        selected.year + this.range.options.seperator + selected.month + this.range.options.seperator + selected.day :
         selected.year + "/" + selected.month + "/" + selected.day;
 
       if (!this.range.datesArray.includes(selected)) {
@@ -168,7 +190,9 @@ export class UiDatePicker {
           ).value = this.range.datesArray
             .map(
               (e) =>
-                String(e.year) + "/" + String(e.month) + "/" + String(e.day)
+                this.range.options.seperator && this.range.options.seperator.length > 0 ?
+                  String(e.year) + this.range.options.seperator + String(e.month) + this.range.options.seperator + String(e.day) :
+                  String(e.year) + "/" + String(e.month) + "/" + String(e.day)
             )
             .join(",");
         }
@@ -188,7 +212,8 @@ export class UiDatePicker {
             ) as HTMLInputElement
           ).value = this.range.datesArray
             .map(
-              (e) =>
+              (e) => this.range.options.seperator && this.range.options.seperator.length > 0 ?
+                String(e.year) + this.range.options.seperator + String(e.month) + this.range.options.seperator + String(e.day) :
                 String(e.year) + "/" + String(e.month) + "/" + String(e.day)
             )
             .join(",");
@@ -225,15 +250,22 @@ export class UiDatePicker {
         this.range.options.culture === "fa"
           ? this.day.currentDay
           : this.day.mcurrentDay;
-      const selectDate =
+      const selectDate = this.range.options.seperator && this.range.options.seperator.length > 0 ?
+        selected.year + this.range.options.seperator + selected.month + this.range.options.seperator + selected.day :
         selected.year + "/" + selected.month + "/" + selected.day;
 
       const mselectDate =
-        this.day.mcurrentDay.year +
-        "/" +
-        this.day.mcurrentDay.month +
-        "/" +
-        this.day.mcurrentDay.day;
+        this.range.options.seperator && this.range.options.seperator.length > 0 ?
+          this.day.mcurrentDay.year +
+          this.range.options.seperator +
+          this.day.mcurrentDay.month +
+          this.range.options.seperator +
+          this.day.mcurrentDay.day :
+          this.day.mcurrentDay.year +
+          "/" +
+          this.day.mcurrentDay.month +
+          "/" +
+          this.day.mcurrentDay.day;
 
       this.range.datesArray.push(selected);
       if (this.range.datesArray.length == 1) {
@@ -274,7 +306,8 @@ export class UiDatePicker {
         if (this.range.options.rangeDatesSeparated) {
           this.range.datePickerInput.value += " " + selectDate;
         } else {
-          this.range.datePickerInput.value += " - " + selectDate;
+          this.range.options.rangeDatesSeperator && this.range.options.rangeDatesSeperator.length > 0 ?
+            this.range.datePickerInput.value += this.range.options.rangeDatesSeperator + selectDate : this.range.datePickerInput.value += " - " + selectDate;
         }
         this.range.datePickerInput.setAttribute(
           "data-datepicker-to-dateid",
@@ -293,17 +326,29 @@ export class UiDatePicker {
           $bc.setSource(this.range.options.sourceid, [
             {
               from:
-                this.range.from.year +
-                "/" +
-                this.range.from.month +
-                "/" +
-                this.range.from.day,
+                this.range.options.seperator && this.range.options.seperator.length > 0 ?
+                  this.range.from.year +
+                  this.range.options.seperator +
+                  this.range.from.month +
+                  this.range.options.seperator +
+                  this.range.from.day :
+                  this.range.from.year +
+                  "/" +
+                  this.range.from.month +
+                  "/" +
+                  this.range.from.day,
               to:
-                this.range.to.year +
-                "/" +
-                this.range.to.month +
-                "/" +
-                this.range.to.day,
+                this.range.options.seperator && this.range.options.seperator.length > 0 ?
+                  this.range.to.year +
+                  this.range.options.seperator +
+                  this.range.to.month +
+                  this.range.options.seperator +
+                  this.range.to.day :
+                  this.range.to.year +
+                  "/" +
+                  this.range.to.month +
+                  "/" +
+                  this.range.to.day,
               culture: this.range.options.culture,
               lid: this.range.options.lid,
             },

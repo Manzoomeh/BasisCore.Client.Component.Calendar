@@ -541,12 +541,6 @@ export class DatePicker {
     styles.innerHTML = themeStyle;
     this.wrapper.appendChild(styles);
   }
-  async getDataAsync(container?: Element) {
-    container.addEventListener("click", (e) => {
-      const inputElement = e.target as HTMLInputElement;
-    })
-    // const dateId = 
-  }
   public async createUIAsync(container?: Element): Promise<void> {
     this.datePickerInput = container as HTMLInputElement;
     this.wrapper = document.createElement("div");
@@ -554,6 +548,7 @@ export class DatePicker {
       container.parentNode.insertBefore(this.wrapper, container.nextSibling);
     } else {
       container.addEventListener("click", (e) => {
+        
         const inputElement = e.target as HTMLInputElement;
         if (this.options.rangeDates == false) {
           if (inputElement.getAttribute("data-datepicker-dateid") !== null) {

@@ -70,7 +70,6 @@ export default class BcComponent implements IComponentManager {
       day: parseInt(toParts[2]) as DayNumber,
     };
     this.dateRange = new DatePicker(this.from, this.to, obj);
-    await this.dateRange.getDataAsync(this.container);
     this.dateRange.createUIAsync(this.container);
   }
   loadDefaultFaCalendar() {
@@ -126,6 +125,7 @@ export default class BcComponent implements IComponentManager {
     if (this.dateRange.data) {
       if (value?.length > 0) {
         retVal = new Array<IPartValue>();
+   
         retVal.push({ id: baseId, value: this.dateRange.data });
       }
     } else {

@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="/bclib.js"></script>
+        <title>Print Command - Simple</title>
+ 
+
+        <script>
+            const host = {
+                repositories: {
+                    "calendar.calendar": "/basiscore.calendar.component.js",
+                    "calendar.datepicker": "/basiscore.calendar.component.js"
+                }
+
+            }
+        </script>
+    </head>
+<style>
+	input{border: 1px solid #ccc !important;}
+    @font-face {
+    font-family: IRANSans1;
+    font-style: normal;
+    font-weight: normal;
+    src: url('../fonts/IRANSansWeb.eot');
+    src: url('../fonts/IRANSansWeb.ttf') format('embedded-opentype'),
+        /* IE6-8 */
+    url('../fonts/IRANSansWeb.woff') format('woff'),
+        /* FF39+,Chrome36+, Opera24+*/
+    url('../fonts/IRANSansWeb.woff2') format('woff2');
+}
+#basis-datepicker{
+    font-family: IRANSans1;
+}
+</style>
+
+    <body>
+        
+		<basis core="component.calendar.datepicker" name="from" run="atclient"   options="mySetting"></basis>
+        <script>
+            var mySetting = {
+                dateProvider: "basisCalendar",
+                culture: "fa",
+                lid: 1,
+                theme: "basic",
+                type:"click",
+                "todayButton": false,
+                        "yearsList": false,
+                        "monthList": false,
+                        
+                        "switchType": false,
+                seperator : "-"
+            }
+ 
+           
+        </script>
+    </body>
+
+</html>
