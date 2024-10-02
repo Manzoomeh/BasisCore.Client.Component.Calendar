@@ -136,8 +136,19 @@ export default class BcComponent implements IComponentManager {
     if (this.dateRange.data) {
       if (value?.length > 0) {
         retVal = new Array<IPartValue>();
-        console.log(this.dateRange.data )
-        retVal.push({ id: baseId, value: this.dateRange.data });
+        retVal = new Array<IPartValue>();
+        retVal.push({ id :baseId , value: {
+          dateid : this.dateRange.datePickerInput.getAttribute(
+            "data-datepicker-dateid"
+          ),
+          sstring : this.dateRange.datePickerInput.getAttribute(
+            "data-datepicker-sstring"
+          ),
+          mstring :this.dateRange.datePickerInput.getAttribute(
+            "data-datepicker-mstring",
+          ),
+        } });
+        console.log(retVal)
       }
     } else {
       if (value?.length > 0 && value != baseValue) {
