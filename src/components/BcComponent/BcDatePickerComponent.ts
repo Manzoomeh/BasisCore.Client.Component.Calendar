@@ -102,7 +102,6 @@ export default class BcComponent implements IComponentManager {
   getAddedValuesAsync(): IPartValue[] {
     let retVal: IPartValue[] = null;
     const value = this.dateRange.datePickerInput.value;
-    console.log(value,this.dateRange.data)
     if (this.dateRange.data) {
       if (value?.length > 0) {
         retVal = new Array<IPartValue>();
@@ -148,7 +147,6 @@ export default class BcComponent implements IComponentManager {
             "data-datepicker-mstring",
           ),
         } });
-        console.log(retVal)
       }
     } else {
       if (value?.length > 0 && value != baseValue) {
