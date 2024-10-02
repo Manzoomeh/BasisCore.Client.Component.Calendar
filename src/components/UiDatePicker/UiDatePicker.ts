@@ -49,12 +49,6 @@ export class UiDatePicker {
       "/" +
       this.day.mcurrentDay.day;
 
-
-    let obj = {
-      dateid: this.day.dateId.toString(),
-      sstring: selectDate,
-      mstring: mselectDate,
-    };
     dayElement.addEventListener("click", async (e) => {
       this.range.datePickerInput.value =
         this.range.options.culture === "en" ? mselectDate : selectDate;
@@ -134,7 +128,6 @@ export class UiDatePicker {
     });
 
     parentElement.appendChild(dayElement);
-    return obj;
   }
 
   generateDaysUiWithMultipleChoices(parentElement: HTMLElement): void {

@@ -102,10 +102,21 @@ export default class BcComponent implements IComponentManager {
   getAddedValuesAsync(): IPartValue[] {
     let retVal: IPartValue[] = null;
     const value = this.dateRange.datePickerInput.value;
+    console.log(value,this.dateRange.data)
     if (this.dateRange.data) {
       if (value?.length > 0) {
         retVal = new Array<IPartValue>();
-        retVal.push({ value: this.dateRange.data });
+        retVal.push({ value: {
+          dateid : this.dateRange.datePickerInput.getAttribute(
+            "data-datepicker-dateid"
+          ),
+          sstring : this.dateRange.datePickerInput.getAttribute(
+            "data-datepicker-sstring"
+          ),
+          mstring :this.dateRange.datePickerInput.getAttribute(
+            "data-datepicker-mstring",
+          ),
+        } });
       }
     } else {
       if (value?.length > 0) {
@@ -125,7 +136,7 @@ export default class BcComponent implements IComponentManager {
     if (this.dateRange.data) {
       if (value?.length > 0) {
         retVal = new Array<IPartValue>();
-   
+        console.log(this.dateRange.data )
         retVal.push({ id: baseId, value: this.dateRange.data });
       }
     } else {
