@@ -91,7 +91,7 @@ export default class BcComponent implements IComponentManager {
 
   setValues(values: IPartValue[]) {
     if (values && values.length == 1) {
-      this.dateRange.datePickerInput.value = values[0].value;
+      this.dateRange.datePickerInput.value = this.options.culture =="en" ? values[0].value?.mstring :values[0].value?.sstring;
     }
   }
 
