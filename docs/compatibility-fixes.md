@@ -1,6 +1,8 @@
 # Backward-compatible DatePicker fixes
 
 Baseline: `35751ce` on `main`. Candidate branch: `basisfly/calendar-compatible-fixes`.
+Package version: `1.0.2` (patch release after `1.0.1`).
+Release notes: [CHANGELOG.md](../CHANGELOG.md).
 The UX v2 download was used as a reference, not copied over the legacy implementation.
 
 ## Contract
