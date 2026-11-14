@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calendar - Compatibility Preview</title>
+  <link rel="stylesheet" href="/css/LineIcons.css">
+  <script src="/bclib.js"></script>
+  <script>
+    const host = { repositories: {
+      "calendar.calendar": "/basiscore.calendar.component.js",
+      "calendar.datepicker": "/basiscore.calendar.component.js"
+    }};
+    const params = new URLSearchParams(location.search);
+    const configured = params.has('selection');
+    const flag = (key, fallback) => configured ? params.get(key) === '1' : fallback;
+    const choice = (key, values, fallback) => values.includes(params.get(key)) ? params.get(key) : fallback;
+    const selection = choice('selection', ['single', 'range', 'multiple'], 'range');
+    const culture = choice('culture', ['fa', 'en'], 'fa');
+    const rangeSeparator = choice('rangeSeparator', ['dash', 'tilde', 'space'], 'dash');
+    var mySetting = {
+      dateProvider: "basisCalendar",
+      culture,
+      lid: culture === 'fa' ? 1 : 2,
+      yearsList: flag('year', true),
+      monthList: flag('month', true),
+      todayButton: flag('today', true),
+      rangeDates: selection === 'range',
+      pickerType: selection === 'multiple' ? 'multiple' : 'action',
+      switchType: flag('switch', true),
+      disabledPrevButton: flag('restriction', false),
+      seperator: choice('separator', ['/', '-', '.'], '/'),
+      theme: "basic",
+      mode: "desktop",
+      style: "/css/datepicker-style-1.0.0.css"
+    };
+    if (selection === 'single' && flag('second', false)) mySetting.secondCulture = culture === 'fa' ? 'en' : 'fa';
+    if (selection === 'range') {
+      mySetting.rangeDatesSeparated = rangeSeparator === 'space';
+      mySetting.rangeDatesSeperator = rangeSeparator === 'tilde' ? ' ~ ' : ' - ';
+    }
+    if (selection === 'multiple') mySetting.isModalPicker = true;
+  </script>
+  <style>
+    @font-face { font-family: CalendarPreview; src: url('/fonts/IRANSansWeb.woff') format('woff'); font-display: swap; }
+    * { box-sizing: border-box; }
+    body.calendar-presentation { margin: 0; color: #243247; background: #f6f8fb; font: 14px/1.7 CalendarPreview, Tahoma, sans-serif; }
+    ::selection { background: #c8e4f0; color: #173c55; }
+    main { max-width: 1040px; margin: 32px auto; padding: 24px; }
+    h1, h2 { margin: 0; font-weight: 600; }
+    h1 { font-size: 22px; }
+    h2 { font-size: 16px; margin-bottom: 20px; }
+    .page-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid #d4dae2; }
+    .heading { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+    #version-label { color: #536174; font-size: 12px; }
+    a { color: #004b85; text-underline-offset: 4px; }
+    .compare { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
+    .workspace { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 40px; }
+    .settings { border-inline-end: 1px solid #d4dae2; padding-inline-end: 24px; }
+    .settings > summary { font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 20px; }
+    fieldset { padding: 0; margin: 0 0 20px; border: 0; min-width: 0; }
+    legend, .field-label { display: block; margin-bottom: 8px; font-size: 13px; color: #38495e; }
+    .selection-modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
+    .selection-modes label { position: relative; }
+    .selection-modes input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+    .selection-modes span { display: flex; justify-content: center; align-items: center; min-height: 40px; padding: 6px; border: 1px solid #c3cedb; border-radius: 5px; font-size: 12px; cursor: pointer; }
+    .selection-modes input:checked + span { background: #e3eff8; border-color: #004b85; color: #004b85; }
+    .selection-modes input:focus-visible + span { outline: 2px solid #004b85; outline-offset: 2px; }
+    .field { margin-bottom: 16px; }
+    select, button, input { font: inherit; color: inherit; }
+    select { width: 100%; min-height: 40px; padding: 7px 10px; border: 1px solid #c3cedb; border-radius: 5px; background: white; }
+    select:disabled { opacity: .6; cursor: not-allowed; }
+    .toggles { display: grid; gap: 12px; padding: 20px 0; margin: 20px 0; border-block: 1px solid #d4dae2; }
+    .toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13px; }
+    .toggle input { flex: none; width: 17px; height: 17px; margin: 0; accent-color: #004b85; }
+    .toggle:has(input:disabled) { opacity: .6; cursor: not-allowed; }
+    .commands { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    button[type="submit"] { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px; padding: 8px 14px; border: 0; border-radius: 5px; background: #004b85; color: white; cursor: pointer; }
+    button[type="submit"]:hover { background: #003b69; }
+    .reset { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
+    :focus-visible { outline: 2px solid #004b85; outline-offset: 3px; }
+    .preview { min-width: 0; }
+    .preview-stage { position: relative; min-height: 620px; }
+    .calendar-presentation input.date-picker-input, .multiple-output input { display: block; width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid #c3cedb; border-radius: 5px; background: white; font: inherit; }
+    #basis-datepicker { max-width: 100%; font-family: inherit; }
+    .multiple-output { margin-top: 16px; }
+    .multiple-output input { direction: ltr; text-align: right; }
+    [hidden] { display: none !important; }
+    .config { padding-top: 16px; border-top: 1px solid #d4dae2; }
+    .config > summary { cursor: pointer; font-weight: 600; }
+    pre { direction: ltr; text-align: left; font-size: 12px; line-height: 1.7; tab-size: 2; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 400px; overflow-y: auto; scrollbar-color: #9cabbc #f6f8fb; }
+    @media (max-width: 760px) {
+      main { margin: 0 auto; padding: 20px 16px; }
+      .page-header { margin-bottom: 20px; }
+      .workspace { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+      .settings { padding-inline-end: 0; padding-bottom: 12px; border-inline-end: 0; border-bottom: 1px solid #d4dae2; }
+      .settings > summary { margin-bottom: 12px; }
+      .preview-stage { min-height: 610px; }
+    }
+  </style>
+</head>
+<body class="calendar-presentation">
+  <main>
+    <header class="page-header">
+      <div class="heading"><h1>تقویم</h1><span id="version-label"></span></div>
+      <a id="compare-link" class="compare" hidden><i class="lni lni-arrow-left" aria-hidden="true"></i><span></span></a>
+    </header>
+    <div class="workspace">
+      <details class="settings" id="settings" open>
+        <summary>تنظیمات</summary>
+        <form id="settings-form" method="get">
+          <fieldset>
+            <legend>انتخاب تاریخ</legend>
+            <div class="selection-modes">
+              <label><input type="radio" name="selection" value="single"><span>تکی</span></label>
+              <label><input type="radio" name="selection" value="range"><span>بازه</span></label>
+              <label><input type="radio" name="selection" value="multiple"><span>چندتاریخ</span></label>
+            </div>
+          </fieldset>
+          <div class="field"><label class="field-label" for="culture">تقویم و زبان</label><select name="culture" id="culture"><option value="fa">شمسی / فارسی</option><option value="en">میلادی / انگلیسی</option></select></div>
+          <div class="field"><label class="field-label" for="separator">جداکنندهٔ تاریخ</label><select name="separator" id="separator" dir="ltr"><option value="/">/</option><option value="-">-</option><option value=".">.</option></select></div>
+          <div class="field"><label class="field-label" for="rangeSeparator">جداکنندهٔ بازه</label><select name="rangeSeparator" id="rangeSeparator"><option value="dash">خط تیره</option><option value="tilde">~</option><option value="space">فاصله</option></select></div>
+          <div class="toggles">
+            <label class="toggle"><input type="checkbox" name="restriction" value="1">محدودیت دکمهٔ ماه قبل</label>
+            <label class="toggle"><input type="checkbox" name="today" value="1">دکمهٔ امروز</label>
+            <label class="toggle"><input type="checkbox" name="year" value="1">انتخاب سال</label>
+            <label class="toggle"><input type="checkbox" name="month" value="1">انتخاب ماه</label>
+            <label class="toggle"><input type="checkbox" name="switch" value="1">تغییر شمسی و میلادی</label>
+            <label class="toggle"><input type="checkbox" name="second" value="1">شمارهٔ روز تقویم دوم (تکی)</label>
+          </div>
+          <div class="commands">
+            <button type="submit"><i class="lni lni-reload" aria-hidden="true"></i>اعمال تنظیمات</button>
+            <a class="reset" href="compatibility.html"><i class="lni lni-reply" aria-hidden="true"></i>بازنشانی</a>
+          </div>
+        </form>
+      </details>
+      <section class="preview" aria-labelledby="preview-title">
+        <h2 id="preview-title">بازهٔ تاریخ</h2>
+        <div class="preview-stage">
+          <basis core="component.calendar.datepicker" name="from" run="atclient" options="mySetting"></basis>
+        </div>
+        <div class="multiple-output" hidden><label class="field-label" for="multiple-dates">تاریخ‌های انتخاب‌شده</label><input id="multiple-dates" data-modal-input-dates readonly></div>
+        <details class="config"><summary>کانفیگ فعال</summary><pre id="active-config"></pre></details>
+      </section>
+    </div>
+  </main>
+  <script>
+    const form = document.querySelector('#settings-form');
+    form.elements.selection.value = selection;
+    form.elements.culture.value = culture;
+    form.elements.separator.value = mySetting.seperator;
+    form.elements.rangeSeparator.value = rangeSeparator;
+    for (const [name, option] of Object.entries({restriction:'disabledPrevButton', today:'todayButton', year:'yearsList', month:'monthList', switch:'switchType', second:'secondCulture'})) {
+      form.elements[name].checked = !!mySetting[option];
+    }
+    const updateControls = () => {
+      form.elements.rangeSeparator.disabled = form.elements.selection.value !== 'range';
+      form.elements.second.disabled = form.elements.selection.value !== 'single';
+    };
+    form.addEventListener('change', updateControls);
+    updateControls();
+    document.querySelector('#settings').open = matchMedia('(min-width: 761px)').matches;
+    document.querySelector('#active-config').textContent = JSON.stringify(mySetting, null, 2);
+    document.querySelector('.multiple-output').hidden = selection !== 'multiple';
+    const title = selection === 'range' ? 'بازهٔ تاریخ' : selection === 'multiple' ? 'چند تاریخ' : 'تاریخ';
+    document.querySelector('#preview-title').textContent = title;
+    const before = location.port === '18479';
+    document.querySelector('#version-label').textContent = before ? 'قبل از اصلاحات' : 'نسخهٔ اصلاح‌شده';
+    if (['18478', '18479'].includes(location.port)) {
+      const target = new URL(location.href);
+      target.port = before ? '18478' : '18479';
+      const link = document.querySelector('#compare-link');
+      link.href = target.href;
+      link.querySelector('span').textContent = before ? 'نسخهٔ اصلاح‌شده' : 'نسخهٔ قبل';
+      link.hidden = false;
+    }
+    const observer = new MutationObserver(prepareInput);
+    observer.observe(document.querySelector('.preview-stage'), {childList: true, subtree: true});
+    function prepareInput() {
+      const input = document.querySelector('input.date-picker-input');
+      if (!input) return;
+      input.id = 'preview-date';
+      input.setAttribute('aria-label', title);
+      observer.disconnect();
+      requestAnimationFrame(() => input.click());
+    }
+    prepareInput();
+  </script>
+</body>
+</html>
