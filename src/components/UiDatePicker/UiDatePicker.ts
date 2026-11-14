@@ -267,6 +267,17 @@ export class UiDatePicker {
           "/" +
           this.day.mcurrentDay.day;
 
+      if (this.range.datesArray.length === 0) {
+        parentElement.querySelectorAll("[data-datepicker-day]").forEach((date) => {
+          ["data-datepicker-start-day", "data-datepicker-end-day", "data-datepicker-selected",
+            "data-datepicker-hover", "data-disabled"].forEach((attribute) => date.removeAttribute(attribute));
+          date.querySelectorAll("span").forEach((span) => span.removeAttribute("data-sys-text-white"));
+        });
+        this.range.datePickerInput.removeAttribute("data-datepicker-to-dateid");
+        this.range.datePickerInput.removeAttribute("data-datepicker-to-sstring");
+        this.range.datePickerInput.removeAttribute("data-datepicker-to-mstring");
+      }
+
       this.range.datesArray.push(selected);
       if (this.range.datesArray.length == 1) {
         if (parentElement.querySelector("[data-datepicker-start-day]")) {
@@ -277,10 +288,11 @@ export class UiDatePicker {
         dayElement.setAttribute("data-datepicker-start-day", "");
         this.disabledDays(parentElement);
         this.range.datePickerInput.value = selectDate;
-        document.querySelector("[data-datepicker-month-main]").innerHTML =
-          String(this.range.datesArray[0].day) +
-          " " +
-          this.range.months[this.range.activeIndex].monthName;
+        const monthTitle = this.range.wrapper.querySelector("[data-datepicker-month-main]");
+        if (monthTitle) {
+          monthTitle.textContent = String(this.range.datesArray[0].day) +
+            " " + this.range.months[this.range.activeIndex].monthName;
+        }
         this.range.datePickerInput.setAttribute(
           "data-datepicker-dateid",
           this.day.dateId.toString()

@@ -82,7 +82,7 @@ export class DatePicker {
 
   nextMonth(nextButtonWrapper: HTMLElement): void {
     if (this.options.disabledPrevButton) {
-      nextButtonWrapper.previousElementSibling.previousElementSibling.removeAttribute(
+      this.wrapper.querySelector("[data-datepicker-prev]")?.removeAttribute(
         "data-disabled-prev"
       );
     }
@@ -97,10 +97,7 @@ export class DatePicker {
   }
   prevMonth(prevButtonWrapper: HTMLElement): void {
     if (this.options.disabledPrevButton) {
-      const objCurrentDate = {
-        year: this.months[this.activeIndex].currentDate.year,
-        month: this.months[this.activeIndex].currentDate.month,
-      };
+      const objCurrentDate = this.dateUtil.getCurrentDate(this.options.culture);
       if (
         objCurrentDate.year == this.activeMonth().value.year &&
         objCurrentDate.month == this.activeMonth().value.month
@@ -124,9 +121,11 @@ export class DatePicker {
     this.renderAsync();
   }
   goToday(): void {
+    const today = this.dateUtil.getCurrentDate(this.options.culture);
     let todayMonthValues: MonthValue = {
-      year: this.months[this.activeIndex].currentDate.year,
-      month: this.months[this.activeIndex].currentDate.month,
+      // The built-in date table stores numbers as strings; navigation adds 1.
+      year: Number(today.year),
+      month: Number(today.month) as MonthNumber,
     };
     this.months[this.activeIndex] = new Month(this, todayMonthValues);
 
@@ -198,9 +197,19 @@ export class DatePicker {
     headerTitles.appendChild(monthNameElement);
     headerTitles.appendChild(secondMonthName);
     if (this.options.yearsList == true) {
+      yearNumber.textContent = String(this.activeMonth().value.year);
+      yearNumber.tabIndex = 0;
+      yearNumber.setAttribute("role", "button");
+      yearNumber.setAttribute("aria-label", this.options.lid == 1 ? "انتخاب سال" : "Choose year");
       yearNumber.setAttribute("data-datepicker-yearnumber-select", "");
       yearNumber.addEventListener("click", (e) => {
         this.showYears(yearNumber);
+      });
+      yearNumber.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          yearNumber.click();
+        }
       });
     }
     if (this.options.monthList == true) {
@@ -254,6 +263,7 @@ export class DatePicker {
     this.headerElement.appendChild(headerTitle);
     if (this.options.switchType) {
       const changeTypeButton = document.createElement("button");
+      changeTypeButton.type = "button";
       changeTypeButton.setAttribute("data-datepicker-chaneType-btn", "");
       changeTypeButton.innerHTML = `<svg width="21" height="22" viewBox="0 0 21 22" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path data-sys-text="" d="M18.6154 16.9231L16.9231 18.6154H18.1923C18.1923 20.0158 17.0542 21.1538 15.6538 21.1538C15.2265 21.1538 14.8204 21.0481 14.4692 20.8577L13.8515 21.4754C14.3719 21.8054 14.9896 22 15.6538 22C17.5238 22 19.0385 20.4854 19.0385 18.6154H20.3077L18.6154 16.9231ZM13.1154 18.6154C13.1154 17.215 14.2535 16.0769 15.6538 16.0769C16.0812 16.0769 16.4873 16.1827 16.8385 16.3731L17.4562 15.7554C16.9358 15.4254 16.3181 15.2308 15.6538 15.2308C13.7838 15.2308 12.2692 16.7454 12.2692 18.6154H11L12.6923 20.3077L14.3846 18.6154H13.1154Z" fill="#767676"/>
@@ -277,21 +287,24 @@ export class DatePicker {
             this.options.secondCulture == "en" ? "fa" : "en";
         }
 
-        this.range.options.lid = this.options.lid == 2 ? 1 : 2;
         this.options.lid = this.options.lid == 2 ? 1 : 2;
-        this.range.options.culture = this.options.culture == "en" ? "fa" : "en";
         this.options.culture = this.options.culture == "en" ? "fa" : "en";
-        this.range.monthValues = this.dateUtil.getMonthValueList(
-          convertDate,
-          convertDate
-        );
+        // Standalone pickers have no parent calendar to refresh.
+        const target = this.range || this;
+        target.options.lid = this.options.lid;
+        target.options.culture = this.options.culture;
+        target.monthValues = [{ year: Number(convertDate.year), month: Number(convertDate.month) as MonthNumber }];
 
-        this.range.months = [];
-        this.range.monthValues.map((x) =>
-          this.range.months.push(new Month(this, x))
+        target.months = [];
+        target.monthValues.map((x) =>
+          target.months.push(new Month(target, x))
         );
-
-        this.range.runAsync();
+        target.activeIndex = 0;
+        if (this.range) {
+          this.range.runAsync();
+        } else {
+          this.renderAsync();
+        }
       });
       this.headerElement.appendChild(changeTypeButton);
     }
@@ -314,10 +327,25 @@ export class DatePicker {
 
     const yearList = document.createElement("ul");
     yearList.setAttribute("data-datepicker-years-list", "");
-    for (var i = 1369; i <= 1420; i++) {
+    let firstYear = 1369;
+    let lastYear = 1420;
+    if (this.options.culture === "en" && this.options.dateProvider === "basisCalendar") {
+      // Exclude the partial first Gregorian year in the shipped date table.
+      firstYear = Number(this.dateUtil.convertToGregorian({ year: 1369, month: 1 }).year) + 1;
+      lastYear = Number(this.dateUtil.convertToGregorian({ year: 1420, month: 1 }).year);
+    }
+    for (var i = firstYear; i <= lastYear; i++) {
       const yearListLi = document.createElement("li");
       yearListLi.textContent = i + "";
       yearListLi.setAttribute("year-number", i.toString());
+      yearListLi.tabIndex = 0;
+      yearListLi.setAttribute("role", "button");
+      yearListLi.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          yearListLi.click();
+        }
+      });
       yearListLi.addEventListener("click", (e) => {
         yearNumberWrapper.textContent = "";
         yearNumberWrapper.textContent = yearListLi.getAttribute("year-number");
@@ -475,6 +503,7 @@ export class DatePicker {
     footerElement.setAttribute("data-datepicker-footer", "");
     if (this.options.todayButton == true) {
       const todayButton = document.createElement("button");
+      todayButton.type = "button";
       todayButton.addEventListener("click", (e) => {
         this.goToday();
       });
@@ -491,6 +520,7 @@ export class DatePicker {
       const changeTypeButton = document.createElement("button");
       changeTypeButton.setAttribute("data-datepicker-chaneType-btn", "");
       // changeTypeButton.textContent= (this.options.culture == "en" ? "شمسی" : "میلادی")
+      changeTypeButton.type = "button";
       changeTypeButton.addEventListener("click", (e) => {
         this.goToday();
         if (this.options.culture == "en") {
@@ -508,10 +538,7 @@ export class DatePicker {
         }
         this.options.lid = this.options.culture == "en" ? 1 : 2;
         this.options.culture = this.options.culture == "en" ? "fa" : "en";
-        this.monthValues = this.dateUtil.getMonthValueList(
-          convertDate,
-          convertDate
-        );
+        this.monthValues = [{ year: Number(convertDate.year), month: Number(convertDate.month) as MonthNumber }];
         this.months = [];
         this.monthValues.map((x) => this.months.push(new Month(this, x)));
         this.renderAsync();
