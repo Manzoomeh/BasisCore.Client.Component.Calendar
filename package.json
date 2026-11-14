@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack serve --mode=development",
-    "pub": "webpack --mode=production"
+    "pub": "webpack --mode=production",
+    "typecheck": "tsc --noEmit",
+    "test": "node tests/compatibility.cjs",
+    "test:preview": "node tests/preview.cjs",
+    "test:presentation": "node tests/presentation.cjs"
   },
   "keywords": [],
   "author": "",
@@ -37,6 +41,7 @@
     "file-loader": "^6.2.0",
     "moment-locales-webpack-plugin": "^1.2.0",
     "persian-date": "^1.1.0",
+    "playwright": "1.61.1",
     "style-loader": "^3.2.1",
     "url-loader": "^4.1.1"
   }

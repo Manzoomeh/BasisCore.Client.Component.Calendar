@@ -142,5 +142,5 @@ router.post('/sharing',cors(), function (req, res) {
 
 
 
-app.listen(8000)
+if (require.main === module) app.listen(8000)
 module.exports = router;
